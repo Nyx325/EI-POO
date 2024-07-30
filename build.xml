@@ -10,6 +10,19 @@
 <project name="EI-POO" default="default" basedir=".">
     <description>Builds, tests, and runs the project EI-POO.</description>
     <import file="nbproject/build-impl.xml"/>
+
+    <!-- Include JAR files from the lib directory in the classpath -->
+    <target name="-pre-compile">
+        <path id="additional.classpath">
+            <fileset dir="lib" includes="**/*.jar"/>
+        </path>
+        <pathconvert property="run.classpath.with.libs">
+            <path refid="additional.classpath"/>
+            <map from="${basedir}/lib" to="lib"/>
+        </pathconvert>
+        <property name="javac.classpath" value="${javac.classpath}:${run.classpath.with.libs}"/>
+    </target>
+
     <!--
 
     There exist several targets which are by default empty and which can be 
