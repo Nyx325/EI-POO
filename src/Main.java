@@ -1,4 +1,4 @@
-import Modelo.Repositorio.RepositorioSignatarios;
+import Modelo.Repositorio.RepositorioSitio;
 import Vista.Singletons.LoginSingleton;
 
 public class Main {
