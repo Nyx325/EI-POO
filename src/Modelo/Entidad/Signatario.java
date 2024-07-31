@@ -8,9 +8,11 @@ public class Signatario {
     public String apellidoM;
     public String siglas;
 
-    public Signatario(){}
+    public Signatario() {
+    }
 
-    public Signatario(long idSignatario, String primNombre, String segNombre, String apellidoP, String apellidoM, String siglas) {
+    public Signatario(long idSignatario, String primNombre, String segNombre, String apellidoP, String apellidoM,
+            String siglas) {
         this.idSignatario = idSignatario;
         this.primNombre = primNombre;
         this.segNombre = segNombre;
@@ -19,7 +21,7 @@ public class Signatario {
     }
 
     @Override
-    public String toString(){
-        return "["+siglas+"]"+" "+primNombre+" "+segNombre+" "+apellidoP+" "+apellidoM;
+    public String toString() {
+        return "[" + siglas + "]" + " " + primNombre + " " + segNombre + " " + apellidoP + " " + apellidoM;
     }
 }

@@ -7,10 +7,10 @@ import Modelo.Entidad.Parametro;
 
 public class RepositorioParametro {
 
-    private Parametro fromResSet() throws Exception{
+    private Parametro fromResSet() throws Exception {
         return new Parametro(
-            Conector.resSet.getLong(1), 
-            Conector.resSet.getString(2));
+                Conector.resSet.getLong(1),
+                Conector.resSet.getString(2));
     }
 
     public List<Parametro> searchParametroBySignatario(long idSignatario) throws Exception {

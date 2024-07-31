@@ -5,7 +5,8 @@ public class Prueba {
     public String nombre;
     public long idParametro;
 
-    public Prueba(){}
+    public Prueba() {
+    }
 
     public Prueba(long idPrueba, String nombre, long idParametro) {
         this.idPrueba = idPrueba;

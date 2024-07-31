@@ -11,7 +11,8 @@ public class Muestra {
     public long muestreador;
     public long idSitio;
 
-    public Muestra(){}
+    public Muestra() {
+    }
 
     public Muestra(String numControl, String proyecto, LocalDateTime fMuestreo, LocalDate fRecepcion, long muestreador,
             long idSitio) {

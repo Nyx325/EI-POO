@@ -20,7 +20,8 @@ public class Sitio {
     public String lugarT;
     public long idCliente;
 
-    public Sitio(){}
+    public Sitio() {
+    }
 
     public Sitio(long idLugar, String clave, String nombre, String cuenca, String cAcuifero, String acuifero,
             String organismo, String dirLocal, String edo, String municipio, String cAgua, String tipoC,

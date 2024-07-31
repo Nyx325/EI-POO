@@ -8,9 +8,9 @@ import Modelo.Entidad.Prueba;
 public class RepositorioPrueba {
     public Prueba fromResSet() throws Exception {
         return new Prueba(
-            Conector.resSet.getLong(1), 
-            Conector.resSet.getString(2), 
-            Conector.resSet.getLong(3));
+                Conector.resSet.getLong(1),
+                Conector.resSet.getString(2),
+                Conector.resSet.getLong(3));
     }
 
     public List<Prueba> searchBy(long idSignatario, long idParametro) throws Exception {
@@ -24,7 +24,6 @@ public class RepositorioPrueba {
         query.append("DetalleSignatarios.idSignatario = ? ");
         query.append("AND Prueba.idParametro = ?");
 
-        System.out.println(query.toString()+"\n");
         Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
         Conector.pStmt.setLong(1, idSignatario);
         Conector.pStmt.setLong(2, idParametro);
