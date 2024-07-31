@@ -59,7 +59,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="capturarResultados" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="225" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="capturarResultados1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="96" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -67,7 +69,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="capturarResultados" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="capturarResultados" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="capturarResultados1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace pref="106" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -76,10 +81,18 @@
       <SubComponents>
         <Component class="javax.swing.JButton" name="capturarResultados">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Capturar resultados"/>
+            <Property name="text" type="java.lang.String" value="Buscador Sitios"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="capturarResultadosActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="capturarResultados1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Buscador Muestras"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="capturarResultados1ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

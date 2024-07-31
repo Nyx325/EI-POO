@@ -21,7 +21,7 @@ public class RepositorioSignatarios {
     public List<Signatario> getAllSignatarios() throws Exception {
         List<Signatario> res = new ArrayList<>();
 
-        String query = "SELECT idSignatario, primNombre, segNombre, apellidoP, apellidoM, siglas FROM Signatario";
+        String query = "SELECT * FROM Signatario";
 
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.resSet = Conector.pStmt.executeQuery();
@@ -30,5 +30,13 @@ public class RepositorioSignatarios {
         }
 
         return res;
+    }
+
+    public Signatario searchBy(long idSignatario) throws Exception {
+        String query = "SELECT * FROM Signatario where idSignatario = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSignatario);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        return fromResSet();
     }
 }

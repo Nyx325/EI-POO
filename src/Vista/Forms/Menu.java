@@ -4,6 +4,7 @@
  */
 package Vista.Forms;
 
+import Vista.Singletons.BuscadorMuestrasSingleton;
 import Vista.Singletons.BuscadorSitiosSingleton;
 
 /**
@@ -31,6 +32,7 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         capturarResultados = new javax.swing.JButton();
+        capturarResultados1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         BienvenidaLbl = new javax.swing.JLabel();
 
@@ -38,10 +40,17 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 237, 211));
 
-        capturarResultados.setText("Capturar resultados");
+        capturarResultados.setText("Buscador Sitios");
         capturarResultados.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 capturarResultadosActionPerformed(evt);
+            }
+        });
+
+        capturarResultados1.setText("Buscador Muestras");
+        capturarResultados1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                capturarResultados1ActionPerformed(evt);
             }
         });
 
@@ -52,13 +61,17 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(capturarResultados)
-                .addContainerGap(225, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(capturarResultados1)
+                .addContainerGap(96, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(capturarResultados)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(capturarResultados)
+                    .addComponent(capturarResultados1))
                 .addContainerGap(106, Short.MAX_VALUE))
         );
 
@@ -111,9 +124,15 @@ public class Menu extends javax.swing.JFrame {
         BuscadorSitiosSingleton.getInstancia().setVisible(true);
     }//GEN-LAST:event_capturarResultadosActionPerformed
 
+    private void capturarResultados1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_capturarResultados1ActionPerformed
+        BuscadorMuestrasSingleton.getInstancia().preparar();
+        BuscadorMuestrasSingleton.getInstancia().show();
+    }//GEN-LAST:event_capturarResultados1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BienvenidaLbl;
     private javax.swing.JButton capturarResultados;
+    private javax.swing.JButton capturarResultados1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables

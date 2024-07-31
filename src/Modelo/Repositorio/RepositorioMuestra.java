@@ -42,4 +42,38 @@ public class RepositorioMuestra {
 
         return res; 
     }
+
+    public List<Muestra> searchBy(String numC, String proj, LocalDateTime fM, LocalDate fR) throws Exception{
+        List<Muestra> res = new ArrayList<>();
+        boolean validFM = false, validFR = false;  
+        String fMuestreo = "";
+        
+        if(fM != null)
+            fMuestreo = fM.getDayOfYear()+"-"+fM.getMonthValue()+"-"+fM.getDayOfMonth()+" "+fM.getHour()+":"+fM.getMinute()+":00";
+        
+        StringBuilder query = new StringBuilder();
+        String fLocalDate = "CONCAT(DATE(fMuestreo),\"T\", LEFT(TIME(fMuestreo),5))"; //Formato legible para LocalDateTime.parse()
+        query.append("SELECT numControl, proyecto,"+fLocalDate+", fRecepcion, muestreador, idSitio FROM Muestra");
+        query.append(" WHERE numControl LIKE \"%"+numC+"%\" ");
+        query.append("AND proyecto LIKE \"%"+proj+"%\" ");
+        if(fM != null){
+            validFM = true;
+            query.append(" AND fMuestreo LIKE \"%"+fMuestreo+"%\"");
+        }
+
+        if(fR != null){
+            validFR = true;
+            query.append(" AND fRecepcion LIKE \"%"+fR+"%\"");
+        }
+
+        System.out.println("Query: "+query.toString());
+        Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+
+        return res;
+    }
 }
