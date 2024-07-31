@@ -1,18 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Vista.Forms;
 
+import Modelo.Entidad.Signatario;
 import Vista.Singletons.BuscadorMuestrasSingleton;
 import Vista.Singletons.BuscadorSitiosSingleton;
+import Vista.Singletons.PruebasPorSignatarioSingleton;
 
-/**
- *
- * @author rubenor
- */
 public class Menu extends javax.swing.JFrame {
-
+    public Signatario sesion;
     /**
      * Creates new form Menu
      */
@@ -33,6 +27,7 @@ public class Menu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         capturarResultados = new javax.swing.JButton();
         capturarResultados1 = new javax.swing.JButton();
+        capturarResultados2 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         BienvenidaLbl = new javax.swing.JLabel();
 
@@ -54,15 +49,25 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
+        capturarResultados2.setText("Capturar resultados");
+        capturarResultados2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                capturarResultados2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(capturarResultados)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(capturarResultados1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(capturarResultados)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(capturarResultados1))
+                    .addComponent(capturarResultados2))
                 .addContainerGap(96, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -72,7 +77,9 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(capturarResultados)
                     .addComponent(capturarResultados1))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(capturarResultados2)
+                .addContainerGap(71, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
@@ -129,10 +136,16 @@ public class Menu extends javax.swing.JFrame {
         BuscadorMuestrasSingleton.getInstancia().show();
     }//GEN-LAST:event_capturarResultados1ActionPerformed
 
+    private void capturarResultados2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_capturarResultados2ActionPerformed
+        PruebasPorSignatarioSingleton.getInstancia().preparar(sesion);
+        PruebasPorSignatarioSingleton.getInstancia().show();
+    }//GEN-LAST:event_capturarResultados2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel BienvenidaLbl;
     private javax.swing.JButton capturarResultados;
     private javax.swing.JButton capturarResultados1;
+    private javax.swing.JButton capturarResultados2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables

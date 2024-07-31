@@ -140,6 +140,7 @@ public class Login extends javax.swing.JFrame {
                 Signatario s = this.signatarios.get(index - 1);
 
                 this.setVisible(false);
+                MenuSingleton.getInstancia().sesion = s;
                 MenuSingleton.getInstancia().getBienvenidaLbl()
                                 .setText("¡Bienvenido " + s.primNombre + " " + s.segNombre + "!");
                 MenuSingleton.getInstancia().setVisible(true);
