@@ -220,6 +220,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Seleccionar muestra"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selMuestraBtnActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+import Controlador.EventListener;
+import Controlador.EventManager;
 import Modelo.Entidad.Muestra;
 import Modelo.Repositorio.RepositorioMuestra;
 import Modelo.Repositorio.RepositorioSignatarios;
@@ -18,21 +20,28 @@ import java.time.LocalTime;
 public class BuscadorMuestras extends javax.swing.JFrame {
     public static final int MODO_VISTA = 0;
     public static final int MODO_BUSQUEDA = 1;
-
+    public static final String EVENTO_BUSQUEDA = "busqueda";
+    
     Muestra seleccionado;
     List<Muestra> ultimaLista;
-    List<Muestra> listaEmpty;
-    RepositorioMuestra repoMuest;
-    RepositorioSignatarios repoSig;
+    List<Muestra> listaEmpty = new ArrayList<>();
 
+    RepositorioMuestra repoMuest = new RepositorioMuestra();
+    RepositorioSignatarios repoSig = new RepositorioSignatarios();
+    EventManager eventos = new EventManager(EVENTO_BUSQUEDA);
     /**
      * Creates new form BuscadorMuestras
      */
     public BuscadorMuestras() {
-        this.listaEmpty = new ArrayList<>();
-        repoMuest = new RepositorioMuestra();
-        repoSig = new RepositorioSignatarios();
         initComponents();
+    }
+
+    public void subscribe(EventListener listener){
+        eventos.subscribe(EVENTO_BUSQUEDA, listener);
+    }
+
+    public void unsubscribe(EventListener listener){
+        eventos.unsubscribe(EVENTO_BUSQUEDA, listener);
     }
 
     /**
@@ -202,14 +211,10 @@ public class BuscadorMuestras extends javax.swing.JFrame {
             return;
         }
         
-        try {
-            this.seleccionado = ultimaLista.get(index);
-        } catch (IndexOutOfBoundsException e) {
-            e.printStackTrace();
-            System.out.println("No se pudo obtener el indice "+index);
-        }
-        
         this.setVisible(false);
+        
+        Muestra m = ultimaLista.get(index);
+        eventos.notify(EVENTO_BUSQUEDA, m);
     }//GEN-LAST:event_aceptarBtnActionPerformed
 
     private void loadMuestras(List<Muestra> list) throws Exception {
@@ -317,27 +322,6 @@ public class BuscadorMuestras extends javax.swing.JFrame {
         }
     }
 
-    public Muestra buscar(Listener listener){
-        this.seleccionado = null;
-        this.preparar();
-        this.setModo(BuscadorMuestras.MODO_BUSQUEDA);
-        this.setVisible(true);
-            
-        Thread t = new Thread(()->{
-            while (this.seleccionado == null) {
-                try {
-                    System.out.println("Esperado respuesta");
-                    Thread.sleep(1000);    
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        t.start();
-
-
-        return this.seleccionado;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptarBtn;
     private javax.swing.JButton buscarBtn3;

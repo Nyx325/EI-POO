@@ -143,7 +143,8 @@ public class Menu extends javax.swing.JFrame {
 
     private void selMuestraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selMuestraActionPerformed
         BuscadorMuestras menu = BuscadorMuestrasSingleton.getInstancia();
-        menu.buscar(null);
+        menu.setModo(BuscadorMuestras.MODO_BUSQUEDA);
+        menu.setVisible(true);
     }//GEN-LAST:event_selMuestraActionPerformed
 
     private void capturarResultadosActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_capturarResultadosActionPerformed
