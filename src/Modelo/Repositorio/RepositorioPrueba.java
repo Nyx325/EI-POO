@@ -16,15 +16,9 @@ public class RepositorioPrueba {
     public List<Prueba> searchBy(long idSignatario, long idParametro) throws Exception {
         List<Prueba> res = new ArrayList<>();
 
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT Prueba.idPrueba, Prueba.Nombre, Parametro.idParametro FROM DetalleSignatarios ");
-        query.append("INNER JOIN Prueba ON DetalleSignatarios.idPrueba  = Prueba.idPrueba ");
-        query.append("INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro ");
-        query.append("WHERE ");
-        query.append("DetalleSignatarios.idSignatario = ? ");
-        query.append("AND Prueba.idParametro = ?");
+        String query = "CALL Muestreos.PruebasPorSignatario(?, ?)";
 
-        Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
         Conector.pStmt.setLong(2, idParametro);
         Conector.resSet = Conector.pStmt.executeQuery();

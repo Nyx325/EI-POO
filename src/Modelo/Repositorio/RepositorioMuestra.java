@@ -1,7 +1,6 @@
 package Modelo.Repositorio;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import Modelo.Entidad.Muestra;
 import java.time.LocalTime;
 
 public class RepositorioMuestra {
-
     private Muestra fromResSet() throws Exception {
         return new Muestra(
                 Conector.resSet.getString(1),
@@ -45,29 +43,18 @@ public class RepositorioMuestra {
 
     public List<Muestra> searchBy(String numC, String proj, LocalDate fM, LocalTime hM, LocalDate fR) throws Exception {
         List<Muestra> res = new ArrayList<>();
-        boolean validFM = false, validFR = false;
+        String query, fMuest, hMuest, fRecep;
+        query = "CALL Muestreos.BuscarMuestras(?, ?, ?, ?, ?)";
+        fMuest = fM == null ? "" : fM.toString();
+        hMuest = hM == null ? "" : hM.toString();
+        fRecep = fR == null ? "" : fR.toString();
 
-        StringBuilder query = new StringBuilder(); // LocalDateTime.parse()
-        query.append("SELECT * FROM Muestra");
-        query.append(" WHERE numControl LIKE \"%" + numC + "%\" ");
-        query.append("AND proyecto LIKE \"%" + proj + "%\" ");
-        if (fM != null) {
-            validFM = true;
-            query.append(" AND fMuestreo LIKE \"%" + fM + "%\"");
-        }
-
-        if (hM != null) {
-            validFM = true;
-            query.append(" AND hMuestreo LIKE \"%" + hM + "%\"");
-        }
-
-        if (fR != null) {
-            validFR = true;
-            query.append(" AND fRecepcion LIKE \"%" + fR + "%\"");
-        }
-
-        System.out.println(query);
         Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
+        Conector.pStmt.setString(1, numC);
+        Conector.pStmt.setString(2, proj);
+        Conector.pStmt.setString(3, fMuest);
+        Conector.pStmt.setString(4, hMuest);
+        Conector.pStmt.setString(5, fRecep);
         Conector.resSet = Conector.pStmt.executeQuery();
 
         while (Conector.resSet.next()) {

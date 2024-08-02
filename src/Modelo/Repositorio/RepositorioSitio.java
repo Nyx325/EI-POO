@@ -48,17 +48,14 @@ public class RepositorioSitio {
         boolean and = false;
         List<Sitio> res = new ArrayList<>();
 
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM Sitio WHERE ");
-        query.append(" clave LIKE '%" + clave + "%'");
-        query.append(" AND latitud LIKE '%" + latitud + "%'");
-        query.append(" AND longitud LIKE '%" + longitud + "%'");
-        query.append(" AND municipio LIKE '%" + municipio + "%'");
-        query.append(" AND edo LIKE '%" + estado + "%'");
-        query.append(" AND nombre LIKE '%" + nombre + "%'");
-
-        System.out.println(query.toString());
+        String query = "CALL Muestreos.BuscarSitio(?, ?, ?, ?, ?, ?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
+        Conector.pStmt.setString(1, clave);
+        Conector.pStmt.setString(2, latitud);
+        Conector.pStmt.setString(3, longitud);
+        Conector.pStmt.setString(4, municipio);
+        Conector.pStmt.setString(5, estado);
+        Conector.pStmt.setString(6, nombre);
         Conector.resSet = Conector.pStmt.executeQuery();
 
         while (Conector.resSet.next()) {
