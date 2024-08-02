@@ -47,7 +47,7 @@ public class RepositorioMuestra {
         List<Muestra> res = new ArrayList<>();
         boolean validFM = false, validFR = false;
 
-        StringBuilder query = new StringBuilder();                                                                               // LocalDateTime.parse()
+        StringBuilder query = new StringBuilder(); // LocalDateTime.parse()
         query.append("SELECT * FROM Muestra");
         query.append(" WHERE numControl LIKE \"%" + numC + "%\" ");
         query.append("AND proyecto LIKE \"%" + proj + "%\" ");
@@ -55,7 +55,7 @@ public class RepositorioMuestra {
             validFM = true;
             query.append(" AND fMuestreo LIKE \"%" + fM + "%\"");
         }
-        
+
         if (hM != null) {
             validFM = true;
             query.append(" AND hMuestreo LIKE \"%" + hM + "%\"");
@@ -65,7 +65,7 @@ public class RepositorioMuestra {
             validFR = true;
             query.append(" AND fRecepcion LIKE \"%" + fR + "%\"");
         }
-        
+
         System.out.println(query);
         Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
         Conector.resSet = Conector.pStmt.executeQuery();

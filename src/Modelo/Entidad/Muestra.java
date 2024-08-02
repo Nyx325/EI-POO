@@ -1,7 +1,6 @@
 package Modelo.Entidad;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Muestra {
@@ -16,7 +15,8 @@ public class Muestra {
     public Muestra() {
     }
 
-    public Muestra(String numControl, String proyecto, LocalDate fMuestreo, LocalTime hMuestreo, LocalDate fRecepcion, long muestreador,
+    public Muestra(String numControl, String proyecto, LocalDate fMuestreo, LocalTime hMuestreo, LocalDate fRecepcion,
+            long muestreador,
             long idSitio) {
         this.numControl = numControl;
         this.proyecto = proyecto;
