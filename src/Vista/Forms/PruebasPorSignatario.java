@@ -8,9 +8,11 @@ import javax.swing.table.DefaultTableModel;
 
 import Controlador.EventListener;
 import Modelo.Entidad.Muestra;
+import Modelo.Entidad.Norma;
 import Modelo.Entidad.Parametro;
 import Modelo.Entidad.Prueba;
 import Modelo.Entidad.Signatario;
+import Modelo.Repositorio.RepositorioNorma;
 import Modelo.Repositorio.RepositorioParametro;
 import Modelo.Repositorio.RepositorioPrueba;
 import Vista.Singletons.BuscadorMuestrasSingleton;
@@ -26,18 +28,17 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     Muestra muestra;
     List<Parametro> parametros;
     HashMap<String, List<Prueba>> pruebas;
-    List<Prueba> emptyPruebas;
+    List<Prueba> emptyPruebas = new ArrayList<>();
+    List<Muestra> emptyMuestras = new ArrayList<>();
 
-    RepositorioParametro repoParam;
-    RepositorioPrueba repoPrueba;
+    RepositorioParametro repoParam = new RepositorioParametro();
+    RepositorioPrueba repoPrueba = new RepositorioPrueba();
+    RepositorioNorma repoNorma = new RepositorioNorma();
 
     /**
      * Creates new form PruebasPorSignatario
      */
     public PruebasPorSignatario() {
-        repoParam = new RepositorioParametro();
-        repoPrueba = new RepositorioPrueba();
-        emptyPruebas = new ArrayList<>();
         BuscadorMuestrasSingleton.getInstancia().subscribe(this);
         this.buscandoMuestra = false;
         initComponents();
@@ -70,7 +71,8 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated
-    // Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
@@ -85,12 +87,9 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         muestraLbl = new javax.swing.JLabel();
         selMuestraBtn = new javax.swing.JToggleButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jPanel1.setBackground(new java.awt.Color(153, 255, 255));
 
-        parametroCbox.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        parametroCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         parametroCbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 parametroCboxActionPerformed(evt);
@@ -102,20 +101,30 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         jLabel2.setText("Parámetro");
 
         pruebasTB.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][] {
+            new Object [][] {
 
-                },
-                new String[] {
-                        "Prueba"
-                }));
+            },
+            new String [] {
+                "Prueba"
+            }
+        ));
+        pruebasTB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pruebasTBMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(pruebasTB);
 
-        normaCbox.setModel(
-                new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        normaCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel3.setText("Norma");
 
         continuarBtn.setText("Continuar");
+        continuarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                continuarBtnActionPerformed(evt);
+            }
+        });
 
         muestraLbl.setText("Muestra: [Ninguna]");
 
@@ -129,116 +138,115 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGap(27, 27, 27)
-                                                .addComponent(jLabel3)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(normaCbox, javax.swing.GroupLayout.PREFERRED_SIZE, 146,
-                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(continuarBtn))
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addGroup(jPanel1Layout
-                                                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-                                                                false)
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(jScrollPane1,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE, 426,
-                                                                        javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addGap(16, 16, 16)
-                                                                .addGroup(jPanel1Layout.createParallelGroup(
-                                                                        javax.swing.GroupLayout.Alignment.LEADING)
-                                                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                                .addComponent(buenDiaLbl,
-                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                        158,
-                                                                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                                .addGap(0, 0, Short.MAX_VALUE))
-                                                                        .addGroup(
-                                                                                javax.swing.GroupLayout.Alignment.TRAILING,
-                                                                                jPanel1Layout.createSequentialGroup()
-                                                                                        .addGroup(jPanel1Layout
-                                                                                                .createParallelGroup(
-                                                                                                        javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                                                .addGroup(jPanel1Layout
-                                                                                                        .createSequentialGroup()
-                                                                                                        .addComponent(
-                                                                                                                jLabel2)
-                                                                                                        .addPreferredGap(
-                                                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                                        .addComponent(
-                                                                                                                parametroCbox,
-                                                                                                                0,
-                                                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                                Short.MAX_VALUE))
-                                                                                                .addGroup(
-                                                                                                        javax.swing.GroupLayout.Alignment.LEADING,
-                                                                                                        jPanel1Layout
-                                                                                                                .createSequentialGroup()
-                                                                                                                .addComponent(
-                                                                                                                        muestraLbl)
-                                                                                                                .addPreferredGap(
-                                                                                                                        javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                                                        javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                                                        Short.MAX_VALUE)
-                                                                                                                .addComponent(
-                                                                                                                        selMuestraBtn)))
-                                                                                        .addGap(9, 9, 9)))))
-                                                .addGap(0, 1, Short.MAX_VALUE)))
-                                .addContainerGap()));
-        jPanel1Layout.setVerticalGroup(
-                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(normaCbox, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(continuarBtn))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(buenDiaLbl)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12,
-                                        Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(muestraLbl)
-                                        .addComponent(selMuestraBtn))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel2)
-                                        .addComponent(parametroCbox, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 369,
-                                        javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(normaCbox, javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel3)
-                                        .addComponent(continuarBtn))
-                                .addGap(14, 14, 14)));
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 426, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(buenDiaLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(jLabel2)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(parametroCbox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                                .addComponent(muestraLbl)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(selMuestraBtn)))
+                                        .addGap(9, 9, 9)))))
+                        .addGap(0, 1, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(buenDiaLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(muestraLbl)
+                    .addComponent(selMuestraBtn))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(parametroCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(normaCbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(continuarBtn))
+                .addGap(14, 14, 14))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE,
-                                        javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap()));
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void continuarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBtnActionPerformed
+        
+    }//GEN-LAST:event_continuarBtnActionPerformed
+
+    private void pruebasTBMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_pruebasTBMouseClicked
+        int index = pruebasTB.getSelectedRow();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Se debe elegir una prueba",
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        String parametro = parametros.get(parametroCbox.getSelectedIndex() - 1).nombre;
+        Prueba prueba = this.pruebas.get(parametro).get(index);
+        try {
+            List<Norma> normas = repoNorma.getNormaByPrueba(prueba.idPrueba);
+            loadNormas(normas);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error: " + e.toString(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+    }// GEN-LAST:event_pruebasTBMouseClicked
 
     private void selMuestraBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selMuestraBtnActionPerformed
         this.buscandoMuestra = true;
@@ -286,6 +294,19 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         }
 
         pruebasTB.setModel(model);
+    }
+
+    private void loadNormas(List<Norma> list) throws Exception {
+        String[] normas = new String[list.size() + 1];
+        normas[0] = "";
+
+        int i = 1;
+        for (Norma n : list) {
+            normas[i] = n.norma;
+            i++;
+        }
+
+        normaCbox.setModel(new javax.swing.DefaultComboBoxModel<>(normas));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
