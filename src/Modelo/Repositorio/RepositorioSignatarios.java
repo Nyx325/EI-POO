@@ -49,6 +49,7 @@ public class RepositorioSignatarios {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
         Conector.resSet = Conector.pStmt.executeQuery();
+        
         Conector.resSet.next();
         return fromResSet();
     }

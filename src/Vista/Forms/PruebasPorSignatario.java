@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * @author rubenor
  */
 public class PruebasPorSignatario extends javax.swing.JFrame implements EventListener {
+    boolean ventanaPrincial;
     boolean buscandoMuestra;
     Signatario sesion;
     Muestra muestra;
@@ -62,7 +63,6 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         switch (eventType) {
             case BuscadorMuestras.EVENTO_BUSQUEDA:
                 this.muestra = (Muestra) obj;
-                System.out.println(this.muestra);
                 this.muestraLbl.setText(muestra.toString());
                 buscandoMuestra = false;
                 break;
@@ -96,7 +96,7 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         continuarBtn = new javax.swing.JButton();
         muestraLbl = new javax.swing.JLabel();
         selMuestraBtn = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
+        volverBtn1 = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(153, 255, 255));
 
@@ -146,10 +146,10 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
             }
         });
 
-        jButton1.setText("Volver");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        volverBtn1.setText("Volver");
+        volverBtn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                volverBtn1ActionPerformed(evt);
             }
         });
 
@@ -173,7 +173,7 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jButton1)
+                                        .addComponent(volverBtn1)
                                         .addGap(0, 0, Short.MAX_VALUE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                         .addGap(4, 4, 4)
@@ -197,7 +197,7 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(volverBtn1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buenDiaLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -242,9 +242,9 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         
     }//GEN-LAST:event_continuarBtnActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void volverBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverBtn1ActionPerformed
         cerrarVentana();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_volverBtn1ActionPerformed
 
     private void pruebasTBMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_pruebasTBMouseClicked
         int index = pruebasTB.getSelectedRow();
@@ -338,7 +338,6 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel buenDiaLbl;
     private javax.swing.JButton continuarBtn;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
@@ -348,6 +347,7 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     private javax.swing.JComboBox<String> parametroCbox;
     private javax.swing.JTable pruebasTB;
     private javax.swing.JToggleButton selMuestraBtn;
+    private javax.swing.JButton volverBtn1;
     // End of variables declaration//GEN-END:variables
 
     public void preparar(Signatario s) {
@@ -356,6 +356,20 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         pruebas = null;
         buenDiaLbl.setText("Buen día " + s.primNombre + " " + s.segNombre);
         muestraLbl.setText("Muestra: No seleccionado");
+
+        switch (s.posicion) {
+            case Signatario.POSICION_PRUEBAS:
+            case Signatario.POSICION_SINDICALIZADO:
+                this.ventanaPrincial = true;
+                break;
+            case Signatario.POSICION_MUESTREO:
+            case Signatario.POSICION_DIRECCION:
+                this.ventanaPrincial = false;
+                break;
+            default:
+                break;
+        }
+
         try {
             parametros = repoParam.searchParametroBySignatario(s.idSignatario);
 
@@ -383,5 +397,11 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     public void cerrarVentana(){
         this.buscandoMuestra = false;
         this.hide();
+
+        if(this.ventanaPrincial){
+            System.exit(0);
+        }else{
+            dispose();
+        }
     }
 }
