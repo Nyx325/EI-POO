@@ -12,8 +12,11 @@ import javax.swing.table.DefaultTableModel;
 import Controlador.EventListener;
 import Controlador.EventManager;
 import Modelo.Entidad.Muestra;
+import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.RepositorioMuestra;
 import Modelo.Repositorio.RepositorioSignatarios;
+
+import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalTime;
 
@@ -225,10 +228,16 @@ public class BuscadorMuestras extends javax.swing.JFrame {
             String fecha = m.fMuestreo.getYear() + "-" + m.fMuestreo.getMonthValue() + "-"
                     + m.fMuestreo.getDayOfMonth();
             String hora = m.hMuestreo.getHour() + ":" + m.hMuestreo.getMinute();
-            String muestreador = "XXX";
-            // TODO bug en repositorio
-            // String muestreador = repoSig.searchBy(m.muestreador).siglas;
-            Object[] newRow = { m.numControl, m.proyecto, fecha, hora, m.fRecepcion, muestreador };
+            String siglas;
+            try {
+                Signatario muest = repoSig.searchBy(m.muestreador);
+                siglas = muest.siglas;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                siglas = "xxxx";
+            }
+
+            Object[] newRow = { m.numControl, m.proyecto, fecha, hora, m.fRecepcion, siglas };
             model.addRow(newRow);
         }
 

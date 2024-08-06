@@ -48,6 +48,16 @@ public class RepositorioSignatarios {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
         Conector.resSet = Conector.pStmt.executeQuery();
+        Conector.resSet.next();
         return fromResSet();
+    }
+
+    public String getSiglas(long id) throws Exception {
+        String query = "SELECT SiglasSignatario(?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, id);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        Conector.resSet.next();
+        return Conector.resSet.getString(1);
     }
 }
