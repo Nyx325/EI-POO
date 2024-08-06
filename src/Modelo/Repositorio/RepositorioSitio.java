@@ -45,9 +45,8 @@ public class RepositorioSitio {
 
     public List<Sitio> search(String clave, String latitud, String longitud, String municipio, String estado,
             String nombre) throws Exception {
-        boolean and = false;
+        
         List<Sitio> res = new ArrayList<>();
-
         String query = "CALL Muestreos.BuscarSitio(?, ?, ?, ?, ?, ?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query.toString());
         Conector.pStmt.setString(1, clave);
