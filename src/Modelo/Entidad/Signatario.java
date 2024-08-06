@@ -13,6 +13,7 @@ public class Signatario {
     public LocalDate fIngreso;
     public LocalDate fNacimiento;
     public String posicion;
+    public String usuario;
     public String siglas;
 
     public static final String POSICION_DIRECCION = "Dirección";
@@ -24,7 +25,8 @@ public class Signatario {
     }
 
     public Signatario(long idSignatario, String primNombre, String segNombre, String apellidoP, String apellidoM,
-            float sueldo, float bono, LocalDate fIngreso, LocalDate fNacimiento, String posicion, String siglas) {
+            float sueldo, float bono, LocalDate fIngreso, LocalDate fNacimiento, String posicion, String usuario,
+            String siglas) {
         this.idSignatario = idSignatario;
         this.primNombre = primNombre;
         this.segNombre = segNombre;
@@ -35,6 +37,7 @@ public class Signatario {
         this.fIngreso = fIngreso;
         this.fNacimiento = fNacimiento;
         this.posicion = posicion;
+        this.usuario = usuario;
         this.siglas = siglas;
     }
 

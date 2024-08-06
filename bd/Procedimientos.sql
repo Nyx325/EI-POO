@@ -1,5 +1,4 @@
 #PROCEDIMIENTOS
-
 # 1
 DROP PROCEDURE IF EXISTS ResultadosInformePorNumeroControl;
 DELIMITER //

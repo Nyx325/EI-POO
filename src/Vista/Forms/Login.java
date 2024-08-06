@@ -1,24 +1,12 @@
 package Vista.Forms;
 
-import java.util.List;
-
 import javax.swing.JOptionPane;
-
-import Modelo.Entidad.Signatario;
-import Modelo.Repositorio.RepositorioSignatarios;
+import Modelo.Repositorio.Conector;
 import Vista.Singletons.MenuSingleton;
 
 public class Login extends javax.swing.JFrame {
-        List<Signatario> signatarios;
-        RepositorioSignatarios repoSig;
-
-        /**
-         * Creates new form Login
-         */
         public Login() {
-                this.repoSig = new RepositorioSignatarios();
                 initComponents();
-                initCbox();
         }
 
         /**
@@ -29,151 +17,128 @@ public class Login extends javax.swing.JFrame {
         @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
-        // Code">//GEN-BEGIN:initComponents
-        private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-                jPanel1 = new javax.swing.JPanel();
-                jLabel1 = new javax.swing.JLabel();
-                usrCbox = new javax.swing.JComboBox<>();
-                jLabel2 = new javax.swing.JLabel();
-                AceptarBtn = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        AceptarBtn = new javax.swing.JButton();
+        userTF = new javax.swing.JTextField();
+        pwdTF = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
-                setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-                jPanel1.setBackground(new java.awt.Color(246, 251, 226));
+        jPanel1.setBackground(new java.awt.Color(246, 251, 226));
 
-                jLabel1.setText("Seleccione un usuario");
+        jLabel1.setText("Usuario");
 
-                usrCbox.setModel(
-                                new javax.swing.DefaultComboBoxModel<>(
-                                                new String[] { }));
+        jLabel2.setText("Bienvenido");
 
-                jLabel2.setText("Bienvenido");
+        AceptarBtn.setText("Aceptar");
+        AceptarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarBtnActionPerformed(evt);
+            }
+        });
 
-                AceptarBtn.setText("Aceptar");
-                AceptarBtn.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                AceptarBtnActionPerformed(evt);
-                        }
-                });
+        jLabel3.setText("Contraseña");
 
-                javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-                jPanel1.setLayout(jPanel1Layout);
-                jPanel1Layout.setHorizontalGroup(
-                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                .addComponent(jLabel1)
-                                                                                .addComponent(usrCbox,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                                276,
-                                                                                                javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addGap(0, 6, Short.MAX_VALUE))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addGroup(jPanel1Layout.createParallelGroup(
-                                                                                javax.swing.GroupLayout.Alignment.LEADING)
-                                                                                .addGroup(jPanel1Layout
-                                                                                                .createSequentialGroup()
-                                                                                                .addGap(105, 105, 105)
-                                                                                                .addComponent(jLabel2))
-                                                                                .addGroup(jPanel1Layout
-                                                                                                .createSequentialGroup()
-                                                                                                .addGap(97, 97, 97)
-                                                                                                .addComponent(AceptarBtn)))
-                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)));
-                jPanel1Layout.setVerticalGroup(
-                                jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(jLabel2)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jLabel1)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(usrCbox,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(
-                                                                                javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(AceptarBtn)
-                                                                .addContainerGap(12, Short.MAX_VALUE)));
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(pwdTF)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(userTF)
+                        .addContainerGap())))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(100, 100, 100)
+                .addComponent(AceptarBtn)
+                .addGap(0, 110, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(userTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pwdTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(AceptarBtn)
+                .addGap(18, 18, 18))
+        );
 
-                javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-                getContentPane().setLayout(layout);
-                layout.setHorizontalGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(jPanel1,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)));
-                layout.setVerticalGroup(
-                                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(layout.createSequentialGroup()
-                                                                .addContainerGap()
-                                                                .addComponent(jPanel1,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)
-                                                                .addContainerGap()));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-                pack();
-        }// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
         private void AceptarBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_AceptarBtnActionPerformed
-                int index = this.usrCbox.getSelectedIndex();
-                if (index == 0) {
-                        JOptionPane.showMessageDialog(
-                                        null,
-                                        "Se debe elegir un usuario",
-                                        "Error",
-                                        JOptionPane.INFORMATION_MESSAGE);
-                }
-                Signatario s = this.signatarios.get(index - 1);
-
-                this.setVisible(false);
-                MenuSingleton.getInstancia().sesion = s;
-                MenuSingleton.getInstancia().getBienvenidaLbl()
-                                .setText("¡Bienvenido " + s.primNombre + " " + s.segNombre + "!");
-                MenuSingleton.getInstancia().setVisible(true);
+                String usr = userTF.getText().trim();
+                String pwd = pwdTF.getText().trim();
+                
+                try {
+                    Conector.login(usr, pwd);
+                    this.hide();
+                    MenuSingleton.getInstancia().preparar();
+                    MenuSingleton.getInstancia().show();
+                } catch (Exception e){
+                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Usuario o contraseña incorrectos",
+                        "Error",
+                        JOptionPane.INFORMATION_MESSAGE);
+                }                
         }// GEN-LAST:event_AceptarBtnActionPerformed
 
-        private void initCbox() {
-                try {
-                        signatarios = repoSig.getAllSignatarios();
-                        String[] data = new String[signatarios.size() + 1];
-
-                        data[0] = "";
-                        int i = 1;
-                        for (Signatario s : signatarios) {
-                                data[i] = s.primNombre + " " + s.segNombre + " " + s.apellidoP + " " + s.apellidoM;
-                                i++;
-                        }
-
-                        usrCbox.setModel(new javax.swing.DefaultComboBoxModel<>(data));
-                } catch (Exception e) {
-                        e.printStackTrace();
-                        JOptionPane.showMessageDialog(
-                                        null,
-                                        "Error: " + e.toString(),
-                                        "Error",
-                                        JOptionPane.ERROR_MESSAGE);
-                }
-        }
-
-        // Variables declaration - do not modify//GEN-BEGIN:variables
-        private javax.swing.JButton AceptarBtn;
-        private javax.swing.JLabel jLabel1;
-        private javax.swing.JLabel jLabel2;
-        private javax.swing.JPanel jPanel1;
-        private javax.swing.JComboBox<String> usrCbox;
-        // End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton AceptarBtn;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField pwdTF;
+    private javax.swing.JTextField userTF;
+    // End of variables declaration//GEN-END:variables
 }

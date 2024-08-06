@@ -1,13 +1,15 @@
 package Vista.Forms;
 
-import Modelo.Entidad.Muestra;
 import Modelo.Entidad.Signatario;
+import Modelo.Repositorio.Conector;
+import Modelo.Repositorio.RepositorioSignatarios;
 import Vista.Singletons.BuscadorMuestrasSingleton;
 import Vista.Singletons.BuscadorSitiosSingleton;
 import Vista.Singletons.PruebasPorSignatarioSingleton;
 
 public class Menu extends javax.swing.JFrame {
     public Signatario sesion;
+    private RepositorioSignatarios repoSig = new RepositorioSignatarios();
 
     /**
      * Creates new form Menu
@@ -174,11 +176,14 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton selMuestra;
 
     // End of variables declaration//GEN-END:variables
-    public javax.swing.JLabel getBienvenidaLbl() {
-        return BienvenidaLbl;
-    }
-
-    public void setBienvenidaLbl(javax.swing.JLabel bienvenidaLbl) {
-        BienvenidaLbl = bienvenidaLbl;
+    public void preparar(){
+        try{
+            this.sesion = repoSig.searchBy(Conector.getUsr());
+            this.BienvenidaLbl.setText("Bienvenido " + sesion.primNombre + " " + sesion.segNombre);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            this.BienvenidaLbl.setText("Bienvenid@");
+        }
     }
 }

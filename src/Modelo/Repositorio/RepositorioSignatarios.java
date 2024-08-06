@@ -26,7 +26,8 @@ public class RepositorioSignatarios {
                 LocalDate.parse(fIngresoStr),
                 LocalDate.parse(fNacimientoStr),
                 Conector.resSet.getString(10),
-                Conector.resSet.getString(11));
+                Conector.resSet.getString(11),
+                Conector.resSet.getString(12));
     }
 
     public List<Signatario> getAllSignatarios() throws Exception {
@@ -47,6 +48,15 @@ public class RepositorioSignatarios {
         String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario where idSignatario = ?";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        Conector.resSet.next();
+        return fromResSet();
+    }
+
+    public Signatario searchBy(String usr) throws Exception {
+        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario WHERE usuario = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, usr);
         Conector.resSet = Conector.pStmt.executeQuery();
         Conector.resSet.next();
         return fromResSet();

@@ -230,8 +230,7 @@ public class BuscadorMuestras extends javax.swing.JFrame {
             String hora = m.hMuestreo.getHour() + ":" + m.hMuestreo.getMinute();
             String siglas;
             try {
-                Signatario muest = repoSig.searchBy(m.muestreador);
-                siglas = muest.siglas;
+                siglas = repoSig.getSiglas(m.muestreador);
             } catch (SQLException e) {
                 e.printStackTrace();
                 siglas = "xxxx";

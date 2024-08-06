@@ -131,13 +131,16 @@ CREATE TABLE Muestreos.Signatario(
 	bono FLOAT DEFAULT 0,
 	fIngreso DATE,
 	fNacimiento DATE,
-	posicion VARCHAR(32) DEFAULT "Pruebas"
+	posicion VARCHAR(32) DEFAULT "Pruebas",
+        usuario VARCHAR(32) 
 );
 
+INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM, posicion, usuario) VALUES
+(1,"Rubén","Omar","Román","Salinas", "Sindicalizado", "rubenrs@localhost"),
+(2,"Maricruz",NULL,"Toledano","Torres", "Sindicalizado", "marictt@localhost"),
+(3,"Ian","Marcus","Prado","Acevedo", "Sindicalizado", "marcuspa@localhost");
+
 INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM, posicion) VALUES
-(1,"Armando","Carlos","Rosas","Quiñonez", "Sindicalizado"),
-(2,"Carmen","Carolina","Puentes","Merino", "Sindicalizado"),
-(3,"Alicia","Alberto","Montez","Díaz", "Sindicalizado"),
 (4,"Berenice","Celia","Huerta","Miralrío", "Sindicalizado"),
 (5,"Cesar","Andrea","Rosas","Rodriguez", "Sindicalizado"),
 (6,"Alberto","Alicia","Nuñez","Rodriguez", "Sindicalizado"),
@@ -380,3 +383,1078 @@ INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, n
 ("<0.20", "2024-01-30", 5, 9, 37, "240124220802"),
 ("<0.30", "2024-01-30", 5, 11, 37, "240124220802"),
 ("<0.20", "2024-01-30", 5, 12, 37, "240124220802");
+
+DROP USER IF EXISTS 'rubenrs'@'localhost';
+CREATE USER 'rubenrs'@'localhost' identified by "1234";
+GRANT ALL PRIVILEGES ON Muestreos.* TO 'rubenrs'@'localhost';
+FLUSH PRIVILEGES;
+
+DROP USER IF EXISTS 'marictt'@'localhost';
+CREATE USER 'marictt'@'localhost' identified by "1234";
+GRANT ALL PRIVILEGES ON Muestreos.* TO 'marictt'@'localhost';
+FLUSH PRIVILEGES;
+
+DROP USER IF EXISTS 'marcuspa'@'localhost';
+CREATE USER 'marcuspa'@'localhost' identified by "1234";
+GRANT ALL PRIVILEGES ON Muestreos.* TO 'marcuspa'@'localhost';
+FLUSH PRIVILEGES;
+
+# FUNCIONES
+# Convertir un DATETIME a una cadena que Java puede parsear en un
+# LocalDateTime
+# 1
+DROP FUNCTION IF EXISTS LocalDateTimeFmt;
+DELIMITER //
+CREATE FUNCTION LocalDateTimeFmt(
+	fecha DATETIME
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    RETURN CONCAT(DATE(fecha),"T", LEFT(TIME(fecha),5));
+END //
+
+# Dado una entrada, concatenar los caracteres de porciento para su uso en LIKE
+# 2
+DROP FUNCTION IF EXISTS LikeFmt;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS LikeFmt(
+	variable TEXT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    RETURN CONCAT("%",variable,"%");
+END //
+
+# 3 
+DROP FUNCTION IF EXISTS SiglasSignatario;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS SiglasSignatario(
+	id INT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	DECLARE siglas TEXT;
+	DECLARE nombre, nombre2, apeP, apeM TEXT;
+	
+	IF NOT EXISTS (SELECT * FROM Signatario WHERE idSignatario = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el signatario";
+	END IF;
+
+	SET nombre = (SELECT primNombre FROM Signatario WHERE idSignatario = id);
+	SET nombre2 = (SELECT segNombre FROM Signatario WHERE idSignatario = id);
+  	SET apeP = (SELECT apellidoP FROM Signatario WHERE idSignatario = id);
+	SET apeM = (SELECT apellidoM FROM Signatario WHERE idSignatario = id);
+
+	IF nombre2 IS NOT NULL THEN
+		SET siglas = CONCAT(LEFT(nombre,1), LEFT(nombre2, 1), LEFT(apeP, 1), LEFT(apeM,1));
+	ELSE
+		SET siglas = CONCAT(LEFT(nombre,1), LEFT(apeP, 1), LEFT(apeM,1));
+	END IF;
+	
+	RETURN siglas;
+END //
+
+SELECT *, SiglasSignatario(idSignatario) 
+FROM Signatario WHERE idSignatario = 1;
+
+# 4 TODO
+DROP FUNCTION IF EXISTS CalcularBonoPorResultado;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS CalcularBonoPorResultado(
+	id INT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	IF NOT EXISTS (SELECT * FROM Signatario WHERE idSignatario = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el signatario";
+	END IF;
+
+	RETURN "";
+END //
+
+#5
+DROP FUNCTION IF EXISTS NombreCS;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS NombreCS(
+	id INT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	DECLARE nombreSig TEXT;
+	IF NOT EXISTS (SELECT * FROM Signatario WHERE idSignatario = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el signatario";
+	END IF;
+
+	SET nombreSig = (
+		SELECT 
+		CONCAT_WS(" ", primNombre,segNombre,apellidoP,apellidoM) 
+		FROM Signatario WHERE idSignatario = id
+	);
+	RETURN nombreSig;
+END //
+
+# 6 
+DROP FUNCTION IF EXISTS ClavePorIdSitio;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS ClavePorIdSitio(
+	id INT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	DECLARE nombreSitio TEXT;
+	IF NOT EXISTS (SELECT * FROM Sitio WHERE idSitio = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el sitio";
+	END IF;
+
+	SET nombreSitio = (SELECT clave FROM Sitio WHERE idSitio = id);
+
+	RETURN nombreSitio;
+END //
+
+#7
+DROP FUNCTION IF EXISTS NombrePruebaPorId;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS NombrePruebaPorId(
+	id INT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	DECLARE nombreP TEXT;
+	IF NOT EXISTS (SELECT nombre FROM Prueba WHERE idPrueba = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe la prueba";
+	END IF;
+
+	SET nombreP = (SELECT nombre FROM Prueba WHERE idPrueba = id);
+
+	RETURN nombreP;
+END //
+
+#8 
+DROP FUNCTION IF EXISTS NormaPorId;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS NormaPorId(
+	id INT
+)
+RETURNS TEXT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	DECLARE norma TEXT;
+	IF NOT EXISTS (SELECT norma FROM Norma WHERE idNorma = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe la norma";
+	END IF;
+
+	SET norma = (SELECT nombre FROM Prueba WHERE idNorma = id);
+
+	RETURN norma;
+END //
+
+#PROCEDIMIENTOS
+# 1
+DROP PROCEDURE IF EXISTS ResultadosInformePorNumeroControl;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS ResultadosInformePorNumeroControl(
+	IN numC VARCHAR(30)
+)
+BEGIN
+	IF NOT EXISTS (SELECT numControl FROM Muestra WHERE numControl = numC) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe la muestra";
+	END IF;
+	
+	select Parametro.nombre As Parametro, Prueba.nombre As Prueba, Norma.unidades, 
+	resultado, Norma.norma As MetodoAnalitico, fAnalisis As FechaAnálisis,
+	SiglasSignatario(Signatario.idSignatario) 
+	FROM Resultados 
+	INNER JOIN Muestra ON Muestra.numControl = Resultados.numControl 
+	INNER JOIN Prueba ON Resultados.idPrueba = Prueba.idPrueba 
+	INNER JOIN Norma ON Resultados.idNorma = Norma.idNorma 
+	INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro 
+	INNER JOIN Signatario ON Resultados.idSignatario = Signatario.idSignatario
+	WHERE Resultados.numControl = numC;	
+END //
+
+CALL ResultadosInformePorNumeroControl("240124220802");
+
+# 2
+DROP PROCEDURE IF EXISTS ParametrosPorSignatario;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS ParametrosPorSignatario(
+	IN id INT
+)
+BEGIN
+	IF NOT EXISTS (SELECT * FROM Signatario WHERE idSignatario = id) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el signatario";
+	END IF;
+	
+	SELECT Parametro.idParametro, Parametro.nombre AS Parametro 
+	FROM DetalleSignatarios 
+	INNER JOIN Prueba ON DetalleSignatarios.idPrueba = Prueba.idPrueba 
+	INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro 
+	WHERE DetalleSignatarios.idSignatario = id 
+	GROUP BY Parametro.nombre 
+	ORDER BY Parametro.nombre;
+END //
+
+CALL ParametrosPorSignatario(1);
+
+# 3
+DROP PROCEDURE IF EXISTS PruebasPorSignatario;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS PruebasPorSignatario(
+	IN idS INT,
+	IN idP INT
+)
+BEGIN
+	IF NOT EXISTS (SELECT * FROM Signatario WHERE idSignatario = idS) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el signatario";
+	END IF;
+
+	IF NOT EXISTS (SELECT * FROM Parametro WHERE idParametro = idP) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe el parámetro";
+	END IF;
+	
+	SELECT Prueba.idPrueba, Prueba.Nombre, Parametro.idParametro FROM DetalleSignatarios 
+	INNER JOIN Prueba ON DetalleSignatarios.idPrueba  = Prueba.idPrueba
+	INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro 
+	WHERE 
+		DetalleSignatarios.idSignatario = idS
+		AND Prueba.idParametro = idP;
+END //
+
+CALL Muestreos.PruebasPorSignatario(1, 1);
+
+# 4
+DROP PROCEDURE IF EXISTS TopPruebasMasRealizadasPorAnio;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS TopPruebasMasRealizadasPorAnio(
+	IN Anio INT,
+	IN top INT
+)
+BEGIN
+	IF Anio <= 0 THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "El año debe ser mayor a 0";
+	END IF;
+	
+	IF top <= 0 THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "El número de puestos debe ser mayor a 0";
+	END IF;
+	
+	SELECT Prueba.Nombre, COUNT(Resultados.folio) As Total FROM Resultados 
+	INNER JOIN Prueba ON Resultados.idPrueba  = Prueba.idPrueba
+	INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro 
+	WHERE YEAR(Resultados.fAnalisis) = Anio
+	GROUP BY Prueba.nombre
+	ORDER BY COUNT(Resultados.folio)
+	LIMIT top;
+END //
+
+CALL TopPruebasMasRealizadasPorAnio(0, 3); 
+CALL TopPruebasMasRealizadasPorAnio(2023, -3); 
+CALL TopPruebasMasRealizadasPorAnio(2024, 5); 
+
+# 5
+DROP PROCEDURE IF EXISTS TopSignatariosConMasResultados;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS TopSignatariosConMasResultados(
+	IN top INT
+)
+BEGIN
+	IF top <= 0 THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "El número de puestos debe ser mayor a 0";
+	END IF;
+	
+	SELECT 
+		SiglasSignatario(Signatario.idSignatario), Signatario.apellidoP, Signatario.apellidoM, 
+		Signatario.primNombre, COUNT(Resultados.idSignatario) As Total 
+	FROM Resultados 
+	INNER JOIN Signatario ON Signatario.idSignatario = Resultados.idSignatario 
+	GROUP BY SiglasSignatario(Signatario.idSignatario)
+	ORDER BY COUNT(Resultados.idSignatario)
+	LIMIT top;
+END //
+
+CALL TopSignatariosConMasResultados(5);
+
+# 6
+DROP PROCEDURE IF EXISTS BuscarSitio;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS BuscarSitio(
+	IN clav TEXT,
+	IN latid TEXT,
+	IN longi TEXT,
+	IN muni TEXT,
+	IN estado TEXT,
+	IN nom TEXT
+)
+BEGIN
+	/*SELECT LikeFmt(clav), LikeFmt(latid), LikeFmt(longi), LikeFmt(muni), LikeFmt(estado), LikeFmt(nom);*/
+
+    SELECT * FROM Sitio WHERE 
+    clave LIKE LikeFmt(clav)
+    AND latitud LIKE LikeFmt(latid)
+    AND longitud LIKE LikeFmt(longi)
+    AND municipio LIKE LikeFmt(muni)
+    AND edo LIKE LikeFmt(estado)
+    AND nombre LIKE LikeFmt(nom);	
+END //
+
+CALL Muestreos.BuscarSitio("OCBAL2825", "", "", "", "", "");
+
+# 7
+DROP PROCEDURE IF EXISTS BuscarMuestras;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS BuscarMuestras(
+	IN numC TEXT,
+	IN proj TEXT,
+	IN fM TEXT,
+	IN hM TEXT,
+	IN fR TEXT
+)
+BEGIN
+	SELECT * FROM Muestra
+	WHERE numControl LIKE LikeFmt(numC)
+	AND proyecto LIKE LikeFmt(proj)
+	AND fMuestreo LIKE LikeFmt(fM)
+	AND hMuestreo LIKE LikeFmt(hM)
+	AND fRecepcion LIKE LikeFmt(fR);
+END //
+
+CALL Muestreos.BuscarMuestras("", "", "2024-01-04", "", "");
+
+# 8 
+DROP PROCEDURE IF EXISTS NormasPorPrueba;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS NormasPorPrueba(
+	IN idP INT
+)
+BEGIN
+	IF NOT EXISTS (SELECT idPrueba FROM Prueba WHERE idPrueba = idP) THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No existe la prueba";
+	END IF;
+
+	SELECT * FROM Norma 
+	INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma 
+	INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba 
+	WHERE Prueba.idPrueba = idP;
+END //
+
+CALL NormasPorPrueba(1); 
+
+# 9 
+DROP PROCEDURE IF EXISTS VariacionResultadosRespecto;
+
+DROP TRIGGER IF EXISTS InCliente;
+DELIMITER //
+CREATE TRIGGER InCliente
+BEFORE INSERT ON Cliente
+FOR EACH ROW
+BEGIN
+	IF (SELECT COUNT(idCliente) FROM Cliente GROUP BY nombre) <> 0 THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Se trata de ingresar dos clientes con el mismo nombre";
+	END IF;
+END //
+
+# 2
+DROP TRIGGER IF EXISTS LogErrorInsertDetalleNorma;
+DELIMITER //
+CREATE TRIGGER LogErrorInsertDetalleNorma
+BEFORE INSERT ON DetalleNorma
+FOR EACH ROW
+BEGIN
+	DECLARE msg TEXT DEFAULT "";
+	IF NOT EXISTS (SELECT * FROM Norma WHERE idNorma = NEW.idNorma) THEN 
+		SET msg = "Se trata de referenciar una norma que no existe ";
+	END IF;
+	
+	IF NOT EXISTS(SELECT * FROM Prueba WHERE idPrueba = NEW.idPrueba) THEN
+		SET msg = (CONCAT(msg, "Se trata de referenciar una prueba que no existe"));
+	END IF;
+
+	IF LENGTH(msg) <> 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+#3 
+DROP TRIGGER IF EXISTS LogErrorInsertDetalleSignatarios;
+DELIMITER //
+CREATE TRIGGER LogErrorInsertDetalleSignatarios
+BEFORE INSERT ON DetalleSignatarios
+FOR EACH ROW
+BEGIN
+	DECLARE msg TEXT DEFAULT "";
+	IF NOT EXISTS (SELECT * FROM Signatario WHERE idSignatario = NEW.idSignatario) THEN 
+		SET msg = "Se trata de referenciar un signatario que no existe ";
+	END IF;
+	
+	IF NOT EXISTS(SELECT * FROM Prueba WHERE idPrueba = NEW.idPrueba) THEN
+		SET msg = (CONCAT(msg, "Se trata de referenciar una prueba que no existe"));
+	END IF;
+
+	IF LENGTH(msg) <> 0 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+#4
+DROP TRIGGER IF EXISTS LogErrorInsertMuestra;
+DELIMITER //
+CREATE TRIGGER LogErrorInsertMuestra
+BEFORE INSERT ON Muestra
+FOR EACH ROW
+BEGIN
+	DECLARE msg TEXT DEFAULT "";
+	IF EXISTS (SELECT numControl FROM Muestra WHERE numControl = NEW.numControl) THEN 
+		SET msg = "Ya existe una muestra con esta clave";
+	END IF;
+	
+	IF NOT EXISTS(SELECT idSignatario FROM Signatario WHERE idSignatario = NEW.muestreador) THEN
+		SET msg = (CONCAT(msg, "El signatario no existe"));
+	END IF;
+
+	IF NOT EXISTS(SELECT idSitio FROM Sitio WHERE idSitio = NEW.idSitio) THEN
+		SET msg = (CONCAT(msg, "El sitio no existe"));
+	END IF;
+
+	IF LENGTH(msg) <> 0 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+#5
+DROP TRIGGER IF EXISTS LogErrorDeleteSitio;
+DELIMITER //
+CREATE TRIGGER LogErrorDeleteSitio
+BEFORE DELETE ON Sitio
+FOR EACH ROW 
+BEGIN 
+	DECLARE msg TEXT;
+	IF OLD.clave NOT LIKE "%RNL" THEN 
+		SET msg = "Sólo pueden eliminarse sitios internos";
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+#6
+DROP TRIGGER IF EXISTS LogErrorInsertNorma
+DELIMITER //
+CREATE TRIGGER LogErrorInsertNorma
+BEFORE INSERT ON Norma
+FOR EACH ROW 
+BEGIN 
+	DECLARE msg TEXT;
+	IF (SELECT COUNT(idNorma) FROM Norma WHERE norma = NEW.norma) <> 0 THEN 
+		SET msg = CONCAT("Ya existe otra norma con nombre",NEW.norma);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+#7
+DROP TRIGGER IF EXISTS LogErrorInsertParametro
+DELIMITER //
+CREATE TRIGGER LogErrorInsertParametro
+BEFORE INSERT ON Parametro
+FOR EACH ROW 
+BEGIN 
+	DECLARE msg TEXT;
+	IF (SELECT COUNT(idParametro) FROM Parametro WHERE nombre = NEW.nombre) <> 0 THEN 
+		SET msg = CONCAT("Ya existe otra parametro con nombre ",NEW.nombre);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+#8
+DROP TRIGGER IF EXISTS LogErrorInsertSignatario;
+DELIMITER //
+CREATE TRIGGER LogErrorInsertSignatario
+BEFORE INSERT ON Signatario
+FOR EACH ROW 
+BEGIN
+	DECLARE msg TEXT;
+	IF TIMESTAMPDIFF(YEAR, NEW.fNacimiento, NOW()) < 18 THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No se cumple con la mayoría de edad";
+	END IF;
+
+	IF NEW.posicion NOT IN ("Dirección", "Muestreo", "Pruebas", "Sindicalizado") THEN 
+		SET msg = CONCAT_WS(
+			" ",
+			"Las posiciones disponibles son: ",
+			"Dirección", "Muestreo", "Pruebas", "Sindicalizado"
+		);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+
+	SET NEW.bono = 0;
+
+	IF NEW.posicion IN ("Dirección", "Muestreo", "Pruebas", "Sindicalizado") THEN
+		SET NEW.sueldo = 2000;
+	ELSE 
+		IF NEW.posicion IN ("Dirección") THEN
+			SET NEW.sueldo = 15000;
+		ELSE
+			IF NEW.posicion IN ("Sindicalizado") THEN
+				SET NEW.sueldo = 5000;
+			ELSE
+				IF NEW.posicion IN ("Muestreo", "Pruebas") THEN
+					SET NEW.sueldo = 3000;
+				END IF;
+			END IF;
+		END IF;
+	END IF;
+END //
+
+# 9
+DROP TRIGGER IF EXISTS TiggerDeleteSignatario;
+DELIMITER //
+CREATE TRIGGER TiggerDeleteSignatario
+BEFORE DELETE ON Signatario
+FOR EACH ROW 
+BEGIN
+	IF OLD.posicion IN ("Sindicalizado") THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "No se pueden despedir a los sindicalizados";
+	END IF;
+END //
+
+#10 
+DROP TRIGGER IF EXISTS LogErrorInsertSitio;
+DELIMITER //
+CREATE TRIGGER LogErrorInsertSitio
+BEFORE INSERT ON Sitio
+FOR EACH ROW 
+BEGIN
+	DECLARE claveSitioRep, msg TEXT;
+
+	IF (SELECT COUNT(idSitio) FROM Sitio WHERE clave = NEW.clave) <> 0 THEN 
+		SET msg = CONCAT("Ya existe un sitio con la clave ", NEW.clave);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+
+	IF (SELECT COUNT(idSitio) FROM Sitio WHERE nombre = NEW.nombre) <> 0 THEN 
+		SET msg = CONCAT("Ya existe un sitio con nombre ", NEW.nombre);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+	
+	IF (SELECT COUNT(idSitio) FROM Sitio WHERE longitud = NEW.longitud AND latitud = NEW.latitud) <> 0 THEN 
+		SET claveSitioRep = (SELECT clave FROM Sitio WHERE longitud = NEW.longitud AND latitud = NEW.latitud);
+		SET msg = CONCAT("Ya existe un sitio con estas coordenadas: ", claveSitioRep);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+# 12 
+DROP TRIGGER IF EXISTS LogErrorUpdateSitio;
+DELIMITER //
+CREATE TRIGGER LogErrorUpdateSitio
+BEFORE INSERT ON Sitio
+FOR EACH ROW 
+BEGIN
+	DECLARE claveSitioRep, msg TEXT;
+
+	IF (SELECT COUNT(idSitio) FROM Sitio WHERE clave = NEW.clave) <> 0 THEN 
+		SET msg = CONCAT("Ya existe un sitio con la clave ", NEW.clave);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+
+	IF (SELECT COUNT(idSitio) FROM Sitio WHERE nombre = NEW.nombre) <> 0 THEN 
+		SET msg = CONCAT("Ya existe un sitio con nombre ", NEW.nombre);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+	
+	IF (SELECT COUNT(idSitio) FROM Sitio WHERE longitud = NEW.longitud AND latitud = NEW.latitud) <> 0 THEN 
+		SET claveSitioRep = (SELECT clave FROM Sitio WHERE longitud = NEW.longitud AND latitud = NEW.latitud);
+		SET msg = CONCAT("Ya existe un sitio con estas coordenadas: ", claveSitioRep);
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
+	END IF;
+END //
+
+# 13
+DROP TRIGGER IF EXISTS LogErroUpdateDetalleNorma;
+DELIMITER //
+CREATE TRIGGER LogErroUpdateDetalleNorma
+AFTER UPDATE ON DetalleNorma
+FOR EACH ROW
+BEGIN
+	IF EXISTS (
+		SELECT 
+			folio FROM DetalleNorma 
+		WHERE 
+			idNorma = NEW.idNorma AND 
+			idPrueba = NEW.idPrueba AND 
+			folio <> NEW.folio
+	)
+	THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Relación entre norma y prueba ya existente";
+	END IF;
+END //
+
+#14
+DROP TRIGGER IF EXISTS LogErroUpdateDetalleSignatarios;
+DELIMITER //
+CREATE TRIGGER LogErroUpdateDetalleSignatarios
+AFTER UPDATE ON DetalleSignatarios
+FOR EACH ROW
+BEGIN
+	IF EXISTS (
+		SELECT 
+			folio FROM DetalleSignatario 
+		WHERE 
+			idSignatario = NEW.idSignatario AND 
+			idPrueba = NEW.idPrueba AND 
+			idDetalle <> NEW.idDetalle
+	)
+	THEN 
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Relación entre signatario y prueba ya existente";
+	END IF;
+END //
+
+#15
+DROP TRIGGER IF EXISTS BloqueoUpdateBitacora;
+DELIMITER //
+CREATE TRIGGER BloqueoUpdateBitacora
+AFTER UPDATE ON Bitacora
+FOR EACH ROW
+BEGIN
+	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Las modificaciones en bitácora no están permitidas";
+END //
+
+# Tiggers AFTER
+# 1
+DROP TRIGGER IF EXISTS BitacoraCliente;
+DELIMITER //
+CREATE TRIGGER BitacoraCliente
+AFTER INSERT ON Cliente
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Se insertó cliente",
+			NEW.nombre,
+			"realizado por:",
+			USER(),
+			"Fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 2
+DROP TRIGGER IF EXISTS BitacoraDetalleNorma;
+DELIMITER //
+CREATE TRIGGER BitacoraDetalleNorma
+AFTER INSERT ON DetalleNorma
+FOR EACH ROW
+BEGIN
+	DECLARE Norma, Prueba TEXT;
+	SET norma = (SELECT norma FROM Norma WHERE idNorma = NEW.idNorma);
+	SET prueba = (SELECT prueba FROM Prueba WHERE idPrueba = NEW.idPrueba);
+
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Se agregó a la prueba",
+			prueba,
+			"La norma",
+			norma,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+#3
+DROP TRIGGER IF EXISTS BitacoraDetalleSignatarios;
+DELIMITER //
+CREATE TRIGGER BitacoraDetalleSignatarios
+AFTER INSERT ON DetalleSignatarios
+FOR EACH ROW
+BEGIN
+	DECLARE nombreSig, Prueba TEXT;
+	SET nombreSig = (
+		SELECT 
+		CONCAT_WS(" ", primNombre,segNombre,apellidoP,apellidoM) 
+		FROM Signatario WHERE idSignatario = NEW.idSignatario
+	);
+
+	SET prueba = (SELECT prueba FROM Prueba WHERE idPrueba = NEW.idPrueba);
+
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Ahora",
+			nombreSig,
+			"puede realizar la prueba:",
+			prueba,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 4
+DROP TRIGGER IF EXISTS BitacoraInsertMuestra;
+DELIMITER //
+CREATE TRIGGER BitacoraInsertMuestra
+AFTER INSERT ON Muestra
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Se ingresó la muestra con NumContrl:",
+			NEW.numControl,
+			"Muestreador:",
+			NombreCS(NEW.muestreador),
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+
+	UPDATE Signatario SET
+		bono = bono + (sueldo*0.05)
+	WHERE idSignatario = NEW.muestreador;
+END //
+
+# 5
+DROP TRIGGER IF EXISTS BitacoraUpdateMuestra;
+DELIMITER //
+CREATE TRIGGER BitacoraUpdateMuestra
+AFTER UPDATE ON Muestra
+FOR EACH ROW
+BEGIN
+	DECLARE msg TEXT;
+	SET msg = CONCAT("Se modificó muestra: ", OLD.numControl);
+
+	IF OLD.numControl <> NEW.numControl THEN
+		SET msg = CONCAT_WS(" ", msg, "NumC previo:",OLD.numControl,"NumC nuevo:",NEW.numControl);
+	END IF;
+	IF OLD.proyecto <> NEW.proyecto THEN
+		SET msg = CONCAT_WS(" ", msg, "proyecto previo:",OLD.proyecto,"proyecto nuevo:",NEW.proyecto);
+	END IF;
+	IF OLD.fMuestreo <> NEW.fMuestreo THEN
+		SET msg = CONCAT_WS(" ", msg, "Fecha muestreo previa:",OLD.fMuestreo,"Fecha muestreo nueva:",NEW.fMuestreo);
+	END IF;
+	IF OLD.hMuestreo <> NEW.hMuestreo THEN
+		SET msg = CONCAT_WS(" ", msg, "Hora muestreo previa:",OLD.hMuestreo,"Hora muestreo nueva:",NEW.hMuestreo);
+	END IF;
+	IF ClavePorIdSitio(OLD.idSitio) <> ClavePorIdSitio(NEW.idSitio) THEN
+		SET msg = CONCAT_WS(
+			" ", 
+			msg, 
+			"sitio previo:",
+			ClavePorIdSitio(OLD.idSitio),
+			"sitio nuevo:",
+			ClavePorIdSitio(NEW.idSitio)
+		);
+	END IF;
+	
+	IF LENGTH(msg) <> 0 THEN
+		INSERT INTO Bitacora VALUES(
+			0,
+			CONCAT_WS(" ",msg,"realizado por:",USER(),"fecha:",NOW())
+		);
+	END IF;
+END //
+
+# 6
+DROP TRIGGER IF EXISTS BitacoraDeleteMuestra;
+DELIMITER //
+CREATE TRIGGER BitacoraDeleteMuestra
+AFTER DELETE ON Muestra
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora VALUES(
+		0,
+		CONCAT_WS(
+			" ",
+			"Se eliminó muestra:",
+			OLD.numControl,
+			"del sitio:",
+			ClavePorIdSitio(OLD.idSitio),
+			"del proyecto:",
+			OLD.proyecto,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 7
+DROP TRIGGER IF EXISTS BitacoraInsertNorma;
+DELIMITER //
+CREATE TRIGGER BitacoraInsertNorma
+AFTER INSERT ON Norma
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Se ingresó norma:",
+			NEW.norma,
+			"con unidades:",
+			NEW.unidades,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 8
+DROP TRIGGER IF EXISTS BitacoraUpdateNorma;
+DELIMITER //
+CREATE TRIGGER BitacoraUpdateNorma
+AFTER UPDATE ON Norma
+FOR EACH ROW
+BEGIN
+	DECLARE msg TEXT;
+	SET msg = CONCAT("Se modificó norma: ", OLD.norma);
+	
+	IF OLD.idNorma <> NEW.idNorma THEN
+		SET msg = CONCAT_WS(" ", msg, "ID previo:",OLD.idNorma,"ID nuevo:",NEW.idNorma);
+	END IF;
+	IF OLD.norma <> NEW.norma THEN
+		SET msg = CONCAT_WS(" ", msg, "nombre previo:",OLD.norma,"nombre nuevo:",NEW.norma);
+	END IF;
+	IF OLD.unidades <> NEW.unidades THEN
+		SET msg = CONCAT_WS(" ", msg, "unidades previas:",OLD.unidades,"unidades nuevas:",NEW.unidades);
+	END IF;
+	IF OLD.tipoVentana <> NEW.tipoVentana THEN
+		SET msg = CONCAT_WS(" ", msg, "tipo ventana previa:",OLD.tipoVentana,"tipo ventana nueva:",NEW.tipoVentana);
+	END IF;
+	
+	IF LENGTH(msg) <> 0 THEN
+		INSERT INTO Bitacora VALUES(
+			0,
+			CONCAT_WS(" ",msg,"realizado por:",USER(),"fecha:",NOW())
+		);
+	END IF;
+END //
+
+#9 
+DROP TRIGGER IF EXISTS BitacoraDeleteNorma;
+DELIMITER //
+CREATE TRIGGER BitacoraDeleteNorma
+AFTER DELETE ON Norma
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora VALUES(
+		0,
+		CONCAT_WS(
+			" ",
+			"Se eliminó norma:",
+			OLD.norma,
+			"con unidades:",
+			OLD.unidades,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 10
+DROP TRIGGER IF EXISTS BitacoraInsertParametro;
+DELIMITER //
+CREATE TRIGGER BitacoraInsertParametro
+AFTER INSERT ON Parametro
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Se ingresó parámetro:",
+			NEW.nombre,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 11
+DROP TRIGGER IF EXISTS BitacoraDeleteParametro;
+DELIMITER //
+CREATE TRIGGER BitacoraDeleteParametro
+AFTER DELETE ON Parametro
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora VALUES(
+		0,
+		CONCAT_WS(
+			" ",
+			"Se eliminó parámetro:",
+			OLD.nombre,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+# 12
+DROP TRIGGER IF EXISTS BitacoraInsertResultado;
+DELIMITER //
+CREATE TRIGGER BitacoraInsertResultado
+AFTER INSERT ON Resultados
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"A la muestra:",
+			NEW.numControl,
+			"Del signatario:",
+			NombreCS(NEW.idSignatario),
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+
+	UPDATE Signatario SET 
+		bono = bono + (sueldo*0.1)
+	WHERE idSignatario = NEW.idSignatario;
+END //
+
+#13
+DROP TRIGGER IF EXISTS BitacoraUpdateResultado;
+DELIMITER //
+CREATE TRIGGER BitacoraUpdateResultado
+AFTER UPDATE ON Resultados
+FOR EACH ROW
+BEGIN
+	DECLARE msg TEXT;
+	SET msg = CONCAT("Se modificó resultado folio: ", OLD.folio);
+	
+	IF OLD.folio <> NEW.folio THEN
+		SET msg = CONCAT_WS(" ", msg, "folio previo:",OLD.folio,"folio nuevo:",NEW.folio);
+	END IF;
+	IF OLD.resultado <> NEW.resultado THEN
+		SET msg = CONCAT_WS(" ", msg, "resultado previo:",OLD.resultado,"resultado nuevo:",NEW.resultado);
+	END IF;
+	IF OLD.fAnalisis <> NEW.fAnalisis THEN
+		SET msg = CONCAT_WS(" ", msg, "fecha previa:",OLD.fAnalisis,"fecha nueva:",NEW.fAnalisis);
+	END IF;
+	IF OLD.idSignatario <> NEW.idSignatario THEN
+		SET msg = CONCAT_WS(" ", msg, "unidades previas:",NombreCS(OLD.idSignatario),"unidades nuevas:",NombreCS(NEW.idSignatario));
+	END IF;
+	IF OLD.idPrueba <> NEW.idPrueba THEN
+		SET msg = CONCAT_WS(
+			" ", 
+			msg, 
+			"prueba previa:",
+			NombrePruebaPorId(OLD.idPrueba),
+			"prueba nueva:",
+			NombrePruebaPorId(NEW.idPrueba)
+		);
+	END IF;
+	IF OLD.idNorma <> NEW.idNorma THEN
+		SET msg = CONCAT_WS(
+			" ", 
+			msg, 
+			"norma previa:",
+			NormaPorId(OLD.idNorma),
+			"norma nueva:",
+			NormaPorId(NEW.idNorma)
+		);
+	END IF;
+
+	IF OLD.numControl <> NEW.OLD.numControl THEN
+		SET msg = CONCAT_WS(
+			" ", 
+			msg, 
+			"norma previa:",
+			OLD.numControl,
+			"norma nueva:",
+			NEW.numControl
+		);
+	END IF;
+	
+	IF LENGTH(msg) <> 0 THEN
+		INSERT INTO Bitacora VALUES(
+			0,
+			CONCAT_WS(" ",msg,"realizado por:",USER(),"fecha:",NOW())
+		);
+	END IF;
+END //
+
+#14
+DROP TRIGGER IF EXISTS BitacoraDeleteResultado;
+DELIMITER //
+CREATE TRIGGER BitacoraDeleteResultado
+AFTER DELETE ON Resultados
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora VALUES(
+		0,
+		CONCAT_WS(
+			" ",
+			"Se eliminó resultado folio::",
+			OLD.folio,
+			"con resultado:",
+			OLD.resultado,
+			"fecha analisis:",
+			OLD.fAnalisis,
+			"del signatario",
+			NombreCS(OLD.idSignatario),
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
+
+#15
+DROP TRIGGER IF EXISTS BitacoraInsertSignatario;
+DELIMITER //
+CREATE TRIGGER BitacoraInsertSignatario
+AFTER INSERT ON Signatario
+FOR EACH ROW
+BEGIN
+	INSERT INTO Bitacora (mensaje) VALUES(
+		CONCAT_WS(
+			" ",
+			"Se agregó al signatario:",
+			NombreCS(NEW.idSignatario),
+			"Con sueldo:",
+			NEW.sueldo,
+			"Fecha ingreso:",
+			NEW.fIngreso,
+			"Posición:",
+			NEW.posicion,
+			"realizado por:",
+			USER(),
+			"fecha:",
+			NOW()
+		)
+	);
+END //
