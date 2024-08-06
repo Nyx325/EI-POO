@@ -46,7 +46,7 @@ public class Login extends javax.swing.JFrame {
 
                 usrCbox.setModel(
                                 new javax.swing.DefaultComboBoxModel<>(
-                                                new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+                                                new String[] { }));
 
                 jLabel2.setText("Bienvenido");
 
