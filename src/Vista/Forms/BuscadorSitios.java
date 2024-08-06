@@ -11,8 +11,17 @@ import javax.swing.table.DefaultTableModel;
 public class BuscadorSitios extends javax.swing.JFrame {
     RepositorioSitio repoSit;
     List<Sitio> ultimaListaUsada;
+    private static BuscadorSitios instancia;
 
-    public BuscadorSitios() {
+    public static BuscadorSitios getInstancia(){
+        if(BuscadorSitios.instancia == null){
+            BuscadorSitios.instancia = new BuscadorSitios();
+        }
+
+        return BuscadorSitios.instancia;
+    }
+
+    private BuscadorSitios() {
         this.repoSit = new RepositorioSitio();
         initComponents();
     }

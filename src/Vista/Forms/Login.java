@@ -4,13 +4,20 @@ import Modelo.Entidad.Signatario;
 import javax.swing.JOptionPane;
 import Modelo.Repositorio.Conector;
 import Modelo.Repositorio.RepositorioSignatarios;
-import Vista.Singletons.MenuSingleton;
-import Vista.Singletons.PruebasPorSignatarioSingleton;
 
 public class Login extends javax.swing.JFrame {
-    RepositorioSignatarios repoSig = new RepositorioSignatarios();
+    public static Login instancia;
+    private RepositorioSignatarios repoSig = new RepositorioSignatarios();
     
-    public Login() {
+    public static Login getInstancia(){
+        if(Login.instancia == null){
+            Login.instancia = new Login();
+        }
+
+        return Login.instancia;
+    }
+
+    private Login() {
             initComponents();
     }
 

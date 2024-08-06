@@ -3,18 +3,21 @@ package Vista.Forms;
 import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.Conector;
 import Modelo.Repositorio.RepositorioSignatarios;
-import Vista.Singletons.BuscadorMuestrasSingleton;
-import Vista.Singletons.BuscadorSitiosSingleton;
-import Vista.Singletons.PruebasPorSignatarioSingleton;
 
 public class Menu extends javax.swing.JFrame {
+    private static Menu instancia;
     public Signatario sesion;
     private RepositorioSignatarios repoSig = new RepositorioSignatarios();
 
-    /**
-     * Creates new form Menu
-     */
-    public Menu() {
+    public static Menu getInstancia(){
+        if(Menu.instancia == null){
+            Menu.instancia = new Menu();
+        }
+
+        return Menu.instancia;
+    }
+    
+    private Menu() {
         initComponents();
     }
 
@@ -143,27 +146,27 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selMuestraActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selMuestraActionPerformed
-        BuscadorMuestras menu = BuscadorMuestrasSingleton.getInstancia();
+        BuscadorMuestras menu = BuscadorMuestras.getInstancia();
         menu.setModo(BuscadorMuestras.MODO_BUSQUEDA);
         menu.setVisible(true);
     }// GEN-LAST:event_selMuestraActionPerformed
 
     private void capturarResultadosActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_capturarResultadosActionPerformed
         this.hide();
-        BuscadorSitiosSingleton.getInstancia().preparar();
-        BuscadorSitiosSingleton.getInstancia().setVisible(true);
+        BuscadorSitios.getInstancia().preparar();
+        BuscadorSitios.getInstancia().setVisible(true);
     }// GEN-LAST:event_capturarResultadosActionPerformed
 
     private void capturarResultados1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_capturarResultados1ActionPerformed
-        BuscadorMuestras menu = BuscadorMuestrasSingleton.getInstancia();
+        BuscadorMuestras menu = BuscadorMuestras.getInstancia();
         menu.preparar();
         menu.setModo(BuscadorMuestras.MODO_VISTA);
         menu.setVisible(true);
     }// GEN-LAST:event_capturarResultados1ActionPerformed
 
     private void capturarResultados2ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_capturarResultados2ActionPerformed
-        PruebasPorSignatarioSingleton.getInstancia().preparar(sesion);
-        PruebasPorSignatarioSingleton.getInstancia().show();
+        PruebasPorSignatario.getInstancia().preparar(sesion);
+        PruebasPorSignatario.getInstancia().show();
     }// GEN-LAST:event_capturarResultados2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

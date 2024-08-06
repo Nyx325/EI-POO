@@ -21,6 +21,7 @@ import java.time.DateTimeException;
 import java.time.LocalTime;
 
 public class BuscadorMuestras extends javax.swing.JFrame {
+    private static BuscadorMuestras instancia;
     public static final int MODO_VISTA = 0;
     public static final int MODO_BUSQUEDA = 1;
     public static final String EVENTO_BUSQUEDA = "busqueda";
@@ -33,10 +34,15 @@ public class BuscadorMuestras extends javax.swing.JFrame {
     RepositorioSignatarios repoSig = new RepositorioSignatarios();
     EventManager eventos = new EventManager(EVENTO_BUSQUEDA);
 
-    /**
-     * Creates new form BuscadorMuestras
-     */
-    public BuscadorMuestras() {
+    public static BuscadorMuestras getInstancia(){
+        if(BuscadorMuestras.instancia == null){
+            BuscadorMuestras.instancia = new BuscadorMuestras();
+        }
+        
+        return BuscadorMuestras.instancia;
+    } 
+
+    private BuscadorMuestras() {
         initComponents();
     }
 

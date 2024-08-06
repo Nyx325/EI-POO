@@ -1,7 +1,7 @@
-import Vista.Singletons.LoginSingleton;
+import Vista.Forms.Login;
 
 public class Main {
     public static void main(String[] args) {
-        LoginSingleton.getInstancia().setVisible(true);
+        Login.getInstancia().setVisible(true);
     }
 }

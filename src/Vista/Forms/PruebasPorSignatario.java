@@ -15,7 +15,6 @@ import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.RepositorioNorma;
 import Modelo.Repositorio.RepositorioParametro;
 import Modelo.Repositorio.RepositorioPrueba;
-import Vista.Singletons.BuscadorMuestrasSingleton;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -25,24 +24,30 @@ import java.util.ArrayList;
  * @author rubenor
  */
 public class PruebasPorSignatario extends javax.swing.JFrame implements EventListener {
-    boolean ventanaPrincial;
-    boolean buscandoMuestra;
-    Signatario sesion;
-    Muestra muestra;
-    List<Parametro> parametros;
-    HashMap<String, List<Prueba>> pruebas;
-    List<Prueba> emptyPruebas = new ArrayList<>();
-    List<Muestra> emptyMuestras = new ArrayList<>();
+    private boolean ventanaPrincial;
+    private boolean buscandoMuestra;
+    private Signatario sesion;
+    private Muestra muestra;
+    private List<Parametro> parametros;
+    private HashMap<String, List<Prueba>> pruebas;
+    private List<Prueba> emptyPruebas = new ArrayList<>();
+    private List<Muestra> emptyMuestras = new ArrayList<>();
 
-    RepositorioParametro repoParam = new RepositorioParametro();
-    RepositorioPrueba repoPrueba = new RepositorioPrueba();
-    RepositorioNorma repoNorma = new RepositorioNorma();
+    private RepositorioParametro repoParam = new RepositorioParametro();
+    private RepositorioPrueba repoPrueba = new RepositorioPrueba();
+    private RepositorioNorma repoNorma = new RepositorioNorma();
+    private static PruebasPorSignatario instancia;
 
-    /**
-     * Creates new form PruebasPorSignatario
-     */
-    public PruebasPorSignatario() {
-        BuscadorMuestrasSingleton.getInstancia().subscribe(this);
+    public static PruebasPorSignatario getInstancia(){
+        if(PruebasPorSignatario.instancia == null){
+            PruebasPorSignatario.instancia = new PruebasPorSignatario();
+        }
+
+        return PruebasPorSignatario.instancia;
+    }
+
+    private PruebasPorSignatario() {
+        BuscadorMuestras.getInstancia().subscribe(this);
         this.buscandoMuestra = false;
         initComponents();
         
@@ -276,7 +281,7 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
 
     private void selMuestraBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selMuestraBtnActionPerformed
         this.buscandoMuestra = true;
-        BuscadorMuestrasSingleton.getInstancia().show();
+        BuscadorMuestras.getInstancia().show();
     }// GEN-LAST:event_selMuestraBtnActionPerformed
 
     private void parametroCboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_parametroCboxActionPerformed
