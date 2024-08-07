@@ -6,7 +6,7 @@ import java.util.List;
 import Modelo.Entidad.Prueba;
 
 public class RepositorioPrueba {
-    public Prueba fromResSet() throws Exception {
+    private Prueba fromResSet() throws Exception {
         return new Prueba(
                 Conector.resSet.getLong(1),
                 Conector.resSet.getString(2),
@@ -27,6 +27,21 @@ public class RepositorioPrueba {
             res.add(fromResSet());
         }
 
+        return res;
+    }
+    
+    public List<Prueba> searchBy(long idParametro) throws Exception {
+        List<Prueba> res = new ArrayList<>();
+        
+        String query = "SELECT * FROM Prueba WHERE idParametro = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idParametro);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+        
         return res;
     }
 }

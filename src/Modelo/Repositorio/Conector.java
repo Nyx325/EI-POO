@@ -17,8 +17,8 @@ public class Conector {
         if (Conector.conection == null) {
             Class.forName("com.mysql.jdbc.Driver");
             String servidor = "jdbc:mysql://localhost:3306/Muestreos?characterEncoding=UTF-8";
-            String usr = "guest";
-            String pwd = "";
+            String usr = "rubenor";
+            String pwd = "archsudoloco";
             Conector.conection = DriverManager.getConnection(servidor, usr, pwd);
         }
 

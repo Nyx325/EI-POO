@@ -12,6 +12,20 @@ public class RepositorioParametro {
                 Conector.resSet.getLong(1),
                 Conector.resSet.getString(2));
     }
+    
+    public List<Parametro> getAllParams() throws Exception {
+        List<Parametro> res = new ArrayList<>();
+        
+        String query = "SELECT * FROM Parametro ORDER BY nombre";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+        
+        return res;
+    }
 
     public List<Parametro> searchParametroBySignatario(long idSignatario) throws Exception {
         List<Parametro> res = new ArrayList<>();
