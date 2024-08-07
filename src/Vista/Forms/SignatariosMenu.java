@@ -141,7 +141,6 @@ public class SignatariosMenu extends javax.swing.JFrame {
         PruebasScrollPane = new javax.swing.JScrollPane();
         PruebasPanel = new javax.swing.JPanel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMaximumSize(new java.awt.Dimension(626, 416));
         setMinimumSize(new java.awt.Dimension(626, 416));
 
@@ -195,7 +194,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                             .addComponent(apellido2TF)
                             .addComponent(pwdTF)
                             .addComponent(pwd2TF, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         signatPanelLayout.setVerticalGroup(
             signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,7 +260,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(SignatariosScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SignatarioSrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(SignatarioSrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -295,7 +294,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
         PruebasScrollPane.setMaximumSize(new java.awt.Dimension(342, 153));
         PruebasScrollPane.setMinimumSize(new java.awt.Dimension(342, 153));
 
-        PruebasPanel.setBackground(new java.awt.Color(255, 0, 102));
+        PruebasPanel.setBackground(new java.awt.Color(255, 255, 255));
         PruebasPanel.setMaximumSize(new java.awt.Dimension(341, 152));
         PruebasPanel.setMinimumSize(new java.awt.Dimension(341, 152));
         PruebasPanel.setLayout(new javax.swing.BoxLayout(PruebasPanel, javax.swing.BoxLayout.Y_AXIS));
@@ -321,7 +320,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                         .addComponent(PruebasScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(ParamsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)))
+                        .addComponent(ParamsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -360,6 +359,14 @@ public class SignatariosMenu extends javax.swing.JFrame {
         int index = this.SignatScrollList.getSelectedIndex();
         if(index == -1) return;
         this.signatario = signatarios.get(index);
+        
+        this.nombreTF.setText(signatario.primNombre);
+        this.nombre2TF.setText(signatario.segNombre);
+        this.apellido1TF.setText(signatario.apellidoP);
+        this.apellido2TF.setText(signatario.apellidoM);
+        String usuario = signatario.usuario != null ? signatario.usuario.split("@")[0] : "";
+        this.usrTF.setText(usuario);
+        
         if(checkboxs != null) pruebasPorSignatario(this.parametro);
         
     }//GEN-LAST:event_SignatScrollListMouseClicked

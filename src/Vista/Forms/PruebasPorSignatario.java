@@ -15,6 +15,7 @@ import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.RepositorioNorma;
 import Modelo.Repositorio.RepositorioParametro;
 import Modelo.Repositorio.RepositorioPrueba;
+import Vista.Extras.VentanaUtils;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
  * @author rubenor
  */
 public class PruebasPorSignatario extends javax.swing.JFrame implements EventListener {
+    private VentanaUtils utils;
     private boolean ventanaPrincial;
     private boolean buscandoMuestra;
     private Signatario sesion;
@@ -49,6 +51,8 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     private PruebasPorSignatario() {
         BuscadorMuestras.getInstancia().subscribe(this);
         this.buscandoMuestra = false;
+        this.utils = new VentanaUtils(this);
+        utils.centrarEnPantalla();
         initComponents();
         
         // Agregar WindowListener para capturar el evento de cierre
@@ -281,7 +285,10 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
 
     private void selMuestraBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selMuestraBtnActionPerformed
         this.buscandoMuestra = true;
-        BuscadorMuestras.getInstancia().show();
+        BuscadorMuestras menu = BuscadorMuestras.getInstancia();
+        menu.setModo(BuscadorMuestras.MODO_BUSQUEDA);
+        menu.preparar();
+        menu.show();
     }// GEN-LAST:event_selMuestraBtnActionPerformed
 
     private void parametroCboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_parametroCboxActionPerformed
@@ -361,6 +368,7 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
         pruebas = null;
         buenDiaLbl.setText("Buen día " + s.primNombre + " " + s.segNombre);
         muestraLbl.setText("Muestra: No seleccionado");
+        this.utils.centrarEnPantalla();
 
         switch (s.posicion) {
             case Signatario.POSICION_PRUEBAS:

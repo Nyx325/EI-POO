@@ -5,6 +5,7 @@
 package Vista.Forms;
 
 import Modelo.Entidad.Signatario;
+import Vista.Extras.VentanaUtils;
 
 /**
  *
@@ -13,6 +14,7 @@ import Modelo.Entidad.Signatario;
 public class MenuPrincipal extends javax.swing.JFrame {
     public Signatario sesion;
     private static MenuPrincipal instancia;
+    public VentanaUtils utils;
     
     public static MenuPrincipal getInstancia(){
         if(MenuPrincipal.instancia == null){
@@ -27,11 +29,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         this.adminPanel.hide();
         this.muestreoPanel.hide();
         this.pruebasPanel.hide();
+        this.utils = new VentanaUtils(this);
     }
     
     public void preparar(Signatario s){
         this.sesion = s;
-        System.out.println(s + " " + s.posicion);
+        utils.centrarEnPantalla();
         switch (s.posicion) {
             case Signatario.POSICION_DIRECCION:
                 this.adminPanel.show();
@@ -39,19 +42,16 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 this.muestreoPanel.show();
                 break;
             case Signatario.POSICION_MUESTREO:
-                System.out.println("a");
                 this.pruebasPanel.show();
                 this.muestreoPanel.show();
                 this.adminPanel.hide();
                 break;
             case Signatario.POSICION_PRUEBAS:
-                System.out.println("b");
                 adminPanel.hide();
                 muestreoPanel.hide();
                 this.pruebasPanel.show();
                 break;
             case Signatario.POSICION_SINDICALIZADO:
-                System.out.println("c");
                 adminPanel.hide();
                 muestreoPanel.hide();
                 this.pruebasPanel.show();
@@ -135,6 +135,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel7)
                 .addContainerGap())
         );
+
+        jPanel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel8MouseClicked(evt);
+            }
+        });
 
         jLabel8.setText("Muestras");
 
@@ -304,6 +310,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel10.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel10MouseClicked(evt);
+            }
+        });
+
         jLabel10.setText("Agregar resultados");
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
@@ -442,6 +454,18 @@ public class MenuPrincipal extends javax.swing.JFrame {
         var sig = new SignatariosMenu();
         sig.show();
     }//GEN-LAST:event_signatariosBtnMouseClicked
+
+    private void jPanel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel10MouseClicked
+        PruebasPorSignatario.getInstancia().preparar(sesion);
+        PruebasPorSignatario.getInstancia().show();
+    }//GEN-LAST:event_jPanel10MouseClicked
+
+    private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
+        BuscadorMuestras menu = BuscadorMuestras.getInstancia();
+        menu.setModo(BuscadorMuestras.MODO_VISTA);
+        menu.preparar();
+        menu.show();
+    }//GEN-LAST:event_jPanel8MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TituloPanel;

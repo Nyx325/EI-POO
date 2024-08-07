@@ -4,10 +4,12 @@ import Modelo.Entidad.Signatario;
 import javax.swing.JOptionPane;
 import Modelo.Repositorio.Conector;
 import Modelo.Repositorio.RepositorioSignatarios;
+import Vista.Extras.VentanaUtils;
 
 public class Login extends javax.swing.JFrame {
     public static Login instancia;
     private RepositorioSignatarios repoSig = new RepositorioSignatarios();
+    private VentanaUtils utils;
     
     public static Login getInstancia(){
         if(Login.instancia == null){
@@ -19,6 +21,8 @@ public class Login extends javax.swing.JFrame {
 
     private Login() {
             initComponents();
+            this.utils = new VentanaUtils(this);
+            utils.centrarEnPantalla();
     }
 
     /**
@@ -136,28 +140,6 @@ public class Login extends javax.swing.JFrame {
                 Conector.login(usr, pwd);
                 Signatario s = repoSig.searchBy(Conector.getUsr());
                 this.hide();
-                /*
-                switch (s.posicion) {
-                    case Signatario.POSICION_MUESTREO:
-                        
-                        break;
-                    case Signatario.POSICION_PRUEBAS:
-                        PruebasPorSignatarioSingleton.getInstancia().preparar(s);
-                        PruebasPorSignatarioSingleton.getInstancia().show();
-                    case Signatario.POSICION_SINDICALIZADO:
-                        PruebasPorSignatarioSingleton.getInstancia().preparar(s);
-                        PruebasPorSignatarioSingleton.getInstancia().show();
-                        break;
-                    case Signatario.POSICION_DIRECCION:
-                        Menu m = MenuSingleton.getInstancia();
-                        m.sesion = s;
-                        m.preparar();
-                        m.show();
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
-                */
                 MenuPrincipal.getInstancia().preparar(s);
                 MenuPrincipal.getInstancia().show();
             } catch (Exception e){

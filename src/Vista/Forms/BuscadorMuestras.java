@@ -12,9 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import Controlador.EventListener;
 import Controlador.EventManager;
 import Modelo.Entidad.Muestra;
-import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.RepositorioMuestra;
 import Modelo.Repositorio.RepositorioSignatarios;
+import Vista.Extras.VentanaUtils;
 
 import java.sql.SQLException;
 import java.time.DateTimeException;
@@ -22,6 +22,7 @@ import java.time.LocalTime;
 
 public class BuscadorMuestras extends javax.swing.JFrame {
     private static BuscadorMuestras instancia;
+    VentanaUtils utils;
     public static final int MODO_VISTA = 0;
     public static final int MODO_BUSQUEDA = 1;
     public static final String EVENTO_BUSQUEDA = "busqueda";
@@ -44,6 +45,7 @@ public class BuscadorMuestras extends javax.swing.JFrame {
 
     private BuscadorMuestras() {
         initComponents();
+        this.utils = new VentanaUtils(this);
     }
 
     public void subscribe(EventListener listener) {
@@ -276,8 +278,6 @@ public class BuscadorMuestras extends javax.swing.JFrame {
 
             input = frTF.getText().trim();
             if (input.length() != 0) {
-                System.out.println("input:" + input);
-                System.out.println("input:" + input.length());
                 fR = LocalDate.parse(input);
             }
 
@@ -308,6 +308,7 @@ public class BuscadorMuestras extends javax.swing.JFrame {
     }// GEN-LAST:event_buscarBtn3ActionPerformed
 
     public void preparar() {
+        this.utils.centrarEnPantalla();
         try {
             ultimaLista = repoMuest.getAllMuestras();
             loadMuestras(ultimaLista);
