@@ -20,10 +20,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-/**
- *
- * @author rubenor
- */
 public class PruebasPorSignatario extends javax.swing.JFrame implements EventListener {
     private VentanaUtils utils;
     private boolean ventanaPrincial;

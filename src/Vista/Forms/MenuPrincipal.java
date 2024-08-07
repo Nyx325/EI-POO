@@ -1,16 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Vista.Forms;
 
 import Modelo.Entidad.Signatario;
 import Vista.Extras.VentanaUtils;
 
-/**
- *
- * @author rubenor
- */
 public class MenuPrincipal extends javax.swing.JFrame {
     public Signatario sesion;
     private static MenuPrincipal instancia;
@@ -451,20 +443,22 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void signatariosBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signatariosBtnMouseClicked
-        var sig = new SignatariosMenu();
-        sig.show();
+        SignatariosMenu sig = SignatariosMenu.getInstancia();
+        sig.preparar();
+        sig.setVisible(true);
     }//GEN-LAST:event_signatariosBtnMouseClicked
 
     private void jPanel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel10MouseClicked
-        PruebasPorSignatario.getInstancia().preparar(sesion);
-        PruebasPorSignatario.getInstancia().show();
+        PruebasPorSignatario ventana = PruebasPorSignatario.getInstancia();
+        ventana.preparar(sesion);
+        ventana.setVisible(true);
     }//GEN-LAST:event_jPanel10MouseClicked
 
     private void jPanel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel8MouseClicked
         BuscadorMuestras menu = BuscadorMuestras.getInstancia();
         menu.setModo(BuscadorMuestras.MODO_VISTA);
         menu.preparar();
-        menu.show();
+        menu.setVisible(true);
     }//GEN-LAST:event_jPanel8MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

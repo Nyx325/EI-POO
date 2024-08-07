@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package Vista.Forms;
 
 import Modelo.Entidad.Parametro;
@@ -18,10 +14,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author rubenor
- */
 public class SignatariosMenu extends javax.swing.JFrame {
     Signatario signatario;
     Parametro parametro;
@@ -33,14 +25,35 @@ public class SignatariosMenu extends javax.swing.JFrame {
     List<Prueba> emptyList = new ArrayList<>();
     List<Signatario> signatarios;
     List<Signatario> signatarioEmpty = new ArrayList<>();
+
+    private static SignatariosMenu instancia;
+
+    public static SignatariosMenu getInstancia(){
+        if(SignatariosMenu.instancia == null){
+            SignatariosMenu.instancia = new SignatariosMenu();
+        }
+
+        return SignatariosMenu.instancia;
+    }
     
-    public SignatariosMenu() {
+    private SignatariosMenu() {
         initComponents();
         preparar();
     }
     
     public void preparar(){
         DefaultListModel<String> modeloParams, modeloSigs;
+        this.signatario = null;
+        this.parametro = null;
+        this.PruebasPanel.removeAll();
+        this.nombreTF.setText("");
+        this.nombre2TF.setText("");
+        this.apellido1TF.setText("");
+        this.apellido2TF.setText("");
+        this.usrTF.setText("");
+        this.pwdTF.setText("");
+        this.pwd2TF.setText("");
+        
         try{
             params = repoParam.getAllParams();      
             modeloParams = new DefaultListModel<>();
