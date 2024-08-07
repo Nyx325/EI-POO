@@ -6,7 +6,7 @@ import java.util.List;
 import Modelo.Entidad.Prueba;
 
 public class RepositorioPrueba {
-    private Prueba fromResSet() throws Exception {
+    protected Prueba fromResSet() throws Exception {
         return new Prueba(
                 Conector.resSet.getLong(1),
                 Conector.resSet.getString(2),
@@ -43,5 +43,32 @@ public class RepositorioPrueba {
         }
         
         return res;
+    }
+
+    public boolean signatarioContienePrueba(long idSignatario, long idPrueba) throws Exception {
+        String query = "SELECT * FROM DetalleSignatarios WHERE idSignatario = ? AND idPrueba = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSignatario);
+        Conector.pStmt.setLong(2, idPrueba);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        return Conector.resSet.next();
+    }
+
+    public void agregarPruebaASignatario(long idSignatario, long idPrueba) throws Exception{
+        if(signatarioContienePrueba(idSignatario, idPrueba)) return;
+        String query = "INSERT INTO DetalleSignatarios VALUES (0,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSignatario);
+        Conector.pStmt.setLong(2, idPrueba);
+        Conector.pStmt.executeUpdate();
+    }
+
+    public void quitarPruebaASignatario(long idSignatario, long idPrueba) throws Exception{
+        if(signatarioContienePrueba(idSignatario, idPrueba)) return;
+        String query = "DELETE FROM DetalleSignatarios WHERE idSignatario = ? AND idPrueba = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSignatario);
+        Conector.pStmt.setLong(2, idPrueba);
+        Conector.pStmt.executeUpdate();
     }
 }

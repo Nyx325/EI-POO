@@ -406,11 +406,5 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     public void cerrarVentana(){
         this.buscandoMuestra = false;
         this.hide();
-
-        if(this.ventanaPrincial){
-            System.exit(0);
-        }else{
-            dispose();
-        }
     }
 }

@@ -5,7 +5,8 @@ import Modelo.Entidad.Prueba;
 import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.RepositorioParametro;
 import Modelo.Repositorio.RepositorioPrueba;
-import Modelo.Repositorio.RepositorioSignatarios;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,17 +15,28 @@ import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
+import Controlador.ControladorSignatarios;
+
+class CheckBoxYPrueba{
+    JCheckBox cbox;
+    Prueba p;
+
+    public CheckBoxYPrueba(JCheckBox cbox, Prueba p){
+        this.cbox = cbox;
+        this.p = p;
+    }
+}
+
 public class SignatariosMenu extends javax.swing.JFrame {
     Signatario signatario;
     Parametro parametro;
     RepositorioParametro repoParam = new RepositorioParametro();
     RepositorioPrueba repoPrueb = new RepositorioPrueba();
-    RepositorioSignatarios repoSig = new RepositorioSignatarios();
-    Map<String, JCheckBox> checkboxs;
+    ControladorSignatarios sigCtl = new ControladorSignatarios();
+    Map<String, CheckBoxYPrueba> checkboxs;
     List<Parametro> params;
-    List<Prueba> emptyList = new ArrayList<>();
+    List<Prueba> pruebas;
     List<Signatario> signatarios;
-    List<Signatario> signatarioEmpty = new ArrayList<>();
 
     private static SignatariosMenu instancia;
 
@@ -39,6 +51,14 @@ public class SignatariosMenu extends javax.swing.JFrame {
     private SignatariosMenu() {
         initComponents();
         preparar();
+        
+        // Agregar WindowListener para capturar el evento de cierre
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cerrarVentana();
+            }
+        });
     }
     
     public void preparar(){
@@ -62,7 +82,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
             }
             this.ParamsScrollList.setModel(modeloParams);
             
-            signatarios = repoSig.getAllSignatarios();
+            signatarios = sigCtl.getAllSignatarios();
             modeloSigs = new DefaultListModel<>();
             for(Signatario s : signatarios){
                 modeloSigs.addElement(s.toString());
@@ -80,16 +100,16 @@ public class SignatariosMenu extends javax.swing.JFrame {
     }
 
     private void loadPruebas(List<Prueba> pruebas){
-        this.PruebasPanel.hide();
+        this.PruebasPanel.setVisible(false);
         this.PruebasPanel.removeAll();
         this.checkboxs = new HashMap<>();
         for(Prueba p : pruebas) {
             JCheckBox cbox = new JCheckBox(p.nombre);
             this.PruebasPanel.add(cbox);
-            this.checkboxs.put(p.nombre, cbox);
+            this.checkboxs.put(p.nombre, new CheckBoxYPrueba(cbox, p));
         }
         
-        this.PruebasPanel.show();
+        this.PruebasPanel.setVisible(true);
     }
     
     private void pruebasPorSignatario(Parametro param){
@@ -102,17 +122,17 @@ public class SignatariosMenu extends javax.swing.JFrame {
                     .searchBy(signatario.idSignatario, param.idParametro);
             
             for(String key : this.checkboxs.keySet()){
-                JCheckBox cbox = checkboxs.getOrDefault(key, null);
+                CheckBoxYPrueba  cbox = checkboxs.getOrDefault(key, null);
                 if(cbox == null) continue;
-                cbox.setSelected(false);
+                cbox.cbox.setSelected(false);
             }
             
             for(Prueba p : pruebasPorSig){
-                JCheckBox cbox = this.checkboxs.getOrDefault(p.nombre, null);
+                CheckBoxYPrueba cbox = this.checkboxs.getOrDefault(p.nombre, null);
                 
                 if(cbox == null) continue;
                 
-                cbox.setSelected(true);
+                cbox.cbox.setSelected(true);
             }
         }catch(Exception e){
             e.printStackTrace();
@@ -124,7 +144,6 @@ public class SignatariosMenu extends javax.swing.JFrame {
         }
     }
     
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -145,6 +164,8 @@ public class SignatariosMenu extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         pwdTF = new javax.swing.JPasswordField();
         pwd2TF = new javax.swing.JPasswordField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
         nuevoSigBtn = new javax.swing.JButton();
         SignatariosScrollPane = new javax.swing.JScrollPane();
         SignatScrollList = new javax.swing.JList<>();
@@ -153,8 +174,9 @@ public class SignatariosMenu extends javax.swing.JFrame {
         ParamsScrollList = new javax.swing.JList<>();
         PruebasScrollPane = new javax.swing.JScrollPane();
         PruebasPanel = new javax.swing.JPanel();
+        AceptarBtn = new javax.swing.JToggleButton();
+        CancelarBtn = new javax.swing.JToggleButton();
 
-        setMaximumSize(new java.awt.Dimension(626, 416));
         setMinimumSize(new java.awt.Dimension(626, 416));
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 204));
@@ -174,6 +196,10 @@ public class SignatariosMenu extends javax.swing.JFrame {
         jLabel6.setText("Contraseña");
 
         jLabel7.setText("<html>Confirmar<br>contraseña");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Dirección", "Muestreo", "Pruebas", "Sindicalizado" }));
+
+        jLabel8.setText("Posición");
 
         javax.swing.GroupLayout signatPanelLayout = new javax.swing.GroupLayout(signatPanel);
         signatPanel.setLayout(signatPanelLayout);
@@ -200,9 +226,11 @@ public class SignatariosMenu extends javax.swing.JFrame {
                                     .addComponent(jLabel1))
                                 .addComponent(jLabel3)
                                 .addComponent(jLabel4)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)))
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(nombreTF)
                             .addComponent(apellido2TF)
                             .addComponent(pwdTF)
@@ -241,7 +269,11 @@ public class SignatariosMenu extends javax.swing.JFrame {
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(pwd2TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         SignatarioSrollPane.setViewportView(signatPanel);
@@ -273,7 +305,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(SignatariosScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(SignatarioSrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                .addComponent(SignatarioSrollPane)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -313,6 +345,20 @@ public class SignatariosMenu extends javax.swing.JFrame {
         PruebasPanel.setLayout(new javax.swing.BoxLayout(PruebasPanel, javax.swing.BoxLayout.Y_AXIS));
         PruebasScrollPane.setViewportView(PruebasPanel);
 
+        AceptarBtn.setText("Aceptar");
+        AceptarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AceptarBtnActionPerformed(evt);
+            }
+        });
+
+        CancelarBtn.setText("Cancelar");
+        CancelarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelarBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -323,18 +369,25 @@ public class SignatariosMenu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(PruebasScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(225, 225, 225)
+                .addComponent(AceptarBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(CancelarBtn)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(PruebasScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(ParamsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ParamsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                    .addComponent(PruebasScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(AceptarBtn)
+                    .addComponent(CancelarBtn))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -359,12 +412,28 @@ public class SignatariosMenu extends javax.swing.JFrame {
         int index = this.ParamsScrollList.getSelectedIndex();
         this.parametro = params.get(index);
         try{
+            if(checkboxs != null){
+                for(String key : checkboxs.keySet()){
+                    CheckBoxYPrueba data = checkboxs.getOrDefault(key, null);
+                    if(data == null) continue;
+
+                    if(data.cbox.isSelected()) 
+                        repoPrueb.agregarPruebaASignatario(signatario.idSignatario, data.p.idPrueba);
+                    else
+                        repoPrueb.quitarPruebaASignatario(signatario.idSignatario, data.p.idPrueba);
+                }
+            }
+
             loadPruebas(repoPrueb.searchBy(this.parametro.idParametro));
             pruebasPorSignatario(this.parametro);
         }catch(Exception e){
             e.printStackTrace();
-            
-            loadPruebas(emptyList);
+            JOptionPane.showMessageDialog(
+                null,
+                "Error: " + e.toString(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            loadPruebas(new ArrayList<>());
         }
     }//GEN-LAST:event_ParamsScrollListMouseClicked
 
@@ -384,7 +453,31 @@ public class SignatariosMenu extends javax.swing.JFrame {
         
     }//GEN-LAST:event_SignatScrollListMouseClicked
 
+    private void CancelarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CancelarBtnActionPerformed
+        cerrarVentana();
+    }//GEN-LAST:event_CancelarBtnActionPerformed
+
+    private void AceptarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarBtnActionPerformed
+            try{
+                if(signatario.idSignatario != -1)
+                    sigCtl.modify(signatario);
+                else
+                    sigCtl.add(signatario);
+
+                
+            }catch(Exception e){
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(
+                null,
+                "Error: " + e.toString(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            }
+    }//GEN-LAST:event_AceptarBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JToggleButton AceptarBtn;
+    private javax.swing.JToggleButton CancelarBtn;
     private javax.swing.JList<String> ParamsScrollList;
     private javax.swing.JScrollPane ParamsScrollPane;
     private javax.swing.JPanel PruebasPanel;
@@ -394,6 +487,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane SignatariosScrollPane;
     private javax.swing.JTextField apellido1TF;
     private javax.swing.JTextField apellido2TF;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -401,6 +495,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField nombre2TF;
@@ -411,4 +506,11 @@ public class SignatariosMenu extends javax.swing.JFrame {
     private javax.swing.JPanel signatPanel;
     private javax.swing.JTextField usrTF;
     // End of variables declaration//GEN-END:variables
+
+    public void cerrarVentana(){
+        this.signatario = null;
+        this.parametro = null;
+        this.setVisible(false);
+        System.out.println("Cerrando");
+    }
 }

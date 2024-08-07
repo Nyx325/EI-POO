@@ -8,7 +8,7 @@ import Modelo.Entidad.Muestra;
 import java.time.LocalTime;
 
 public class RepositorioMuestra {
-    private Muestra fromResSet() throws Exception {
+    protected Muestra fromResSet() throws Exception {
         return new Muestra(
                 Conector.resSet.getString(1),
                 Conector.resSet.getString(2),

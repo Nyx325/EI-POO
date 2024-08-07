@@ -6,7 +6,7 @@ import Modelo.Entidad.Sitio;
 
 public class RepositorioSitio {
 
-    private Sitio fromResSet() throws Exception {
+    protected Sitio fromResSet() throws Exception {
         Sitio s = new Sitio(
                 Conector.resSet.getLong(1),
                 Conector.resSet.getString(2),

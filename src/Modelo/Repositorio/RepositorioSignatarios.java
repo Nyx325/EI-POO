@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class RepositorioSignatarios {
-    private Signatario fromResSet() throws Exception {
+    protected Signatario fromResSet() throws Exception {
         String segNombre = Conector.resSet.getString(3);
         segNombre = segNombre == null ? "" : segNombre;
         String fIngresoStr = Conector.resSet.getString(8);
@@ -30,6 +30,30 @@ public class RepositorioSignatarios {
                 Conector.resSet.getString(12));
     }
 
+    protected void add(Signatario s) throws Exception {
+        String query = "INSERT INTO Signatario VALUES (0,?,?,?,?,?,?,?,?,?,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, s.primNombre);
+        Conector.pStmt.setString(2, s.segNombre);
+        Conector.pStmt.setString(3, s.apellidoP);
+        Conector.pStmt.setString(4, s.apellidoM);
+        Conector.pStmt.setFloat(5, s.sueldo);
+        Conector.pStmt.setFloat(6, s.bono);
+        Conector.pStmt.setString(7, s.fIngreso.toString());
+        Conector.pStmt.setString(8, s.fNacimiento.toString());
+        Conector.pStmt.setString(9, s.posicion);
+        Conector.pStmt.setString(10, s.usuario);
+        Conector.pStmt.setString(11, s.siglas);
+        Conector.pStmt.executeUpdate();
+    }
+
+    public void remove(Signatario s) throws Exception {
+        String query = "DELETE FROM Signatario WHERE idSignatario = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, s.idSignatario);
+        Conector.pStmt.executeUpdate();
+    }
+
     public List<Signatario> getAllSignatarios() throws Exception {
         List<Signatario> res = new ArrayList<>();
 
@@ -49,9 +73,7 @@ public class RepositorioSignatarios {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
         Conector.resSet = Conector.pStmt.executeQuery();
-        
-        Conector.resSet.next();
-        return fromResSet();
+        return Conector.resSet.next() ? fromResSet() : null;
     }
 
     public Signatario searchBy(String usr) throws Exception {
@@ -59,8 +81,7 @@ public class RepositorioSignatarios {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setString(1, usr);
         Conector.resSet = Conector.pStmt.executeQuery();
-        Conector.resSet.next();
-        return fromResSet();
+        return Conector.resSet.next() ? fromResSet() : null;
     }
 
     public String getSiglas(long id) throws Exception {

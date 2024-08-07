@@ -7,7 +7,7 @@ import Modelo.Entidad.Parametro;
 
 public class RepositorioParametro {
 
-    private Parametro fromResSet() throws Exception {
+    protected Parametro fromResSet() throws Exception {
         return new Parametro(
                 Conector.resSet.getLong(1),
                 Conector.resSet.getString(2));

@@ -22,6 +22,18 @@ public class Signatario {
     public static final String POSICION_SINDICALIZADO = "Sindicalizado";
 
     public Signatario() {
+        this.idSignatario = -1;
+        this.primNombre = "";
+        this.segNombre = "";
+        this.apellidoP = "";
+        this.apellidoM = "";
+        this.sueldo = 0;
+        this.bono = 0;
+        this.fIngreso = null;
+        this.fNacimiento = null;
+        this.posicion = "";
+        this.usuario = "";
+        this.siglas = "";
     }
 
     public Signatario(long idSignatario, String primNombre, String segNombre, String apellidoP, String apellidoM,
@@ -41,7 +53,19 @@ public class Signatario {
         this.siglas = siglas;
     }
 
-
+    public boolean equalsExceptId(Signatario s){
+        return  this.primNombre == s.primNombre &&
+                this.segNombre == s.segNombre &&
+                this.apellidoP == s.apellidoP &&
+                this.apellidoM == s.apellidoM &&
+                this.sueldo == s.sueldo &&
+                this.bono == s.bono &&
+                this.fIngreso == s.fIngreso &&
+                this.fNacimiento == s.fNacimiento &&
+                this.posicion == s.posicion &&
+                this.usuario == s.usuario &&
+                this.siglas == s.siglas;
+    }
 
     @Override
     public String toString() {

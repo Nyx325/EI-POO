@@ -6,7 +6,7 @@ import java.util.List;
 import Modelo.Entidad.Norma;
 
 public class RepositorioNorma {
-    private Norma fromResSet() throws Exception {
+    protected Norma fromResSet() throws Exception {
         return new Norma(
             Conector.resSet.getLong(1), 
             Conector.resSet.getString(2), 
