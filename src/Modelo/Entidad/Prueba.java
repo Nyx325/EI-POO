@@ -13,4 +13,9 @@ public class Prueba {
         this.nombre = nombre;
         this.idParametro = idParametro;
     }
+    
+    @Override
+    public String toString(){
+        return idPrueba + " " + nombre + " " + idParametro;
+    }
 }

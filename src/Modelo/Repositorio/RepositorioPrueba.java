@@ -64,7 +64,7 @@ public class RepositorioPrueba {
     }
 
     public void quitarPruebaASignatario(long idSignatario, long idPrueba) throws Exception{
-        if(signatarioContienePrueba(idSignatario, idPrueba)) return;
+        if(!signatarioContienePrueba(idSignatario, idPrueba)) return;
         String query = "DELETE FROM DetalleSignatarios WHERE idSignatario = ? AND idPrueba = ?";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
