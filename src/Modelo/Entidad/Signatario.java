@@ -87,6 +87,10 @@ public class Signatario {
         return "[" + siglas + "]" + " " + primNombre + " " + segNombre + " " + apellidoP + " " + apellidoM;
     }
     
+    public String getNombreCompleto(){
+        return primNombre+" "+segNombre+" "+apellidoP+" "+apellidoM;
+    }
+    
     public void printData(){
         System.out.println("idSignatario: "+this.idSignatario);
         System.out.println("primNombre: "+this.primNombre);

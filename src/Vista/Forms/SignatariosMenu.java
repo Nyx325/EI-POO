@@ -390,6 +390,11 @@ public class SignatariosMenu extends javax.swing.JFrame {
         SignatariosScrollPane.setViewportView(SignatScrollList);
 
         elminarSigBtn.setText("Eliminar");
+        elminarSigBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                elminarSigBtnMouseClicked(evt);
+            }
+        });
 
         AceptarBtn.setText("Aceptar");
         AceptarBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -637,6 +642,43 @@ public class SignatariosMenu extends javax.swing.JFrame {
         limpiarInputSignatario();
         this.nombreTF.setText("NUEVO USUARIO");
     }//GEN-LAST:event_nuevoSigBtnMouseClicked
+
+    private void elminarSigBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_elminarSigBtnMouseClicked
+        if(this.signatario == null){
+            JOptionPane.showConfirmDialog(
+                this,
+                "Se debe seleccionar un signatario",
+                "Error",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            return;
+        }
+        
+        String msg = "¿Estás seguro que quieres eliminar al signatario " + signatario.getNombreCompleto() + "?";
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            msg,
+            "Confirmación",
+            JOptionPane.YES_NO_OPTION);
+        
+        if(response != 0) return;
+        
+        try {
+            sigCtl.remove(signatario);
+            limpiarInputSignatario();
+            loadSignatarios();
+            this.PruebasPanel.removeAll();
+            signatario = null;
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(
+                this,
+                "Error: " + e.toString(),
+                "Confirmación",
+                JOptionPane.YES_NO_OPTION);
+        }
+        
+
+    }//GEN-LAST:event_elminarSigBtnMouseClicked
 
     public void limpiarInputSignatario(){
                 this.nombreTF.setText("");
