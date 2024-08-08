@@ -69,17 +69,11 @@ public class SignatariosMenu extends javax.swing.JFrame {
     
     public void preparar(){
         utils.centrarEnPantalla();
-        DefaultListModel<String> modeloParams, modeloSigs;
+        DefaultListModel<String> modeloParams;
         this.signatario = null;
         this.parametro = null;
         this.PruebasPanel.removeAll();
-        this.nombreTF.setText("");
-        this.nombre2TF.setText("");
-        this.apellido1TF.setText("");
-        this.apellido2TF.setText("");
-        this.usrTF.setText("");
-        this.pwdTF.setText("");
-        this.pwd2TF.setText("");
+        limpiarInputSignatario();
         this.usrLbl.setVisible(false);
         this.usrTF.setVisible(false);
         this.pwd1Lbl.setVisible(false);
@@ -94,13 +88,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                 modeloParams.addElement(p.nombre);
             }
             this.ParamsScrollList.setModel(modeloParams);
-            
-            signatarios = sigCtl.getAllSignatarios();
-            modeloSigs = new DefaultListModel<>();
-            for(Signatario s : signatarios){
-                modeloSigs.addElement(s.toString());
-            }
-            this.SignatScrollList.setModel(modeloSigs);
+            loadSignatarios();
         }catch(Exception e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(
@@ -141,6 +129,15 @@ public class SignatariosMenu extends javax.swing.JFrame {
         });
     }
 
+    public void loadSignatarios() throws Exception{
+        DefaultListModel<String> modeloSigs = new DefaultListModel<>();   
+        this.signatarios = sigCtl.getAllSignatarios();
+        for(Signatario s : signatarios){
+            modeloSigs.addElement(s.toString());
+        }
+        this.SignatScrollList.setModel(modeloSigs);
+    }
+    
     private void loadPruebas(List<Prueba> pruebas) {
         this.PruebasPanel.setVisible(false);
         this.PruebasPanel.removeAll();
@@ -374,6 +371,11 @@ public class SignatariosMenu extends javax.swing.JFrame {
         SignatarioSrollPane.setViewportView(signatPanel);
 
         nuevoSigBtn.setText("Nuevo");
+        nuevoSigBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nuevoSigBtnMouseClicked(evt);
+            }
+        });
 
         SignatScrollList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -572,6 +574,10 @@ public class SignatariosMenu extends javax.swing.JFrame {
             signatario.fIngreso = fIngresoTF.getDate();
             signatario.fNacimiento = fNacTF.getDate();
             
+            if(signatario.idSignatario == -1){
+                signatario.usuario = usrTF.getText().trim();
+            }
+            
             switch (posicionComboBox.getSelectedIndex()) {
                 case 1:
                     signatario.posicion = Signatario.POSICION_DIRECCION;
@@ -591,8 +597,20 @@ public class SignatariosMenu extends javax.swing.JFrame {
             
             if(signatario.idSignatario != -1)
                 sigCtl.modify(signatario);
-            else
+            else{
                 sigCtl.add(signatario);
+                // crear usuario
+                this.signatario = null;
+                limpiarInputSignatario();
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Signatario agregado correctamente",
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+                
+            
+            loadSignatarios();
         }catch(ParseException e){
             JOptionPane.showMessageDialog(
             null,
@@ -613,6 +631,33 @@ public class SignatariosMenu extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_usrTFActionPerformed
 
+    private void nuevoSigBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevoSigBtnMouseClicked
+        this.signatario = new Signatario();
+        this.signatario.idSignatario = -1;
+        limpiarInputSignatario();
+        this.nombreTF.setText("NUEVO USUARIO");
+    }//GEN-LAST:event_nuevoSigBtnMouseClicked
+
+    public void limpiarInputSignatario(){
+                this.nombreTF.setText("");
+        this.nombre2TF.setText("");
+        this.apellido1TF.setText("");
+        this.apellido2TF.setText("");
+        this.fIngresoTF.setText("");
+        this.fNacTF.setText("");
+        this.sueldoTF.setText("");
+        this.bonoTF.setText("");
+        this.usrLbl.setVisible(true);
+        this.usrTF.setVisible(true);
+        this.pwd1Lbl.setVisible(true);
+        this.pwdTF.setVisible(true);
+        this.pwd2Lbl.setVisible(true);
+        this.pwd2TF.setVisible(true);
+        this.usrTF.setText("");
+        this.pwdTF.setText("");
+        this.pwd2TF.setText("");
+        this.posicionComboBox.setSelectedIndex(0);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton AceptarBtn;
     private javax.swing.JList<String> ParamsScrollList;

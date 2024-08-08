@@ -60,7 +60,7 @@ public class RepositorioSignatarios {
     public List<Signatario> getAllSignatarios() throws Exception {
         List<Signatario> res = new ArrayList<>();
 
-        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario";
+        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario ORDER BY SiglasSignatario(idSignatario)";
 
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.resSet = Conector.pStmt.executeQuery();

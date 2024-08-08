@@ -1593,3 +1593,18 @@ BEGIN
 		)
 	);
 END //
+
+DROP USER IF EXISTS 'rubenrs'@'localhost';
+CREATE USER 'rubenrs'@'localhost' identified by "1234";
+GRANT ALL PRIVILEGES ON Muestreos.* TO 'rubenrs'@'localhost';
+FLUSH PRIVILEGES;
+
+DROP USER IF EXISTS 'marictt'@'localhost';
+CREATE USER 'marictt'@'localhost' identified by "1234";
+GRANT ALL PRIVILEGES ON Muestreos.* TO 'marictt'@'localhost';
+FLUSH PRIVILEGES;
+
+DROP USER IF EXISTS 'marcuspa'@'localhost';
+CREATE USER 'marcuspa'@'localhost' identified by "1234";
+GRANT ALL PRIVILEGES ON Muestreos.* TO 'marcuspa'@'localhost';
+FLUSH PRIVILEGES;
