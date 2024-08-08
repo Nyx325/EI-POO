@@ -31,7 +31,7 @@ public class RepositorioSignatarios {
     }
 
     protected void add(Signatario s) throws Exception {
-        String query = "INSERT INTO Signatario VALUES (0,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO Signatario VALUES (0,?,?,?,?,?,?,?,?,?,?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setString(1, s.primNombre);
         Conector.pStmt.setString(2, s.segNombre);
@@ -43,7 +43,6 @@ public class RepositorioSignatarios {
         Conector.pStmt.setString(8, s.fNacimiento.toString());
         Conector.pStmt.setString(9, s.posicion);
         Conector.pStmt.setString(10, s.usuario);
-        Conector.pStmt.setString(11, s.siglas);
         Conector.pStmt.executeUpdate();
     }
 

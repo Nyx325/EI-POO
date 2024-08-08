@@ -247,6 +247,8 @@ CREATE TABLE Muestreos.Sitio(
     lugarT VARCHAR(256), /*Lugar toma*/
 	idCliente INT,
 	FOREIGN KEY (idCliente) REFERENCES Muestreos.Cliente(idCliente)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
 
 
@@ -267,6 +269,8 @@ CREATE TABLE Muestreos.Prueba (
 	nombre varchar(100) NOT NULL,
 	idParametro INT,
 	FOREIGN KEY (idParametro) REFERENCES Parametro (idParametro)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
 
 INSERT INTO Prueba VALUES
@@ -309,8 +313,12 @@ CREATE TABLE Muestreos.DetalleSignatarios(
 	idDetalle INT PRIMARY KEY AUTO_INCREMENT,
 	idSignatario INT NOT NULL,
 	idPrueba INT NOT NULL,
-	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario),
+	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
 	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
 
 INSERT INTO DetalleSignatarios VALUES 
@@ -347,8 +355,12 @@ CREATE TABLE Muestreos.Muestra(
 	fRecepcion DATE,
 	muestreador INT,
 	idSitio INT,
-	FOREIGN KEY (muestreador) REFERENCES Muestreos.Signatario(idSignatario),
+	FOREIGN KEY (muestreador) REFERENCES Muestreos.Signatario(idSignatario)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
 	FOREIGN KEY (idSitio) REFERENCES Muestreos.Sitio(idSitio)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
 
 INSERT INTO Muestra VALUES
@@ -366,10 +378,18 @@ CREATE TABLE Muestreos.Resultados(
 	idPrueba INT,
 	idNorma INT,
 	numControl VARCHAR(30),
-	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario),
-	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba),
-	FOREIGN KEY (idNorma) REFERENCES Muestreos.Norma(idNorma),
+	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (idNorma) REFERENCES Muestreos.Norma(idNorma)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
 	FOREIGN KEY (numControl) REFERENCES Muestreos.Muestra(numControl)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
 );
  
 INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, numControl) VALUES
