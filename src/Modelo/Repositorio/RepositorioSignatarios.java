@@ -46,6 +46,10 @@ public class RepositorioSignatarios {
         Conector.pStmt.executeUpdate();
     }
 
+    public void crearUsuario(Signatario s, String pwd) throws Exception {
+
+    }
+
     public void remove(Signatario s) throws Exception {
         String query = "DELETE FROM Signatario WHERE idSignatario = ?";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);

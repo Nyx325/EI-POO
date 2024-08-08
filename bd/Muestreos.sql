@@ -246,9 +246,10 @@ CREATE TABLE Muestreos.Sitio(
     uso VARCHAR(256),
     lugarT VARCHAR(256), /*Lugar toma*/
 	idCliente INT,
-	FOREIGN KEY (idCliente) REFERENCES Muestreos.Cliente(idCliente)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE
+	FOREIGN KEY (idCliente) 
+		REFERENCES Muestreos.Cliente(idCliente)
+	    ON DELETE SET NULL
+	    ON UPDATE CASCADE
 );
 
 
@@ -268,9 +269,10 @@ CREATE TABLE Muestreos.Prueba (
 	idPrueba INT PRIMARY KEY auto_increment,
 	nombre varchar(100) NOT NULL,
 	idParametro INT,
-	FOREIGN KEY (idParametro) REFERENCES Parametro (idParametro)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE
+	FOREIGN KEY (idParametro) 
+		REFERENCES Parametro (idParametro)
+	    ON DELETE SET NULL
+	    ON UPDATE CASCADE
 );
 
 INSERT INTO Prueba VALUES
@@ -289,10 +291,16 @@ INSERT INTO Prueba VALUES
 
 CREATE TABLE Muestreos.DetalleNorma(
 	folio INT PRIMARY KEY AUTO_INCREMENT,
-	idNorma INT NOT NULL,
-	idPrueba INT NOT NULL,
-	FOREIGN KEY (idNorma) REFERENCES Muestreos.Norma(idNorma),
-	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
+	idNorma INT,
+	idPrueba INT,
+	FOREIGN KEY (idNorma) 
+		REFERENCES Muestreos.Norma(idNorma)
+		ON DELETE SET NULL 
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idPrueba) 
+		REFERENCES Muestreos.Prueba(idPrueba)
+		ON DELETE SET NULL 
+		ON UPDATE CASCADE
 );
 
 INSERT INTO DetalleNorma (idPrueba, idNorma) VALUES
@@ -311,8 +319,8 @@ INSERT INTO DetalleNorma (idPrueba, idNorma) VALUES
 
 CREATE TABLE Muestreos.DetalleSignatarios(
 	idDetalle INT PRIMARY KEY AUTO_INCREMENT,
-	idSignatario INT NOT NULL,
-	idPrueba INT NOT NULL,
+	idSignatario INT,
+	idPrueba INT,
 	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
     ON DELETE SET NULL
     ON UPDATE CASCADE,
@@ -405,21 +413,6 @@ INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, n
 ("<0.20", "2024-01-30", 5, 12, 37, "240124220802");
 
 
-
-DROP USER IF EXISTS 'rubenrs'@'localhost';
-CREATE USER 'rubenrs'@'localhost' identified by "1234";
-GRANT ALL PRIVILEGES ON Muestreos.* TO 'rubenrs'@'localhost';
-FLUSH PRIVILEGES;
-
-DROP USER IF EXISTS 'marictt'@'localhost';
-CREATE USER 'marictt'@'localhost' identified by "1234";
-GRANT ALL PRIVILEGES ON Muestreos.* TO 'marictt'@'localhost';
-FLUSH PRIVILEGES;
-
-DROP USER IF EXISTS 'marcuspa'@'localhost';
-CREATE USER 'marcuspa'@'localhost' identified by "1234";
-GRANT ALL PRIVILEGES ON Muestreos.* TO 'marcuspa'@'localhost';
-FLUSH PRIVILEGES;
 
 
 SELECT *, SiglasSignatario(idSignatario) FROM Signatario
@@ -587,6 +580,25 @@ BEGIN
 	SET norma = (SELECT nombre FROM Prueba WHERE idNorma = id);
 
 	RETURN norma;
+END //
+
+# 9
+DROP FUNCTION IF EXISTS UsuarioExiste;
+DELIMITER //
+CREATE FUNCTION IF NOT EXISTS UsuarioExiste(
+	usr TEXT
+)
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+	DECLARE res INT;
+	SET res = 0;
+	IF EXISTS (select user from user where user = usr) THEN 
+		SET res = 1;
+	END IF;
+
+	RETURN res;
 END //
 
 #PROCEDIMIENTOS
@@ -780,6 +792,103 @@ END //
 
 CALL NormasPorPrueba(1); 
 
+DROP PROCEDURE IF EXISTS QueryFromStr;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS QueryFromStr(
+	IN query TEXT
+)
+BEGIN
+	SELECT query;
+	PREPARE stmt FROM @query;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+END //
+
+CALL QueryFromStr("SELECT * FROM Signatarios");
+
+#10
+DROP PROCEDURE IF EXISTS CrearUsuario;
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS CrearUsuario(
+	IN usr TEXT,
+	IN pwd TEXT,
+	IN posicion TEXT
+)
+BEGIN
+	IF (SELECT UsuarioExiste(usr)) = 1 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "El usuario existe";
+	END IF;
+
+	IF posicion NOT IN ("Dirección", "Muestreo", "Pruebas", "Sindicalizado") THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Posición no válida";
+	END IF;
+
+	CALL QueryFromStr(CONCAT("CREATE USER '",usr,"'@'localhost' IDENTIFIED BY '",pwd,"'"));
+
+	IF posicion IN ("Dirección") THEN
+		CALL QueryFromStr(CONCAT("GRANT ALL PRIVILEGES ON Muestreos.* TO '",usr,"'@'localhost'"));
+		CALL QueryFromStr(CONCAT("GRANT CREATE USER ON *.* TO '",usr,"'@'localhost'"));
+	END IF;
+
+	IF posicion IN ("Pruebas", "Sindicalizado", "Muestreo") THEN
+		CALL QueryFromStr(CONCAT("GRANT EXECUTE ON Muestreos.* TO '"usr"'@'localhost'"));
+		CALL QueryFromStr(
+			CONCAT(
+				"GRANT SELECT ON ",
+				"Muestreos.Cliente, Muestreos.DetalleNorma, Muestreos.Muestra, Muestreos.Norma,",
+				"Muestra.Parametro, Muestreos.Prueba, Muestreos.Resultados, Muestreos.Bitacora",
+				"TO '",
+				usr,
+				"'@'localhost'"
+			)
+		);
+
+		CALL QueryFromStr(
+			CONCAT(
+				"GRANT INSERT, UPDATE, DELETE ON ",
+				"Muestreos.Bitacora, Muestreos.Resultados",
+				"TO '",
+				usr,
+				"'@'localhost'"
+			)
+		);
+	END IF;
+
+	IF posicion IN ("Muestreos") THEN
+		CALL QueryFromStr(
+			CONCAT(
+				"GRANT SELECT ON ",
+				"Muestreos.Sitio ",
+				"TO '",
+				usr,
+				"'@'localhost'"
+			)
+		);
+	
+		CALL QueryFromStr(
+			CONCAT(
+				"GRANT INSERT, UPDATE, DELETE ON ",
+				"Muestreos.Muestras",
+				"TO '",
+				usr,
+				"'@'localhost'"
+			)
+		);
+	END IF;
+
+	FLUSH PRIVILEGES;
+END //
+
+DROP USER IF EXISTS 'rubenrs'@'localhost';
+CALL CrearUsuario("rubenrs", "1234", "Dirección");
+CALL CrearUsuario("rubenrs", "1234", "Dirección");
+CALL CrearUsuario("rubenrs", "1234", "Direcció");
+
+DROP USER IF EXISTS 'marictt'@'localhost';
+CALL CrearUsuario("marictt", "1234", "Pruebas");
+
+DROP USER IF EXISTS 'marcuspa'@'localhost';
+CALL CrearUsuario("rubenrs", "1234", "Muestreo");
 
 # TIGGERS BEFORE
 #1
