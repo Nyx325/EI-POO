@@ -135,10 +135,10 @@ CREATE TABLE Muestreos.Signatario(
         usuario VARCHAR(32) 
 );
 
-INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM, posicion, usuario) VALUES
-(1,"Rubén","Omar","Román","Salinas", "Sindicalizado", "rubenrs@localhost"),
-(2,"Maricruz",NULL,"Toledano","Torres", "Sindicalizado", "marictt@localhost"),
-(3,"Ian","Marcus","Prado","Acevedo", "Sindicalizado", "marcuspa@localhost");
+INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM,fIngreso,fNacimiento, posicion, usuario) VALUES
+(1,"Rubén","Omar","Román","Salinas", NOW(), "2004-05-28", "Dirección", "rubenrs@localhost"),
+(2,"Maricruz",NULL,"Toledano","Torres", NOW(), "2004-09-12", "Sindicalizado", "marictt@localhost"),
+(3,"Ian","Marcus","Prado","Acevedo", NOW(), "2000-06-10",  "Muestreo", "marcuspa@localhost");
 
 INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM, posicion) VALUES
 (4,"Berenice","Celia","Huerta","Miralrío", "Sindicalizado"),
@@ -385,6 +385,7 @@ INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, n
 ("<0.20", "2024-01-30", 5, 12, 37, "240124220802");
 
 
+
 DROP USER IF EXISTS 'rubenrs'@'localhost';
 CREATE USER 'rubenrs'@'localhost' identified by "1234";
 GRANT ALL PRIVILEGES ON Muestreos.* TO 'rubenrs'@'localhost';
@@ -398,7 +399,8 @@ FLUSH PRIVILEGES;
 DROP USER IF EXISTS 'marcuspa'@'localhost';
 CREATE USER 'marcuspa'@'localhost' identified by "1234";
 GRANT ALL PRIVILEGES ON Muestreos.* TO 'marcuspa'@'localhost';
-FLUSH PRIVILEGES
+FLUSH PRIVILEGES;
+
 
 SELECT *, SiglasSignatario(idSignatario) FROM Signatario
 

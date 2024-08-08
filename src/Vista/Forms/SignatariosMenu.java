@@ -19,6 +19,7 @@ import Controlador.ControladorSignatarios;
 import Vista.Extras.VentanaUtils;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.ParseException;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -204,8 +205,16 @@ public class SignatariosMenu extends javax.swing.JFrame {
         pwd2Lbl = new javax.swing.JLabel();
         pwdTF = new javax.swing.JPasswordField();
         pwd2TF = new javax.swing.JPasswordField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        posicionComboBox = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        sueldoTF = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        bonoTF = new javax.swing.JTextField();
+        fIngresoTF = new Vista.Extras.FechaTF();
+        jLabel7 = new javax.swing.JLabel();
+        fNacTF = new Vista.Extras.FechaTF();
+        jLabel9 = new javax.swing.JLabel();
         nuevoSigBtn = new javax.swing.JButton();
         SignatariosScrollPane = new javax.swing.JScrollPane();
         SignatScrollList = new javax.swing.JList<>();
@@ -229,7 +238,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
 
         jLabel3.setText("Apellido Paterno");
 
-        jLabel4.setText("Apellido Materno");
+        jLabel4.setText("Sueldo");
 
         usrLbl.setText("Usuario");
 
@@ -243,16 +252,24 @@ public class SignatariosMenu extends javax.swing.JFrame {
 
         pwd2Lbl.setText("<html>Confirmar<br>contraseña");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<html><br>", "Dirección", "Muestreo", "Pruebas", "Sindicalizado" }));
+        posicionComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<html><br>", "Dirección", "Muestreo", "Pruebas", "Sindicalizado" }));
 
         jLabel8.setText("Posición");
+
+        jLabel5.setText("Apellido Materno");
+
+        jLabel6.setText("Bono");
+
+        jLabel7.setText("Fecha Ingreso");
+
+        jLabel9.setText("Fecha Ingreso");
 
         javax.swing.GroupLayout signatPanelLayout = new javax.swing.GroupLayout(signatPanel);
         signatPanel.setLayout(signatPanelLayout);
         signatPanelLayout.setHorizontalGroup(
             signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(signatPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(7, Short.MAX_VALUE)
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(signatPanelLayout.createSequentialGroup()
@@ -276,19 +293,28 @@ public class SignatariosMenu extends javax.swing.JFrame {
                                 .addComponent(nombre2TF, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(signatPanelLayout.createSequentialGroup()
                             .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(signatPanelLayout.createSequentialGroup()
-                                    .addGap(50, 50, 50)
-                                    .addComponent(jLabel1))
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(signatPanelLayout.createSequentialGroup()
+                                        .addGap(50, 50, 50)
+                                        .addComponent(jLabel1))
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(fNacTF, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(nombreTF, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                    .addComponent(apellido2TF))))))
-                .addContainerGap(42, Short.MAX_VALUE))
+                                    .addComponent(posicionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(nombreTF)
+                                    .addComponent(apellido2TF)
+                                    .addComponent(sueldoTF, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(bonoTF, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(fIngresoTF, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
         signatPanelLayout.setVerticalGroup(
             signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -307,13 +333,29 @@ public class SignatariosMenu extends javax.swing.JFrame {
                     .addComponent(apellido1TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(apellido2TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(apellido2TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(posicionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sueldoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bonoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fIngresoTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fNacTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usrLbl)
                     .addComponent(usrTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -326,7 +368,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(pwd2TF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(pwd2Lbl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(32, 32, 32))
         );
 
         SignatarioSrollPane.setViewportView(signatPanel);
@@ -482,6 +524,10 @@ public class SignatariosMenu extends javax.swing.JFrame {
         this.apellido1TF.setText(signatario.apellidoP);
         this.apellido2TF.setText(signatario.apellidoM);
         String usuario = signatario.usuario != null ? signatario.usuario.split("@")[0] : "";
+        this.fIngresoTF.setDate(signatario.fIngreso);
+        this.fNacTF.setDate(signatario.fNacimiento);
+        this.sueldoTF.setText(String.valueOf(signatario.sueldo));
+        this.bonoTF.setText(String.valueOf(signatario.bono));
         this.usrLbl.setVisible(false);
         this.usrTF.setVisible(false);
         this.pwd1Lbl.setVisible(false);
@@ -492,26 +538,75 @@ public class SignatariosMenu extends javax.swing.JFrame {
         this.pwdTF.setText("");
         this.pwd2TF.setText("");
         
+        switch (signatario.posicion) {
+            case Signatario.POSICION_DIRECCION:
+                this.posicionComboBox.setSelectedIndex(1);
+                break;
+            case Signatario.POSICION_MUESTREO:
+                this.posicionComboBox.setSelectedIndex(2);
+                break;
+            case Signatario.POSICION_PRUEBAS:
+                this.posicionComboBox.setSelectedIndex(3);
+                break;
+            case Signatario.POSICION_SINDICALIZADO:
+                this.posicionComboBox.setSelectedIndex(4);
+                break;
+            default:
+                this.posicionComboBox.setSelectedIndex(0);
+        }
+        
         if(checkboxs != null) pruebasPorSignatario(this.parametro);
         
     }//GEN-LAST:event_SignatScrollListMouseClicked
 
     private void AceptarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AceptarBtnActionPerformed
-            try{
-                if(signatario.idSignatario != -1)
-                    sigCtl.modify(signatario);
-                else
-                    sigCtl.add(signatario);
-
-                
-            }catch(Exception e){
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(
-                null,
-                "Error: " + e.toString(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE);
+        if(this.signatario == null) return;
+        
+        try{
+            signatario.primNombre = nombreTF.getText().trim();
+            signatario.segNombre = nombre2TF.getText().trim();
+            signatario.apellidoP = apellido1TF.getText().trim();
+            signatario.apellidoM = apellido2TF.getText().trim();
+            signatario.sueldo = Float.parseFloat(sueldoTF.getText());
+            signatario.bono = Float.parseFloat(bonoTF.getText());
+            signatario.fIngreso = fIngresoTF.getDate();
+            signatario.fNacimiento = fNacTF.getDate();
+            
+            switch (posicionComboBox.getSelectedIndex()) {
+                case 1:
+                    signatario.posicion = Signatario.POSICION_DIRECCION;
+                    break;
+                case 2:
+                    signatario.posicion = Signatario.POSICION_MUESTREO;
+                    break;
+                case 3:
+                    signatario.posicion = Signatario.POSICION_PRUEBAS;
+                    break;
+                case 4:
+                    signatario.posicion = Signatario.POSICION_SINDICALIZADO;
+                    break;
+                default:
+                    throw new Exception("Se debe elegir una posición");
             }
+            
+            if(signatario.idSignatario != -1)
+                sigCtl.modify(signatario);
+            else
+                sigCtl.add(signatario);
+        }catch(ParseException e){
+            JOptionPane.showMessageDialog(
+            null,
+            "Error: El sueldo y bono deben ser numeros reales",
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        }catch(Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+            null,
+            "Error: " + e.toString(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_AceptarBtnActionPerformed
 
     private void usrTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usrTFActionPerformed
@@ -529,23 +624,31 @@ public class SignatariosMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane SignatariosScrollPane;
     private javax.swing.JTextField apellido1TF;
     private javax.swing.JTextField apellido2TF;
+    private javax.swing.JTextField bonoTF;
     private javax.swing.JButton elminarSigBtn;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private Vista.Extras.FechaTF fIngresoTF;
+    private Vista.Extras.FechaTF fNacTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField nombre2TF;
     private javax.swing.JTextField nombreTF;
     private javax.swing.JButton nuevoSigBtn;
+    private javax.swing.JComboBox<String> posicionComboBox;
     private javax.swing.JLabel pwd1Lbl;
     private javax.swing.JLabel pwd2Lbl;
     private javax.swing.JPasswordField pwd2TF;
     private javax.swing.JPasswordField pwdTF;
     private javax.swing.JPanel signatPanel;
+    private javax.swing.JTextField sueldoTF;
     private javax.swing.JLabel usrLbl;
     private javax.swing.JTextField usrTF;
     // End of variables declaration//GEN-END:variables

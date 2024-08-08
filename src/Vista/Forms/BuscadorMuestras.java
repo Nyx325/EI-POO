@@ -15,6 +15,8 @@ import Modelo.Entidad.Muestra;
 import Modelo.Repositorio.RepositorioMuestra;
 import Modelo.Repositorio.RepositorioSignatarios;
 import Vista.Extras.VentanaUtils;
+import Vista.Extras.FechaTF;
+import Vista.Extras.HoraTF;
 
 import java.sql.SQLException;
 import java.time.DateTimeException;
@@ -70,9 +72,9 @@ public class BuscadorMuestras extends javax.swing.JFrame {
 
         jPanel4 = new javax.swing.JPanel();
         numCTF = new javax.swing.JTextField();
-        proyectoTF = new javax.swing.JTextField();
-        fmTF = new javax.swing.JTextField();
-        frTF = new javax.swing.JTextField();
+        proyectoTF = new FechaTF();
+        fmTF = new FechaTF();
+        frTF = new FechaTF();;
         jScrollPane4 = new javax.swing.JScrollPane();
         muestrasTb = new javax.swing.JTable();
         buscarBtn3 = new javax.swing.JButton();
@@ -81,7 +83,7 @@ public class BuscadorMuestras extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         aceptarBtn = new javax.swing.JButton();
-        hmTF = new javax.swing.JTextField();
+        hmTF = new HoraTF();
         jLabel6 = new javax.swing.JLabel();
 
         jPanel4.setBackground(new java.awt.Color(153, 153, 255));
@@ -252,35 +254,12 @@ public class BuscadorMuestras extends javax.swing.JFrame {
     }
 
     private void buscarBtn3ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_buscarBtn3ActionPerformed
-        LocalDate fM = null;
-        LocalTime hM = null;
-        LocalDate fR = null;
-        String numC = numCTF.getText();
-        String proj = proyectoTF.getText();
-        String input;
-
+        String numC = numCTF.getText().trim();
+        String proj = proyectoTF.getText().trim();
         try {
-            input = fmTF.getText().trim();
-
-            if (input.length() != 0) {
-                fM = LocalDate.parse(input);
-            }
-
-            input = hmTF.getText();
-            if (input.length() != 0) {
-                if (!input.contains(":"))
-                    throw new DateTimeParseException("Text '" + input + "' could not be parsed", "proj", ERROR);
-                String[] tiempo = input.split(":");
-                hM = LocalTime.of(
-                        Integer.parseInt(tiempo[0]),
-                        Integer.parseInt(tiempo[1]));
-            }
-
-            input = frTF.getText().trim();
-            if (input.length() != 0) {
-                fR = LocalDate.parse(input);
-            }
-
+            LocalDate fM = this.fmTF.getDate();
+            LocalTime hM = hmTF.getHour();
+            LocalDate fR = frTF.getDate();
             ultimaLista = repoMuest.searchBy(numC, proj, fM, hM, fR);
             loadMuestras(ultimaLista);
         } catch (DateTimeParseException e) {
@@ -340,9 +319,9 @@ public class BuscadorMuestras extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptarBtn;
     private javax.swing.JButton buscarBtn3;
-    private javax.swing.JTextField fmTF;
-    private javax.swing.JTextField frTF;
-    private javax.swing.JTextField hmTF;
+    private FechaTF fmTF;
+    private FechaTF frTF;
+    private HoraTF hmTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

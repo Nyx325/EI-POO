@@ -54,21 +54,51 @@ public class Signatario {
     }
 
     public boolean equalsExceptId(Signatario s){
-        return  this.primNombre == s.primNombre &&
-                this.segNombre == s.segNombre &&
-                this.apellidoP == s.apellidoP &&
-                this.apellidoM == s.apellidoM &&
-                this.sueldo == s.sueldo &&
-                this.bono == s.bono &&
-                this.fIngreso == s.fIngreso &&
-                this.fNacimiento == s.fNacimiento &&
-                this.posicion == s.posicion &&
-                this.usuario == s.usuario &&
-                this.siglas == s.siglas;
+        return  primNombre.equals(s.primNombre) &&
+                segNombre.equals(s.segNombre) &&
+                apellidoP.equals(s.apellidoP) &&
+                apellidoM.equals(s.apellidoM) &&
+                sueldo == s.sueldo &&
+                bono == s.bono &&
+                fIngreso.equals(s.fIngreso) &&
+                fNacimiento.equals(s.fNacimiento) &&
+                posicion.equals(s.posicion) &&
+                usuario.equals(s.usuario) &&
+                siglas.equals(s.siglas);
+    }
+
+    public boolean equals(Signatario s){
+            return  idSignatario == s.idSignatario &&
+                    primNombre.equals(s.primNombre) &&
+                    segNombre.equals(s.segNombre) &&
+                    apellidoP.equals(s.apellidoP) &&
+                    apellidoM.equals(s.apellidoM) &&
+                    sueldo == s.sueldo &&
+                    bono == s.bono &&
+                    fIngreso.equals(s.fIngreso) &&
+                    fNacimiento.equals(s.fNacimiento) &&
+                    posicion.equals(s.posicion) &&
+                    usuario.equals(s.usuario) &&
+                    siglas.equals(s.siglas);
     }
 
     @Override
     public String toString() {
         return "[" + siglas + "]" + " " + primNombre + " " + segNombre + " " + apellidoP + " " + apellidoM;
+    }
+    
+    public void printData(){
+        System.out.println("idSignatario: "+this.idSignatario);
+        System.out.println("primNombre: "+this.primNombre);
+        System.out.println("segNombre: "+this.segNombre);
+        System.out.println("apellidoP: "+this.apellidoP);
+        System.out.println("apellidoM: "+this.apellidoM);
+        System.out.println("sueldo: "+this.sueldo);
+        System.out.println("bono: "+this.bono);
+        System.out.println("fIngreso: "+this.fIngreso);
+        System.out.println("fNacimiento: "+this.fNacimiento);
+        System.out.println("posicion: "+this.posicion);
+        System.out.println("usuario: "+this.usuario);
+        System.out.println("siglas: "+this.siglas);
     }
 }

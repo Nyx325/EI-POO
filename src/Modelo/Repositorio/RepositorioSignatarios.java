@@ -83,6 +83,15 @@ public class RepositorioSignatarios {
         Conector.resSet = Conector.pStmt.executeQuery();
         return Conector.resSet.next() ? fromResSet() : null;
     }
+    
+    public boolean usuarioEnUso(Signatario s) throws Exception {
+        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario WHERE usuario = ? AND idSignatario != ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, s.usuario);
+        Conector.pStmt.setLong(2, s.idSignatario);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        return Conector.resSet.next();
+    }
 
     public String getSiglas(long id) throws Exception {
         String query = "SELECT SiglasSignatario(?)";
