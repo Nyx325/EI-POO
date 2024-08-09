@@ -260,9 +260,10 @@ public class ParametroVista extends javax.swing.JFrame {
             this.parametros = parametrosCtl.searchByName(busqueda);
             loadParametros(parametros);
         }catch(Exception e){
+            e.printStackTrace();
             JOptionPane.showMessageDialog(
                 null,
-                "Se eliminó correctamente",
+                "Error: " + e.toString(),
                 "Error",
                 JOptionPane.INFORMATION_MESSAGE);
         }
