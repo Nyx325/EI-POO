@@ -18,9 +18,9 @@ public class MenuPrincipal extends javax.swing.JFrame {
     
     private MenuPrincipal() {
         initComponents();
-        this.adminPanel.hide();
-        this.muestreoPanel.hide();
-        this.pruebasPanel.hide();
+        this.adminPanel.setVisible(false);
+        this.muestreoPanel.setVisible(false);
+        this.pruebasPanel.setVisible(false);
         this.utils = new VentanaUtils(this);
     }
     
@@ -29,24 +29,24 @@ public class MenuPrincipal extends javax.swing.JFrame {
         utils.centrarEnPantalla();
         switch (s.posicion) {
             case Signatario.POSICION_DIRECCION:
-                this.adminPanel.show();
-                this.pruebasPanel.show();
-                this.muestreoPanel.show();
+                this.adminPanel.setVisible(true);
+                this.pruebasPanel.setVisible(true);
+                this.muestreoPanel.setVisible(true);
                 break;
             case Signatario.POSICION_MUESTREO:
-                this.pruebasPanel.show();
-                this.muestreoPanel.show();
-                this.adminPanel.hide();
+                this.pruebasPanel.setVisible(true);
+                this.muestreoPanel.setVisible(true);;
+                this.adminPanel.setVisible(false);
                 break;
             case Signatario.POSICION_PRUEBAS:
-                adminPanel.hide();
-                muestreoPanel.hide();
-                this.pruebasPanel.show();
+                adminPanel.setVisible(false);
+                muestreoPanel.setVisible(false);
+                this.pruebasPanel.setVisible(true);;
                 break;
             case Signatario.POSICION_SINDICALIZADO:
-                adminPanel.hide();
-                muestreoPanel.hide();
-                this.pruebasPanel.show();
+                adminPanel.setVisible(false);
+                muestreoPanel.setVisible(false);
+                this.pruebasPanel.setVisible(true);;
                 break;
             default:
                 throw new AssertionError();
@@ -201,6 +201,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addContainerGap())
         );
+
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
 
         jLabel2.setText("Normas");
 
@@ -464,6 +470,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         menu.preparar();
         menu.setVisible(true);
     }//GEN-LAST:event_jPanel8MouseClicked
+
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+        NormaVista v = new NormaVista();
+        v.setVisible(true);
+    }//GEN-LAST:event_jPanel2MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TituloPanel;

@@ -20,8 +20,6 @@ import Vista.Extras.VentanaUtils;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.ParseException;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 class CheckBoxYPrueba{
     JCheckBox cbox;

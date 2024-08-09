@@ -19,4 +19,11 @@ public class Norma {
     public String toString(){
         return idNorma + " " + norma + " " + unidades;
     }
+
+    public boolean equals(Norma n){
+        return  idNorma == n.idNorma &&
+                norma.equals(n.norma) &&
+                unidades.equals(n.unidades) &&
+                tipoVentana == n.tipoVentana;
+    }
 }
