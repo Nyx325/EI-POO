@@ -596,7 +596,7 @@ READS SQL DATA
 BEGIN
 	DECLARE res INT;
 	SET res = 0;
-	IF EXISTS (select user from user where user = usr) THEN 
+	IF EXISTS (select user from mysql.user where user = usr) THEN 
 		SET res = 1;
 	END IF;
 
@@ -794,14 +794,14 @@ END //
 
 CALL NormasPorPrueba(1); 
 
+#9
 DROP PROCEDURE IF EXISTS QueryFromStr;
 DELIMITER //
 CREATE PROCEDURE IF NOT EXISTS QueryFromStr(
 	IN query TEXT
 )
 BEGIN
-	SELECT query;
-	PREPARE stmt FROM @query;
+	PREPARE stmt FROM query;
 	EXECUTE stmt;
 	DEALLOCATE PREPARE stmt;
 END //
@@ -825,23 +825,24 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Posición no válida";
 	END IF;
 
-	CALL QueryFromStr(CONCAT("CREATE USER '",usr,"'@'localhost' IDENTIFIED BY '",pwd,"'"));
+	SET usr = CONCAT("'",usr,"'@'localhost'");
+
+	CALL QueryFromStr(CONCAT("CREATE USER ",usr," IDENTIFIED BY '",pwd,"'"));
 
 	IF posicion IN ("Dirección") THEN
-		CALL QueryFromStr(CONCAT("GRANT ALL PRIVILEGES ON Muestreos.* TO '",usr,"'@'localhost'"));
-		CALL QueryFromStr(CONCAT("GRANT CREATE USER ON *.* TO '",usr,"'@'localhost'"));
+		CALL QueryFromStr(CONCAT("GRANT ALL PRIVILEGES ON Muestreos.* TO ",usr));
+		CALL QueryFromStr(CONCAT("GRANT CREATE USER ON *.* TO ",usr));
 	END IF;
 
 	IF posicion IN ("Pruebas", "Sindicalizado", "Muestreo") THEN
-		CALL QueryFromStr(CONCAT("GRANT EXECUTE ON Muestreos.* TO '",usr,"'@'localhost'"));
+		CALL QueryFromStr(CONCAT("GRANT EXECUTE ON Muestreos.* TO ",usr));
 		CALL QueryFromStr(
 			CONCAT(
 				"GRANT SELECT ON ",
 				"Muestreos.Cliente, Muestreos.DetalleNorma, Muestreos.Muestra, Muestreos.Norma,",
-				"Muestra.Parametro, Muestreos.Prueba, Muestreos.Resultados, Muestreos.Bitacora",
-				"TO '",
-				usr,
-				"'@'localhost'"
+				"Muestreos.Parametro, Muestreos.Prueba, Muestreos.Resultados, Muestreos.Bitacora",
+				"TO ",
+				usr
 			)
 		);
 
@@ -849,9 +850,8 @@ BEGIN
 			CONCAT(
 				"GRANT INSERT, UPDATE, DELETE ON ",
 				"Muestreos.Bitacora, Muestreos.Resultados",
-				"TO '",
-				usr,
-				"'@'localhost'"
+				"TO ",
+				usr
 			)
 		);
 	END IF;
@@ -861,9 +861,8 @@ BEGIN
 			CONCAT(
 				"GRANT SELECT ON ",
 				"Muestreos.Sitio ",
-				"TO '",
-				usr,
-				"'@'localhost'"
+				"TO ",
+				usr
 			)
 		);
 	
@@ -871,9 +870,8 @@ BEGIN
 			CONCAT(
 				"GRANT INSERT, UPDATE, DELETE ON ",
 				"Muestreos.Muestras",
-				"TO '",
-				usr,
-				"'@'localhost'"
+				"TO ",
+				usr
 			)
 		);
 	END IF;

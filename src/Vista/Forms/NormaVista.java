@@ -256,8 +256,7 @@ public class NormaVista extends javax.swing.JFrame {
     }//GEN-LAST:event_nuevoBtnActionPerformed
 
     private void eliminarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarBtnMouseClicked
-        int index = normaScrollList.getSelectedIndex();
-        if(index == -1) {
+        if(norma == null) {
             JOptionPane.showMessageDialog(
                 null,
                 "Se debe seleccionar una norma",
@@ -267,8 +266,7 @@ public class NormaVista extends javax.swing.JFrame {
         }
         
         try {
-            Norma n = normas.get(index);
-            String msg = "¿Estás seguro que quieres eliminar la norma " + n.norma + "?";
+            String msg = "¿Estás seguro que quieres eliminar la norma " + this.norma.norma + "?";
             
             int response = JOptionPane.showConfirmDialog(
                 this,
@@ -277,11 +275,12 @@ public class NormaVista extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION);
             if(response != 0) return;
             
-            normasCtl.remove(n);
+            normasCtl.remove(this.norma);
             String busqueda = buscarTF.getText().trim();
             normas = normasCtl.searchNormaByNombre(busqueda);
             loadNormas(normas);
-            
+            norma = null;
+            preparar();
             JOptionPane.showMessageDialog(
                 this,
                 "Tarea realizada con éxito",
