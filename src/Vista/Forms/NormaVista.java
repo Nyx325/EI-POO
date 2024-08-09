@@ -65,8 +65,6 @@ public class NormaVista extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         nombreTA = new javax.swing.JTextArea();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jPanel1.setBackground(new java.awt.Color(204, 255, 255));
 
         normaScrollList.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -91,8 +89,18 @@ public class NormaVista extends javax.swing.JFrame {
         tipoVComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "<html><br>", "1", "2" }));
 
         nuevoBtn.setText("Nuevo");
+        nuevoBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nuevoBtnActionPerformed(evt);
+            }
+        });
 
         eliminarBtn.setText("Eliminar");
+        eliminarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                eliminarBtnMouseClicked(evt);
+            }
+        });
 
         aceptarBtn.setText("Aceptar");
         aceptarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -194,7 +202,6 @@ public class NormaVista extends javax.swing.JFrame {
         nombreTA.setText(norma.norma);
         unidadesTF.setText(norma.unidades);
         tipoVComboBox.setSelectedIndex((int)norma.tipoVentana);
-        System.out.println(norma);
     }//GEN-LAST:event_normaScrollListMouseClicked
 
     private void buscarTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarTFKeyReleased
@@ -214,15 +221,17 @@ public class NormaVista extends javax.swing.JFrame {
     }//GEN-LAST:event_buscarTFKeyReleased
 
     private void aceptarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aceptarBtnMouseClicked
-        norma.norma = nombreTA.getText().trim();
-        norma.unidades = unidadesTF.getText().trim();
-        norma.tipoVentana = tipoVComboBox.getSelectedIndex();
+        Norma n = new Norma(
+                norma.idNorma,
+                nombreTA.getText().trim(),
+                unidadesTF.getText().trim(),
+                tipoVComboBox.getSelectedIndex());
         
         try {
-            if(norma.idNorma == -1)
-                normasCtl.add(norma);
+            if(n.idNorma == -1)
+                normasCtl.add(n);
             else
-                normasCtl.modify(norma);
+                normasCtl.modify(n);
             
             String busqueda = buscarTF.getText().trim();
             normas = normasCtl.searchNormaByNombre(busqueda);
@@ -237,6 +246,56 @@ public class NormaVista extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_aceptarBtnMouseClicked
+
+    private void nuevoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoBtnActionPerformed
+        nombreTA.setText("Nueva norma");
+        unidadesTF.setText("");
+        tipoVComboBox.setSelectedIndex(0);
+        buscarTF.setText("");
+        norma = new Norma();
+    }//GEN-LAST:event_nuevoBtnActionPerformed
+
+    private void eliminarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarBtnMouseClicked
+        int index = normaScrollList.getSelectedIndex();
+        if(index == -1) {
+            JOptionPane.showMessageDialog(
+                null,
+                "Se debe seleccionar una norma",
+                "Error",
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        try {
+            Norma n = normas.get(index);
+            String msg = "¿Estás seguro que quieres eliminar la norma " + n.norma + "?";
+            
+            int response = JOptionPane.showConfirmDialog(
+                this,
+                msg,
+                "Confirmación",
+                JOptionPane.YES_NO_OPTION);
+            if(response != 0) return;
+            
+            normasCtl.remove(n);
+            String busqueda = buscarTF.getText().trim();
+            normas = normasCtl.searchNormaByNombre(busqueda);
+            loadNormas(normas);
+            
+            JOptionPane.showMessageDialog(
+                this,
+                "Tarea realizada con éxito",
+                "Confirmación",
+                JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showConfirmDialog(
+                this,
+                "Error: " + e.toString(),
+                "Confirmación",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        
+    }//GEN-LAST:event_eliminarBtnMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptarBtn;

@@ -672,7 +672,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                 this,
                 "Error: " + e.toString(),
                 "Confirmación",
-                JOptionPane.YES_NO_OPTION);
+                JOptionPane.ERROR_MESSAGE);
         }
         
 

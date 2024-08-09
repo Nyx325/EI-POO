@@ -6,7 +6,12 @@ public class Norma {
     public String unidades;
     public long tipoVentana;
 
-    public Norma(){}
+    public Norma(){
+        this.idNorma = -1;
+        this.norma = "";
+        this.unidades = "";
+        this.tipoVentana = 0;
+    }
 
     public Norma(long idNorma, String norma, String unidades, long tipoVentana) {
         this.idNorma = idNorma;
