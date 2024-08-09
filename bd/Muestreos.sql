@@ -1145,7 +1145,7 @@ FOR EACH ROW
 BEGIN
 	IF EXISTS (
 		SELECT 
-			folio FROM DetalleSignatario 
+			idDetalle FROM DetalleSignatarios
 		WHERE 
 			idSignatario = NEW.idSignatario AND 
 			idPrueba = NEW.idPrueba AND 
@@ -1522,7 +1522,7 @@ BEGIN
 		);
 	END IF;
 
-	IF OLD.numControl <> NEW.OLD.numControl THEN
+	IF OLD.numControl <> OLD.numControl THEN
 		SET msg = CONCAT_WS(
 			" ", 
 			msg, 
@@ -1594,6 +1594,7 @@ BEGIN
 	);
 END //
 
+/*
 DROP USER IF EXISTS 'rubenrs'@'localhost';
 CREATE USER 'rubenrs'@'localhost' identified by "1234";
 GRANT ALL PRIVILEGES ON Muestreos.* TO 'rubenrs'@'localhost';
@@ -1608,3 +1609,4 @@ DROP USER IF EXISTS 'marcuspa'@'localhost';
 CREATE USER 'marcuspa'@'localhost' identified by "1234";
 GRANT ALL PRIVILEGES ON Muestreos.* TO 'marcuspa'@'localhost';
 FLUSH PRIVILEGES;
+*/

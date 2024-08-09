@@ -28,4 +28,27 @@ public class RepositorioNorma {
 
         return res;
     }
+
+    protected void addAI(Norma n) throws Exception {
+        String query = "INSERT INTO Norma VALUES (0,?,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, n.norma);
+        Conector.pStmt.setString(2, n.unidades);
+        Conector.pStmt.setLong(3, n.tipoVentana);
+        Conector.pStmt.executeUpdate();
+    }
+
+    protected void add(Norma n) throws Exception {
+        String query = "INSERT INTO Norma VALUES (?,?,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, n.idNorma);
+        Conector.pStmt.setString(2, n.norma);
+        Conector.pStmt.setString(3, n.unidades);
+        Conector.pStmt.setLong(4, n.tipoVentana);
+        Conector.pStmt.executeUpdate();
+    }
+
+    protected void remove(Norma n) throws Exception {
+
+    }
 }

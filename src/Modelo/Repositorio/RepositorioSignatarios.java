@@ -30,7 +30,7 @@ public class RepositorioSignatarios {
                 Conector.resSet.getString(12));
     }
 
-    protected void add(Signatario s) throws Exception {
+    protected void addAI(Signatario s) throws Exception {
         String query = "INSERT INTO Signatario VALUES (0,?,?,?,?,?,?,?,?,?,?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setString(1, s.primNombre);
@@ -43,6 +43,23 @@ public class RepositorioSignatarios {
         Conector.pStmt.setString(8, s.fNacimiento.toString());
         Conector.pStmt.setString(9, s.posicion);
         Conector.pStmt.setString(10, s.usuario);
+        Conector.pStmt.executeUpdate();
+    }
+
+    protected void add(Signatario s) throws Exception {
+        String query = "INSERT INTO Signatario VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, s.idSignatario);
+        Conector.pStmt.setString(2, s.primNombre);
+        Conector.pStmt.setString(3, s.segNombre);
+        Conector.pStmt.setString(4, s.apellidoP);
+        Conector.pStmt.setString(5, s.apellidoM);
+        Conector.pStmt.setFloat(6, s.sueldo);
+        Conector.pStmt.setFloat(7, s.bono);
+        Conector.pStmt.setString(8, s.fIngreso.toString());
+        Conector.pStmt.setString(9, s.fNacimiento.toString());
+        Conector.pStmt.setString(10, s.posicion);
+        Conector.pStmt.setString(11, s.usuario);
         Conector.pStmt.executeUpdate();
     }
 

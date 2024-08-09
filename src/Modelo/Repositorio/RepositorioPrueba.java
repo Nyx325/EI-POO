@@ -3,6 +3,7 @@ package Modelo.Repositorio;
 import java.util.ArrayList;
 import java.util.List;
 
+import Modelo.Entidad.DetalleSignatario;
 import Modelo.Entidad.Prueba;
 
 public class RepositorioPrueba {
@@ -45,6 +46,25 @@ public class RepositorioPrueba {
         return res;
     }
 
+    public List<DetalleSignatario> searchDetalleBy(long idSignatario) throws Exception {
+        List<DetalleSignatario> pruebas = new ArrayList<>();
+
+        String query = "SELECT * FROM DetalleSignatarios WHERE idSignatario = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSignatario);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            DetalleSignatario d = new DetalleSignatario(
+                    Conector.resSet.getLong(1), 
+                    Conector.resSet.getLong(2), 
+                    Conector.resSet.getLong(3));
+            pruebas.add(d);
+        }
+
+        return pruebas;
+    }
+
     public boolean signatarioContienePrueba(long idSignatario, long idPrueba) throws Exception {
         String query = "SELECT * FROM DetalleSignatarios WHERE idSignatario = ? AND idPrueba = ?";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
@@ -69,6 +89,14 @@ public class RepositorioPrueba {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
         Conector.pStmt.setLong(2, idPrueba);
+        Conector.pStmt.executeUpdate();
+    }
+
+    public void updatePruebasModify(long idDetalle, long idSignatario) throws Exception{
+        String query = "UPDATE DetalleSignatarios SET idSignatario = ? WHERE idDetalle = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSignatario);
+        Conector.pStmt.setLong(2, idDetalle);
         Conector.pStmt.executeUpdate();
     }
 }
