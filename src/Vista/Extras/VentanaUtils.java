@@ -16,7 +16,7 @@ public class VentanaUtils {
         
         // Calcular la posicion central
         int x = (pantalla.width - ventanaSize.width) / 2;
-        int y = (pantalla.height - ventanaSize.height) / 2;
+        int y = (pantalla.height - ventanaSize.height) / 3;
         
         ventana.setLocation(x, y);
     }

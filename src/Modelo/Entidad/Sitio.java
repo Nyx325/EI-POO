@@ -21,6 +21,24 @@ public class Sitio {
     public long idCliente;
 
     public Sitio() {
+        this.idLugar = -1l;
+        this.clave = "";
+        this.nombre = "";
+        this.cuenca = "";
+        this.cAcuifero = "";
+        this.acuifero = "";
+        this.organismo = "";
+        this.dirLocal = "";
+        this.edo = "";
+        this.municipio = "";
+        this.cAgua = "";
+        this.tipoC = "";
+        this.subtipoC = "";
+        this.latitud = "";
+        this.longitud = "";
+        this.uso = "";
+        this.lugarT = "";
+        this.idCliente = -1l;
     }
 
     public Sitio(long idLugar, String clave, String nombre, String cuenca, String cAcuifero, String acuifero,

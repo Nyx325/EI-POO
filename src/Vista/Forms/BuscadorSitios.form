@@ -23,17 +23,27 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="MainPanel" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                      <Component id="jPanel2" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="MainPanel" min="-2" max="-2" attributes="0"/>
+              </Group>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace pref="18" max="32767" attributes="0"/>
               <Component id="MainPanel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -234,6 +244,9 @@
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sitiosTbMouseClicked"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -299,7 +312,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cuencaTF1" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="cuencaTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
@@ -333,13 +346,13 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel18" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="edoTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="gEdoTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel19" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="municipioTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="gMunicipioTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -361,12 +374,12 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel23" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="latitudTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="gLatitudTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel24" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="longitudTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
+                                      <Component id="gLongitudTF" alignment="0" min="-2" pref="174" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
@@ -416,7 +429,7 @@
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Group type="103" groupAlignment="3" attributes="0">
                                                               <Component id="cAcuiferoTF" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                              <Component id="cuencaTF1" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="cuencaTF" alignment="3" min="-2" max="-2" attributes="0"/>
                                                           </Group>
                                                           <EmptySpace max="-2" attributes="0"/>
                                                           <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
@@ -437,13 +450,13 @@
                                               <Group type="102" attributes="0">
                                                   <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
                                                   <EmptySpace max="-2" attributes="0"/>
-                                                  <Component id="edoTF" min="-2" max="-2" attributes="0"/>
+                                                  <Component id="gEdoTF" min="-2" max="-2" attributes="0"/>
                                               </Group>
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jLabel19" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="municipioTF" min="-2" max="-2" attributes="0"/>
+                                          <Component id="gMunicipioTF" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
                                           <Component id="jLabel20" min="-2" max="-2" attributes="0"/>
@@ -467,12 +480,12 @@
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabel23" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="latitudTF" min="-2" max="-2" attributes="0"/>
+                                  <Component id="gLatitudTF" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="longitudTF" min="-2" max="-2" attributes="0"/>
+                                  <Component id="gLongitudTF" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -527,7 +540,7 @@
                     <Property name="text" type="java.lang.String" value="Acuifero"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="cuencaTF1">
+                <Component class="javax.swing.JTextField" name="cuencaTF">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel16">
                   <Properties>
@@ -543,14 +556,14 @@
                     <Property name="text" type="java.lang.String" value="Direcci&#xf3;n local"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="edoTF">
+                <Component class="javax.swing.JTextField" name="gEdoTF">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel18">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Estado"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="municipioTF">
+                <Component class="javax.swing.JTextField" name="gMunicipioTF">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel19">
                   <Properties>
@@ -583,9 +596,9 @@
                     <Property name="text" type="java.lang.String" value="Latitud"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="latitudTF">
+                <Component class="javax.swing.JTextField" name="gLatitudTF">
                 </Component>
-                <Component class="javax.swing.JTextField" name="longitudTF">
+                <Component class="javax.swing.JTextField" name="gLongitudTF">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel24">
                   <Properties>
@@ -610,6 +623,55 @@
             </Container>
           </SubComponents>
         </Container>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="jPanel2">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="cc" red="cc" type="rgb"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="171" max="-2" attributes="0"/>
+                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jButton2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="175" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="jButton1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Aceptar"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Eliminar"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Nuevo"/>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
