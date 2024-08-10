@@ -59,8 +59,6 @@ public class ParametroVista extends javax.swing.JFrame {
         nuevoBtn = new javax.swing.JButton();
         eliminarBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
         parametrosScrollList.addMouseListener(new java.awt.event.MouseAdapter() {
