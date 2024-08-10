@@ -414,12 +414,6 @@ INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, n
 ("<0.30", "2024-01-30", 5, 11, 37, "240124220802"),
 ("<0.20", "2024-01-30", 5, 12, 37, "240124220802");
 
-
-
-
-SELECT *, SiglasSignatario(idSignatario) FROM Signatario
-
-
 # FUNCIONES
 # Convertir un DATETIME a una cadena que Java puede parsear en un
 # LocalDateTime
@@ -440,7 +434,7 @@ END //
 # 2
 DROP FUNCTION IF EXISTS LikeFmt;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS LikeFmt(
+CREATE FUNCTION LikeFmt(
 	variable TEXT
 )
 RETURNS TEXT
@@ -453,7 +447,7 @@ END //
 # 3 
 DROP FUNCTION IF EXISTS SiglasSignatario;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS SiglasSignatario(
+CREATE FUNCTION SiglasSignatario(
 	id INT
 )
 RETURNS TEXT
@@ -487,7 +481,7 @@ FROM Signatario WHERE idSignatario = 1;
 # 4 TODO
 DROP FUNCTION IF EXISTS CalcularBonoPorResultado;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS CalcularBonoPorResultado(
+CREATE FUNCTION CalcularBonoPorResultado(
 	id INT
 )
 RETURNS TEXT
@@ -504,7 +498,7 @@ END //
 #5
 DROP FUNCTION IF EXISTS NombreCS;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS NombreCS(
+CREATE FUNCTION NombreCS(
 	id INT
 )
 RETURNS TEXT
@@ -527,7 +521,7 @@ END //
 # 6 
 DROP FUNCTION IF EXISTS ClavePorIdSitio;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS ClavePorIdSitio(
+CREATE FUNCTION ClavePorIdSitio(
 	id INT
 )
 RETURNS TEXT
@@ -547,7 +541,7 @@ END //
 #7
 DROP FUNCTION IF EXISTS NombrePruebaPorId;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS NombrePruebaPorId(
+CREATE FUNCTION NombrePruebaPorId(
 	id INT
 )
 RETURNS TEXT
@@ -567,7 +561,7 @@ END //
 #8 
 DROP FUNCTION IF EXISTS NormaPorId;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS NormaPorId(
+CREATE FUNCTION NormaPorId(
 	id INT
 )
 RETURNS TEXT
@@ -587,7 +581,7 @@ END //
 # 9
 DROP FUNCTION IF EXISTS UsuarioExiste;
 DELIMITER //
-CREATE FUNCTION IF NOT EXISTS UsuarioExiste(
+CREATE FUNCTION UsuarioExiste(
 	usr TEXT
 )
 RETURNS INT
@@ -607,7 +601,7 @@ END //
 # 1
 DROP PROCEDURE IF EXISTS ResultadosInformePorNumeroControl;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS ResultadosInformePorNumeroControl(
+CREATE PROCEDURE ResultadosInformePorNumeroControl(
 	IN numC VARCHAR(30)
 )
 BEGIN
@@ -632,7 +626,7 @@ CALL ResultadosInformePorNumeroControl("240124220802");
 # 2
 DROP PROCEDURE IF EXISTS ParametrosPorSignatario;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS ParametrosPorSignatario(
+CREATE PROCEDURE ParametrosPorSignatario(
 	IN id INT
 )
 BEGIN
@@ -654,7 +648,7 @@ CALL ParametrosPorSignatario(1);
 # 3
 DROP PROCEDURE IF EXISTS PruebasPorSignatario;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS PruebasPorSignatario(
+CREATE PROCEDURE PruebasPorSignatario(
 	IN idS INT,
 	IN idP INT
 )
@@ -680,7 +674,7 @@ CALL Muestreos.PruebasPorSignatario(1, 1);
 # 4
 DROP PROCEDURE IF EXISTS TopPruebasMasRealizadasPorAnio;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS TopPruebasMasRealizadasPorAnio(
+CREATE PROCEDURE TopPruebasMasRealizadasPorAnio(
 	IN Anio INT,
 	IN top INT
 )
@@ -709,7 +703,7 @@ CALL TopPruebasMasRealizadasPorAnio(2024, 5);
 # 5
 DROP PROCEDURE IF EXISTS TopSignatariosConMasResultados;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS TopSignatariosConMasResultados(
+CREATE PROCEDURE TopSignatariosConMasResultados(
 	IN top INT
 )
 BEGIN
@@ -732,7 +726,7 @@ CALL TopSignatariosConMasResultados(5);
 # 6
 DROP PROCEDURE IF EXISTS BuscarSitio;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS BuscarSitio(
+CREATE PROCEDURE BuscarSitio(
 	IN clav TEXT,
 	IN latid TEXT,
 	IN longi TEXT,
@@ -757,7 +751,7 @@ CALL Muestreos.BuscarSitio("OCBAL2825", "", "", "", "", "");
 # 7
 DROP PROCEDURE IF EXISTS BuscarMuestras;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS BuscarMuestras(
+CREATE PROCEDURE BuscarMuestras(
 	IN numC TEXT,
 	IN proj TEXT,
 	IN fM TEXT,
@@ -778,7 +772,7 @@ CALL Muestreos.BuscarMuestras("", "", "2024-01-04", "", "");
 # 8 
 DROP PROCEDURE IF EXISTS NormasPorPrueba;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS NormasPorPrueba(
+CREATE PROCEDURE NormasPorPrueba(
 	IN idP INT
 )
 BEGIN
@@ -797,7 +791,7 @@ CALL NormasPorPrueba(1);
 #9
 DROP PROCEDURE IF EXISTS QueryFromStr;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS QueryFromStr(
+CREATE PROCEDURE QueryFromStr(
 	IN query TEXT
 )
 BEGIN
@@ -811,13 +805,12 @@ CALL QueryFromStr("SELECT * FROM Signatarios");
 #10
 DROP PROCEDURE IF EXISTS CrearUsuario;
 DELIMITER //
-CREATE PROCEDURE IF NOT EXISTS CrearUsuario(
+CREATE PROCEDURE CrearUsuario(
 	IN u TEXT,
 	IN pwd TEXT,
 	IN posicion TEXT
 )
 BEGIN
-    START TRANSACTION;
     DECLARE usr TEXT;
 	IF (SELECT UsuarioExiste(u)) = 1 THEN
         ROLLBACK;
@@ -866,7 +859,6 @@ BEGIN
 	END IF;
 
 	FLUSH PRIVILEGES;
-    COMMIT;
 END //
 /*/home/rubenor/upemor/POO/EI-POO/bd/Muestreos.sql*/
 
