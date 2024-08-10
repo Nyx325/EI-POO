@@ -1,5 +1,7 @@
 # EI-POO
 ## """Desplegar"""
+
+### Crear BD y Usuarios
 Se debe ejecutar la base de datos en `./bd` y asegurarse de 
 poder crear algun usuario. Eh aqui un ejemplo:
 ```sql
@@ -19,6 +21,16 @@ GRANT ALL PRIVILEGES ON Muestreos.* TO 'marcuspa'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
+Ahora también hay una función que crea el usuario con sus permisos de
+acuerdo a la posicion, pero para que funcione he visto que necesito 
+crear el script o al menos el procedimiento supongo como `root` para
+que funcione el procedimiento
+```sql
+DROP USER IF EXISTS 'rubenrs'@'localhost';
+CALL CrearUsuario("rubenrs", "1234", "Dirección");
+```
+
+### Asignar un registro de signatario de la BD con el cliente creado
 En el login se solicitaran los usuarios y contraseñas colocados
 en mysql. También asegurese de incluir el campo de posicion,
 y usuario en la bd, el usuario obvio correspondiente al usuario
@@ -28,15 +40,6 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 (1,"Rubén","Omar","Román","Salinas", NOW(), "2004-05-28", "Dirección", "rubenrs@localhost"),
 (2,"Maricruz",NULL,"Toledano","Torres", NOW(), "2004-09-12", "Sindicalizado", "marictt@localhost"),
 (3,"Ian","Marcus","Prado","Acevedo", NOW(), "2000-06-10",  "Muestreo", "marcuspa@localhost");
-```
-
-Ahora también hay una función que crea el usuario con sus permisos de
-acuerdo a la posicion, pero para que funcione he visto que necesito 
-crear el script o al menos el procedimiento supongo como `root` para
-que funcione el procedimiento
-```sql
-DROP USER IF EXISTS 'rubenrs'@'localhost';
-CALL CrearUsuario("rubenrs", "1234", "Dirección");
 ```
 
 ## TODO list
