@@ -56,3 +56,4 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 - [ ] Tarea 1: Funcion #4 del script
 - [ ] Tarea 2: Funcion #10 del script
 - [ ] Tarea 3: Pruebas de to'
+- [ ] Tarea 4: Transacciones distribuidas y tipos bloqueo
