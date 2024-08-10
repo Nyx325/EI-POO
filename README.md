@@ -38,3 +38,15 @@ que funcione el procedimiento
 DROP USER IF EXISTS 'rubenrs'@'localhost';
 CALL CrearUsuario("rubenrs", "1234", "Dirección");
 ```
+
+## TODO list
+### Del programa
+- [ ] Tarea 1: CRUD sitios
+- [ ] Tarea 2: Personalizar vista sitios segun permisos
+- [ ] Tarea 3: CRUD clientes
+- [ ] Tarea 4: Vista que asigne pruebas a parámetros
+- [ ] Tarea 5: Vista que asigne clientes a sitios
+
+### Del script
+- [ ] Tarea 1: Funcion #4 del script
+- [ ] Tarea 2: Funcion #10 del script
