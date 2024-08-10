@@ -50,3 +50,4 @@ CALL CrearUsuario("rubenrs", "1234", "Dirección");
 ### Del script
 - [ ] Tarea 1: Funcion #4 del script
 - [ ] Tarea 2: Funcion #10 del script
+- [ ] Tarea 3: Pruebas de to'
