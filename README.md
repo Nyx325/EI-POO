@@ -29,3 +29,12 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 (2,"Maricruz",NULL,"Toledano","Torres", NOW(), "2004-09-12", "Sindicalizado", "marictt@localhost"),
 (3,"Ian","Marcus","Prado","Acevedo", NOW(), "2000-06-10",  "Muestreo", "marcuspa@localhost");
 ```
+
+Ahora también hay una función que crea el usuario con sus permisos de
+acuerdo a la posicion, pero para que funcione he visto que necesito 
+crear el script o al menos el procedimiento supongo como `root` para
+que funcione el procedimiento
+```sql
+DROP USER IF EXISTS 'rubenrs'@'localhost';
+CALL CrearUsuario("rubenrs", "1234", "Dirección");
+```

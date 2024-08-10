@@ -812,20 +812,24 @@ CALL QueryFromStr("SELECT * FROM Signatarios");
 DROP PROCEDURE IF EXISTS CrearUsuario;
 DELIMITER //
 CREATE PROCEDURE IF NOT EXISTS CrearUsuario(
-	IN usr TEXT,
+	IN u TEXT,
 	IN pwd TEXT,
 	IN posicion TEXT
 )
 BEGIN
-	IF (SELECT UsuarioExiste(usr)) = 1 THEN
+    START TRANSACTION;
+    DECLARE usr TEXT;
+	IF (SELECT UsuarioExiste(u)) = 1 THEN
+        ROLLBACK;
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "El usuario existe";
 	END IF;
 
 	IF posicion NOT IN ("Dirección", "Muestreo", "Pruebas", "Sindicalizado") THEN
+        ROLLBACK;
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = "Posición no válida";
 	END IF;
 
-	SET usr = CONCAT("'",usr,"'@'localhost'");
+    SET usr = CONCAT("'",u,"'@'localhost'");
 
 	CALL QueryFromStr(CONCAT("CREATE USER ",usr," IDENTIFIED BY '",pwd,"'"));
 
@@ -836,59 +840,46 @@ BEGIN
 
 	IF posicion IN ("Pruebas", "Sindicalizado", "Muestreo") THEN
 		CALL QueryFromStr(CONCAT("GRANT EXECUTE ON Muestreos.* TO ",usr));
-		CALL QueryFromStr(
-			CONCAT(
-				"GRANT SELECT ON ",
-				"Muestreos.Cliente, Muestreos.DetalleNorma, Muestreos.Muestra, Muestreos.Norma,",
-				"Muestreos.Parametro, Muestreos.Prueba, Muestreos.Resultados, Muestreos.Bitacora",
-				"TO ",
-				usr
-			)
-		);
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Cliente TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.DetalleNorma TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Muestra TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Norma TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Parametro TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Prueba TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Resultados TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Bitacora TO ",usr));
 
-		CALL QueryFromStr(
-			CONCAT(
-				"GRANT INSERT, UPDATE, DELETE ON ",
-				"Muestreos.Bitacora, Muestreos.Resultados",
-				"TO ",
-				usr
-			)
-		);
+        CALL QueryFromStr(CONCAT("GRANT INSERT ON Muestreos.Bitacora TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT INSERT ON Muestreos.Resultados TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT UPDATE ON Muestreos.Bitacora TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT UPDATE ON Muestreos.Resultados TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT DELETE ON Muestreos.Bitacora TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT DELETE ON Muestreos.Resultados TO ",usr));
 	END IF;
 
 	IF posicion IN ("Muestreos") THEN
-		CALL QueryFromStr(
-			CONCAT(
-				"GRANT SELECT ON ",
-				"Muestreos.Sitio ",
-				"TO ",
-				usr
-			)
-		);
+		CALL QueryFromStr(CONCAT("GRANT SELECT ON Muestreos.Sitio TO ",usr));
 	
-		CALL QueryFromStr(
-			CONCAT(
-				"GRANT INSERT, UPDATE, DELETE ON ",
-				"Muestreos.Muestras",
-				"TO ",
-				usr
-			)
-		);
+        CALL QueryFromStr(CONCAT("GRANT INSERT ON Muestreos.Muestras TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT UPDATE ON Muestreos.Muestras TO ",usr));
+        CALL QueryFromStr(CONCAT("GRANT DELETE ON Muestreos.Muestras TO ",usr));
 	END IF;
 
 	FLUSH PRIVILEGES;
+    COMMIT;
 END //
+/*/home/rubenor/upemor/POO/EI-POO/bd/Muestreos.sql*/
 
 DROP USER IF EXISTS 'rubenrs'@'localhost';
 CALL CrearUsuario("rubenrs", "1234", "Dirección");
 CALL CrearUsuario("rubenrs", "1234", "Dirección");
-CALL CrearUsuario("rubenrs", "1234", "Direcció");
+CALL CrearUsuario("rubiño", "1234", "Direcció");
 
 DROP USER IF EXISTS 'marictt'@'localhost';
 CALL CrearUsuario("marictt", "1234", "Pruebas");
-
+:
 DROP USER IF EXISTS 'marcuspa'@'localhost';
-CALL CrearUsuario("rubenrs", "1234", "Muestreo");
+CALL CrearUsuario("marcuspa", "1234", "Muestreo");
 
 # TIGGERS BEFORE
 #1

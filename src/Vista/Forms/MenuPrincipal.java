@@ -227,6 +227,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel3MouseClicked(evt);
+            }
+        });
+
         jLabel3.setText("Parametros");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -475,6 +481,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         NormaVista v = new NormaVista();
         v.setVisible(true);
     }//GEN-LAST:event_jPanel2MouseClicked
+
+    private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
+        ParametroVista p = new ParametroVista();
+        p.setVisible(true);
+    }//GEN-LAST:event_jPanel3MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel TituloPanel;
