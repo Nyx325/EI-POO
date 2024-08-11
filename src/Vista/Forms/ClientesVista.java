@@ -151,7 +151,6 @@ public class ClientesVista extends javax.swing.JFrame {
         agregarSBtn = new javax.swing.JButton();
         eliminarSBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(732, 362));
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -335,6 +334,7 @@ public class ClientesVista extends javax.swing.JFrame {
     }//GEN-LAST:event_nuevoCBtnMouseClicked
 
     private void aceptarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aceptarBtnMouseClicked
+        if(this.cliente == null) return;
         Cliente c = new Cliente(
                 this.cliente.idCliente,
                 this.nombreTF.getText().trim()
