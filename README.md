@@ -51,7 +51,7 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 - [x] Tarea 3: CRUD clientes
 - [ ] Tarea 4: Vista que asigne pruebas a parámetros
 - [ ] Tarea 5: Vista que asigne clientes a sitios
-- [ ] Tarea 6: Vista bitácora
+- [x] Tarea 6: Vista bitácora
 - [ ] Tarea 7: Ventanas de captura de resultados
 
 ### Del script
