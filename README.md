@@ -48,7 +48,7 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
     1. [ ] Enlazar clientes a nuevos sitios o existenes
     2. [ ] Reenlazar clientes y muestras o modificar apropiadamente
 - [ ] Tarea 2: Personalizar vista sitios segun permisos
-- [ ] Tarea 3: CRUD clientes
+- [x] Tarea 3: CRUD clientes
 - [ ] Tarea 4: Vista que asigne pruebas a parámetros
 - [ ] Tarea 5: Vista que asigne clientes a sitios
 - [ ] Tarea 6: Vista bitácora

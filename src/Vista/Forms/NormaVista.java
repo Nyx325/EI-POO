@@ -249,7 +249,6 @@ public class NormaVista extends javax.swing.JFrame {
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_aceptarBtnMouseClicked
 
     private void nuevoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoBtnActionPerformed

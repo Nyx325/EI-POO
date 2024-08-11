@@ -82,6 +82,21 @@ public class RepositorioSitio {
         return res;
     }
 
+    public List<Sitio> searhByCliente(long idCliente) throws Exception {
+        List<Sitio> res = new ArrayList<>();
+
+        String query = "SELECT * FROM Sitio WHERE idCliente = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idCliente);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+
+        return res;
+    }
+
     protected void addAI(Sitio s) throws Exception {
         String query = "INSERT INTO Sitio (clave, nombre, cuenca, cAcuifero, acuifero, organismo, dirLocal, edo, municipio, cAgua, tipoC, subtipoC, latitud, longitud, uso, lugarT, idCliente) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
