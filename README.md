@@ -44,7 +44,9 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 
 ## TODO list
 ### Del programa
-- [ ] Tarea 1: CRUD sitios
+- [x] Tarea 1: CRUD sitios
+    1. [ ] Enlazar clientes a nuevos sitios o existenes
+    2. [ ] Reenlazar clientes y muestras o modificar apropiadamente
 - [ ] Tarea 2: Personalizar vista sitios segun permisos
 - [ ] Tarea 3: CRUD clientes
 - [ ] Tarea 4: Vista que asigne pruebas a parámetros

@@ -83,7 +83,7 @@ public class RepositorioSitio {
     }
 
     protected void addAI(Sitio s) throws Exception {
-        String query = "INSERT INTO Sitio VALUES (0,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO Sitio (clave, nombre, cuenca, cAcuifero, acuifero, organismo, dirLocal, edo, municipio, cAgua, tipoC, subtipoC, latitud, longitud, uso, lugarT, idCliente) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setString(1, s.clave);
         Conector.pStmt.setString(2, s.nombre);
@@ -101,15 +101,19 @@ public class RepositorioSitio {
         Conector.pStmt.setString(14, s.longitud);
         Conector.pStmt.setString(15, s.uso);
         Conector.pStmt.setString(16, s.lugarT);
-        Conector.pStmt.setLong(17, s.idCliente);
-        System.out.println(Conector.pStmt);
+        Conector.pStmt.setNull(17, java.sql.Types.BIGINT);
         Conector.pStmt.executeUpdate();
     }
 
     protected void add(Sitio s) throws Exception {
+        // Asegúrate de que la consulta SQL tenga 18 parámetros
         String query = "INSERT INTO Sitio VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+        // Preparar el statement
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
-        Conector.pStmt.setLong(1, s.idCliente);
+
+        // Establecer los valores para cada parámetro
+        Conector.pStmt.setLong(1, s.idLugar); // idSitio
         Conector.pStmt.setString(2, s.clave);
         Conector.pStmt.setString(3, s.nombre);
         Conector.pStmt.setString(4, s.cuenca);
@@ -118,7 +122,7 @@ public class RepositorioSitio {
         Conector.pStmt.setString(7, s.organismo);
         Conector.pStmt.setString(8, s.dirLocal);
         Conector.pStmt.setString(9, s.edo);
-        Conector.pStmt.setString(10,s.municipio);
+        Conector.pStmt.setString(10, s.municipio);
         Conector.pStmt.setString(11, s.cAgua);
         Conector.pStmt.setString(12, s.tipoC);
         Conector.pStmt.setString(13, s.subtipoC);
@@ -126,13 +130,18 @@ public class RepositorioSitio {
         Conector.pStmt.setString(15, s.longitud);
         Conector.pStmt.setString(16, s.uso);
         Conector.pStmt.setString(17, s.lugarT);
-        Conector.pStmt.setLong(18, s.idCliente);
-        System.out.println(Conector.pStmt);
+
+        if (s.idCliente == -1) {
+            Conector.pStmt.setNull(18, java.sql.Types.BIGINT);
+        } else {
+            Conector.pStmt.setLong(18, s.idCliente);
+        }
+
         Conector.pStmt.executeUpdate();
     }
 
     public void remove(Sitio s) throws Exception {
-        String query = "REMOVE FROM Sitio WHERE idSitio = ?";
+        String query = "DELETE FROM Sitio WHERE idSitio = ?";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, s.idLugar);
         Conector.pStmt.executeUpdate();

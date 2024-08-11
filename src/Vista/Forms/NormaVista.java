@@ -101,6 +101,11 @@ public class NormaVista extends javax.swing.JFrame {
                 eliminarBtnMouseClicked(evt);
             }
         });
+        eliminarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminarBtnActionPerformed(evt);
+            }
+        });
 
         aceptarBtn.setText("Aceptar");
         aceptarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -295,6 +300,10 @@ public class NormaVista extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_eliminarBtnMouseClicked
+
+    private void eliminarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_eliminarBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptarBtn;

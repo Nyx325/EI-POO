@@ -26,4 +26,17 @@ public class ControladorSitios extends RepositorioSitio {
 
         
     }
+
+    public void add(Sitio s) throws Exception {
+        isValid(s);
+        super.addAI(s);
+    }
+
+    public void modify(Sitio s) throws Exception {
+        isValid(s);
+        // TODO actualizar las muestras y clientes
+        // o aplicar modificacion apropiadamente
+        super.remove(s);
+        super.add(s);
+    }
 }

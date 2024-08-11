@@ -1062,13 +1062,13 @@ BEGIN
 	END IF;
 
 	IF (SELECT COUNT(idSitio) FROM Sitio WHERE nombre = NEW.nombre) <> 0 THEN 
-		SET msg = CONCAT("Ya existe un sitio con nombre ", NEW.nombre);
+		SET msg = CONCAT("Ya existe un sitio con nombre: '", NEW.nombre,"'");
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
 	END IF;
 	
 	IF (SELECT COUNT(idSitio) FROM Sitio WHERE longitud = NEW.longitud AND latitud = NEW.latitud) <> 0 THEN 
 		SET claveSitioRep = (SELECT clave FROM Sitio WHERE longitud = NEW.longitud AND latitud = NEW.latitud);
-		SET msg = CONCAT("Ya existe un sitio con estas coordenadas: ", claveSitioRep);
+		SET msg = CONCAT("Ya existe un sitio con estas coordenadas lat:", NEW.latitud, " long:", NEW.longitud);
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = msg;
 	END IF;
 END //

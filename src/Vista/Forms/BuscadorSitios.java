@@ -1,8 +1,8 @@
 package Vista.Forms;
 
+import Controlador.ControladorSitios;
 import Modelo.Entidad.Sitio;
 import Modelo.Repositorio.Conector;
-import Modelo.Repositorio.RepositorioSitio;
 import Vista.Extras.VentanaUtils;
 
 import java.util.List;
@@ -11,11 +11,12 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class BuscadorSitios extends javax.swing.JFrame {
-    VentanaUtils utils = new VentanaUtils(this);
-    RepositorioSitio repoSit = new RepositorioSitio();
-    List<Sitio> ultimaListaUsada;
+    private VentanaUtils utils = new VentanaUtils(this);
+    private ControladorSitios sitioCtl = new ControladorSitios();
+    private List<Sitio> ultimaListaUsada;
     private static BuscadorSitios instancia;   
-    Sitio sitio;
+    private Sitio sitio;
+    private String modo;
     
     public final String MODO_BUSQUEDA = "vista"; // Modo leer y buscar sitios
     public final String MODO_SELECTOR = "selector"; // Modo selector de sitios
@@ -90,9 +91,9 @@ public class BuscadorSitios extends javax.swing.JFrame {
         lugatTTF = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        aceptarBtn = new javax.swing.JButton();
+        eliminarBtn = new javax.swing.JButton();
+        nuevoBtn = new javax.swing.JButton();
 
         setResizable(false);
 
@@ -424,11 +425,26 @@ public class BuscadorSitios extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
 
-        jButton1.setText("Aceptar");
+        aceptarBtn.setText("Aceptar");
+        aceptarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                aceptarBtnMouseClicked(evt);
+            }
+        });
 
-        jButton2.setText("Eliminar");
+        eliminarBtn.setText("Eliminar");
+        eliminarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                eliminarBtnMouseClicked(evt);
+            }
+        });
 
-        jButton3.setText("Nuevo");
+        nuevoBtn.setText("Nuevo");
+        nuevoBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nuevoBtnMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -436,19 +452,19 @@ public class BuscadorSitios extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(171, 171, 171)
-                .addComponent(jButton3)
+                .addComponent(nuevoBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
+                .addComponent(eliminarBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(aceptarBtn)
                 .addGap(175, 175, 175))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(jButton2)
-                .addComponent(jButton3)
-                .addComponent(jButton1))
+                .addComponent(eliminarBtn)
+                .addComponent(nuevoBtn)
+                .addComponent(aceptarBtn))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -484,6 +500,75 @@ public class BuscadorSitios extends javax.swing.JFrame {
         this.sitio = ultimaListaUsada.get(index);
         cargarDatos(sitio);
     }//GEN-LAST:event_sitiosTbMouseClicked
+
+    private void eliminarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_eliminarBtnMouseClicked
+        if(this.sitio == null){
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Se debe seleccionar un sitio",
+                    "Error",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        
+        String msg = "¿Estás seguro que quieres eliminar la norma " + this.sitio.clave + "?";
+        int response = JOptionPane.showConfirmDialog(
+            this,
+            msg,
+            "Confirmación",
+            JOptionPane.YES_NO_OPTION);
+        if(response != 0) return;
+        
+        try {
+            sitioCtl.remove(sitio);
+            this.ultimaListaUsada = sitioCtl.search(
+                    claveTF.getText().trim(),
+                    LatitudTF.getText().trim(),
+                    LongitudTF.getText().trim(),
+                    MunicipioTF.getText().trim(),
+                    EstadoTF.getText().trim(),
+                    nombreTF.getText().trim());
+            loadSitios(ultimaListaUsada);
+            cargarDatos(new Sitio());
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error: " + e.toString(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_eliminarBtnMouseClicked
+
+    private void nuevoBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_nuevoBtnMouseClicked
+        this.sitio = new Sitio();
+        cargarDatos(sitio);
+        this.gClaveTF.setText("Nuevo sitio");
+    }//GEN-LAST:event_nuevoBtnMouseClicked
+
+    private void aceptarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_aceptarBtnMouseClicked
+        if(sitio == null) return;
+        Sitio s = obtenerDeTF();
+        s.idLugar = this.sitio.idLugar;
+
+        try {
+            if(s.idLugar == -1)
+                sitioCtl.add(s);
+            else 
+                sitioCtl.modify(s);
+
+            this.sitio = null;
+            cargarDatos(new Sitio());
+            buscar();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Error: " + e.toString(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_aceptarBtnMouseClicked
 
     private void cargarDatos(Sitio s){
         this.gClaveTF.setText(s.clave);
@@ -526,9 +611,8 @@ public class BuscadorSitios extends javax.swing.JFrame {
             -1l);
     }
     
-    private void buscarBtnActionPerformed(java.awt.event.ActionEvent evt) {
-        try {
-            this.ultimaListaUsada = repoSit.search(
+    private void buscar() throws Exception {
+        this.ultimaListaUsada = sitioCtl.search(
                     claveTF.getText().trim(),
                     LatitudTF.getText().trim(),
                     LongitudTF.getText().trim(),
@@ -536,6 +620,11 @@ public class BuscadorSitios extends javax.swing.JFrame {
                     EstadoTF.getText().trim(),
                     nombreTF.getText().trim());
             loadSitios(ultimaListaUsada);
+    }
+
+    private void buscarBtnActionPerformed(java.awt.event.ActionEvent evt) {
+        try {
+            buscar();
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(
@@ -561,7 +650,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
     public void preparar() {
         try {
             this.utils.centrarEnPantalla();
-            this.ultimaListaUsada = repoSit.getAllSitios();
+            this.ultimaListaUsada = sitioCtl.getAllSitios();
             cargarDatos(new Sitio());
             loadSitios(ultimaListaUsada);
         } catch (Exception e) {
@@ -582,6 +671,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private javax.swing.JPanel MainPanel;
     private javax.swing.JTextField MunicipioTF;
     private javax.swing.JScrollPane VistaPanel;
+    private javax.swing.JButton aceptarBtn;
     private javax.swing.JTextField acuiferoTF;
     private javax.swing.JButton buscarBtn;
     private javax.swing.JTextField cAcuiferoTF;
@@ -589,15 +679,13 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private javax.swing.JTextField claveTF;
     private javax.swing.JTextField cuencaTF;
     private javax.swing.JTextField dirLocalTF;
+    private javax.swing.JButton eliminarBtn;
     private javax.swing.JTextField gClaveTF;
     private javax.swing.JTextField gEdoTF;
     private javax.swing.JTextField gLatitudTF;
     private javax.swing.JTextField gLongitudTF;
     private javax.swing.JTextField gMunicipioTF;
     private javax.swing.JTextField gNombreTF;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -625,6 +713,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField lugatTTF;
     private javax.swing.JTextField nombreTF;
+    private javax.swing.JButton nuevoBtn;
     private javax.swing.JTextField organismoTF;
     private javax.swing.JScrollPane sPaneGestion;
     private javax.swing.JTable sitiosTb;
