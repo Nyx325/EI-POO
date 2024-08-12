@@ -51,7 +51,8 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
     1. [ ] Incluir patron observer para busquedas
     2. [ ] Hacer que no se vea desproporcionado el menu
 - [x] Tarea 3: CRUD clientes
-- [ ] Tarea 4: Vista que asigne pruebas a parámetros
+- [ ] Tarea 4: CRUD Tareas 
+    1. [ ] Vista que asigne pruebas a parámetros
 - [ ] Tarea 5: Vista que asigne clientes a sitios
 - [x] Tarea 6: Vista bitácora
 - [ ] Tarea 7: Ventanas de captura de resultados
