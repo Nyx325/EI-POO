@@ -2,7 +2,6 @@ package Vista.Forms;
 
 import Controlador.ControladorSitios;
 import Modelo.Entidad.Sitio;
-import Modelo.Repositorio.Conector;
 import Vista.Extras.VentanaUtils;
 
 import java.util.List;
@@ -18,9 +17,9 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private Sitio sitio;
     private String modo;
     
-    public final String MODO_BUSQUEDA = "vista"; // Modo leer y buscar sitios
-    public final String MODO_SELECTOR = "selector"; // Modo selector de sitios
-    public final String MODO_GESTION = "gestion"; // Modo administrar sitios
+    public static final String MODO_BUSQUEDA = "busqueda";
+    public static final String MODO_SELECTOR = "selector";
+    public static final String MODO_GESTION = "gestion";
 
     public static BuscadorSitios getInstancia(){
         if(BuscadorSitios.instancia == null){
@@ -34,11 +33,26 @@ public class BuscadorSitios extends javax.swing.JFrame {
         initComponents();
     }
 
+    /**
+     * Dado el modo la funcion `preparar()` reaccionará de forma
+     * diferente
+     * @param modo El modo que se vaya a establecer, existen los modos:
+     * MODO_BUSQUEDA = "busqueda" - Modo leer y buscar sitios
+     * MODO_SELECTOR = "selector" - Modo selector de sitios
+     * MODO_GESTION = "gestion" - Modo administrar sitios
+     */ 
+    public void setModo(String modo){
+        this.modo = modo;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        MainPanel = new javax.swing.JPanel();
+        gestionBotonesPanel = new javax.swing.JPanel();
+        aceptarBtn = new javax.swing.JButton();
+        eliminarBtn = new javax.swing.JButton();
+        nuevoBtn = new javax.swing.JButton();
         VistaPanel = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         claveTF = new javax.swing.JTextField();
@@ -56,6 +70,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        aceptarBusquedaBtn = new javax.swing.JButton();
         sPaneGestion = new javax.swing.JScrollPane();
         GestionPanel = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
@@ -90,12 +105,52 @@ public class BuscadorSitios extends javax.swing.JFrame {
         usoTF = new javax.swing.JTextField();
         lugatTTF = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        aceptarBtn = new javax.swing.JButton();
-        eliminarBtn = new javax.swing.JButton();
-        nuevoBtn = new javax.swing.JButton();
 
         setResizable(false);
+
+        gestionBotonesPanel.setBackground(new java.awt.Color(204, 204, 255));
+
+        aceptarBtn.setText("Aceptar");
+        aceptarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                aceptarBtnMouseClicked(evt);
+            }
+        });
+
+        eliminarBtn.setText("Eliminar");
+        eliminarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                eliminarBtnMouseClicked(evt);
+            }
+        });
+
+        nuevoBtn.setText("Nuevo");
+        nuevoBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                nuevoBtnMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout gestionBotonesPanelLayout = new javax.swing.GroupLayout(gestionBotonesPanel);
+        gestionBotonesPanel.setLayout(gestionBotonesPanelLayout);
+        gestionBotonesPanelLayout.setHorizontalGroup(
+            gestionBotonesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gestionBotonesPanelLayout.createSequentialGroup()
+                .addGap(171, 171, 171)
+                .addComponent(nuevoBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(eliminarBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 354, Short.MAX_VALUE)
+                .addComponent(aceptarBtn)
+                .addGap(175, 175, 175))
+        );
+        gestionBotonesPanelLayout.setVerticalGroup(
+            gestionBotonesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(gestionBotonesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(eliminarBtn)
+                .addComponent(nuevoBtn)
+                .addComponent(aceptarBtn))
+        );
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
@@ -141,6 +196,13 @@ public class BuscadorSitios extends javax.swing.JFrame {
 
         jLabel6.setText("Estado");
 
+        aceptarBusquedaBtn.setText("Aceptar");
+        aceptarBusquedaBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                aceptarBusquedaBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -180,7 +242,10 @@ public class BuscadorSitios extends javax.swing.JFrame {
                                         .addComponent(jLabel6)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(EstadoTF))))))
-                    .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(buscarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(aceptarBusquedaBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -205,7 +270,9 @@ public class BuscadorSitios extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buscarBtn)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buscarBtn)
+                    .addComponent(aceptarBusquedaBtn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(14, Short.MAX_VALUE))
@@ -404,90 +471,34 @@ public class BuscadorSitios extends javax.swing.JFrame {
 
         sPaneGestion.setViewportView(GestionPanel);
 
-        javax.swing.GroupLayout MainPanelLayout = new javax.swing.GroupLayout(MainPanel);
-        MainPanel.setLayout(MainPanelLayout);
-        MainPanelLayout.setHorizontalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, MainPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(VistaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(sPaneGestion, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        MainPanelLayout.setVerticalGroup(
-            MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(MainPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(sPaneGestion, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(VistaPanel)))
-        );
-
-        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
-
-        aceptarBtn.setText("Aceptar");
-        aceptarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                aceptarBtnMouseClicked(evt);
-            }
-        });
-
-        eliminarBtn.setText("Eliminar");
-        eliminarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                eliminarBtnMouseClicked(evt);
-            }
-        });
-
-        nuevoBtn.setText("Nuevo");
-        nuevoBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                nuevoBtnMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(171, 171, 171)
-                .addComponent(nuevoBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(eliminarBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(aceptarBtn)
-                .addGap(175, 175, 175))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(eliminarBtn)
-                .addComponent(nuevoBtn)
-                .addComponent(aceptarBtn))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(VistaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(sPaneGestion, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(gestionBotonesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(18, Short.MAX_VALUE)
-                .addComponent(MainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(VistaPanel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(sPaneGestion, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6))
+                .addComponent(gestionBotonesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -570,6 +581,10 @@ public class BuscadorSitios extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_aceptarBtnMouseClicked
 
+    private void aceptarBusquedaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarBusquedaBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_aceptarBusquedaBtnActionPerformed
+
     private void cargarDatos(Sitio s){
         this.gClaveTF.setText(s.clave);
         this.gNombreTF.setText(s.nombre);
@@ -647,7 +662,35 @@ public class BuscadorSitios extends javax.swing.JFrame {
         sitiosTb.setModel(model);
     }
 
+    public void preparar(String modo){
+        this.modo = modo;
+        preparar();
+    }
+
     public void preparar() {
+        switch (this.modo) {
+            case BuscadorSitios.MODO_SELECTOR:
+                this.GestionPanel.setVisible(false);
+                this.sPaneGestion.setVisible(false);
+                this.gestionBotonesPanel.setVisible(false);
+                this.aceptarBusquedaBtn.setVisible(false);
+                break;
+            case BuscadorSitios.MODO_GESTION:
+                this.GestionPanel.setVisible(true);
+                this.gestionBotonesPanel.setVisible(true);
+                this.sPaneGestion.setVisible(true);
+                this.aceptarBusquedaBtn.setVisible(false);
+                break;
+            case BuscadorSitios.MODO_BUSQUEDA:
+                this.GestionPanel.setVisible(false);
+                this.sPaneGestion.setVisible(false);
+                this.gestionBotonesPanel.setVisible(false);
+                this.aceptarBusquedaBtn.setVisible(true);
+                break;
+            default:
+                break;
+        }
+
         try {
             this.utils.centrarEnPantalla();
             this.ultimaListaUsada = sitioCtl.getAllSitios();
@@ -668,10 +711,10 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private javax.swing.JPanel GestionPanel;
     private javax.swing.JTextField LatitudTF;
     private javax.swing.JTextField LongitudTF;
-    private javax.swing.JPanel MainPanel;
     private javax.swing.JTextField MunicipioTF;
     private javax.swing.JScrollPane VistaPanel;
     private javax.swing.JButton aceptarBtn;
+    private javax.swing.JButton aceptarBusquedaBtn;
     private javax.swing.JTextField acuiferoTF;
     private javax.swing.JButton buscarBtn;
     private javax.swing.JTextField cAcuiferoTF;
@@ -686,6 +729,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private javax.swing.JTextField gLongitudTF;
     private javax.swing.JTextField gMunicipioTF;
     private javax.swing.JTextField gNombreTF;
+    private javax.swing.JPanel gestionBotonesPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -709,7 +753,6 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField lugatTTF;
     private javax.swing.JTextField nombreTF;

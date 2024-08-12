@@ -360,6 +360,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         );
 
         jPanel7.setPreferredSize(new java.awt.Dimension(104, 104));
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel7MouseClicked(evt);
+            }
+        });
 
         jLabel7.setText("Sitios");
 
@@ -499,10 +504,10 @@ public class MenuPrincipal extends javax.swing.JFrame {
             .addGroup(MainPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(MainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pruebasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(pruebasPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 242, Short.MAX_VALUE)
                     .addComponent(adminPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(muestreoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(otrosPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(otrosPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 242, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -578,6 +583,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         Bitacora b = new Bitacora();
         b.show();
     }//GEN-LAST:event_jPanel4MouseClicked
+
+    private void jPanel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MouseClicked
+        BuscadorSitios b = BuscadorSitios.getInstancia();
+        b.preparar("busqueda");
+        b.setVisible(true);
+    }//GEN-LAST:event_jPanel7MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainPanel;
