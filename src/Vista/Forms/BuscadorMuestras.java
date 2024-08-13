@@ -24,7 +24,8 @@ import java.time.LocalTime;
 
 public class BuscadorMuestras extends javax.swing.JFrame {
     private static BuscadorMuestras instancia;
-    VentanaUtils utils;
+    private VentanaUtils utils;
+
     public static final int MODO_VISTA = 0;
     public static final int MODO_BUSQUEDA = 1;
     public static final String EVENTO_BUSQUEDA = "busqueda";

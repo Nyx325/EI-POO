@@ -14,6 +14,36 @@ public class RepositorioPrueba {
                 Conector.resSet.getLong(3));
     }
 
+    public List<Prueba> getAllPrueba() throws Exception {
+        List<Prueba> res = new ArrayList<>();
+
+        String query = "SELECT * FROM Prueba ORDER BY nombre";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+
+        return res;
+    }
+    
+    public List<Prueba> searchByName(String nombre) throws Exception {
+        List<Prueba> res = new ArrayList<>();
+
+        String query = "SELECT * FROM Prueba WHERE nombre LIKE LikeFmt(?) ORDER BY nombre";
+
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, nombre);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+
+        return res;
+    }
+
     public List<Prueba> searchBy(long idSignatario, long idParametro) throws Exception {
         List<Prueba> res = new ArrayList<>();
 
@@ -30,11 +60,27 @@ public class RepositorioPrueba {
 
         return res;
     }
-    
+
+    public Prueba getByNombre(String nombre) throws Exception {
+        String query = "SELECT * FROM Prueba WHERE nombre = ? ORDER BY nombre";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, nombre);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        return Conector.resSet.next() ? fromResSet() : null;
+    }
+
+    public Prueba getById(long idPrueba) throws Exception {
+        String query = "SELECT * FROM Prueba WHERE idPrueba = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idPrueba);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        return Conector.resSet.next() ? fromResSet() : null;
+    }
+
     public List<Prueba> searchBy(long idParametro) throws Exception {
         List<Prueba> res = new ArrayList<>();
         
-        String query = "SELECT * FROM Prueba WHERE idParametro = ?";
+        String query = "SELECT * FROM Prueba WHERE idParametro = ? ORDER BY nombre";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idParametro);
         Conector.resSet = Conector.pStmt.executeQuery();
@@ -97,6 +143,39 @@ public class RepositorioPrueba {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, idSignatario);
         Conector.pStmt.setLong(2, idDetalle);
+        Conector.pStmt.executeUpdate();
+    }
+
+    public void addAI(Prueba p) throws Exception {
+        String query = "INSERT INTO Prueba VALUES (0,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, p.nombre);
+        Conector.pStmt.setLong(2, p.idParametro);
+        Conector.pStmt.executeUpdate();
+    }
+
+    protected void add(Prueba p) throws Exception {
+        String query = "INSERT INTO Prueba VALUES (?,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, p.idPrueba);
+        Conector.pStmt.setString(2, p.nombre);
+        Conector.pStmt.setLong(3, p.idParametro);
+        Conector.pStmt.executeUpdate();
+    }
+
+    protected void update(Prueba p) throws Exception {
+        String query = "UPDATE Prueba SET nombre = ?, idParametro = ? WHERE idPrueba = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, p.nombre);
+        Conector.pStmt.setLong(2, p.idParametro);
+        Conector.pStmt.setLong(3, p.idPrueba);
+        Conector.pStmt.executeUpdate();
+    }
+
+    public void remove(Prueba p) throws Exception {
+        String query = "DELETE FROM Prueba WHERE idPrueba = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, p.idPrueba);
         Conector.pStmt.executeUpdate();
     }
 }

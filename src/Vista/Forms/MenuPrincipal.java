@@ -552,7 +552,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_signatariosBtnMouseClicked
 
     private void jPanel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel10MouseClicked
-        PruebasPorSignatario ventana = PruebasPorSignatario.getInstancia();
+        ResultadosMenuPrevio ventana = ResultadosMenuPrevio.getInstancia();
         ventana.preparar(sesion);
         ventana.setVisible(true);
     }//GEN-LAST:event_jPanel10MouseClicked
@@ -570,7 +570,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel2MouseClicked
 
     private void jPanel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseClicked
-        ParametroVista p = new ParametroVista();
+        ParametroVista p = ParametroVista.getInstancia();
         p.setVisible(true);
     }//GEN-LAST:event_jPanel3MouseClicked
 

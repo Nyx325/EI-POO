@@ -20,7 +20,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-public class PruebasPorSignatario extends javax.swing.JFrame implements EventListener {
+public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventListener {
     private VentanaUtils utils;
     private boolean ventanaPrincial;
     private boolean buscandoMuestra;
@@ -34,17 +34,17 @@ public class PruebasPorSignatario extends javax.swing.JFrame implements EventLis
     private RepositorioParametro repoParam = new RepositorioParametro();
     private RepositorioPrueba repoPrueba = new RepositorioPrueba();
     private RepositorioNorma repoNorma = new RepositorioNorma();
-    private static PruebasPorSignatario instancia;
+    private static ResultadosMenuPrevio instancia;
 
-    public static PruebasPorSignatario getInstancia(){
-        if(PruebasPorSignatario.instancia == null){
-            PruebasPorSignatario.instancia = new PruebasPorSignatario();
+    public static ResultadosMenuPrevio getInstancia(){
+        if(ResultadosMenuPrevio.instancia == null){
+            ResultadosMenuPrevio.instancia = new ResultadosMenuPrevio();
         }
 
-        return PruebasPorSignatario.instancia;
+        return ResultadosMenuPrevio.instancia;
     }
 
-    private PruebasPorSignatario() {
+    private ResultadosMenuPrevio() {
         BuscadorMuestras.getInstancia().subscribe(this);
         this.buscandoMuestra = false;
         this.utils = new VentanaUtils(this);

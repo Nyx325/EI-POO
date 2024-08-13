@@ -1,6 +1,8 @@
 package Vista.Forms;
 
 import Controlador.ControladorParametros;
+import Controlador.EventManager;
+import Controlador.EventListener;
 import Modelo.Entidad.Parametro;
 import Vista.Extras.VentanaUtils;
 import java.util.ArrayList;
@@ -9,12 +11,17 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 public class ParametroVista extends javax.swing.JFrame {
-    ControladorParametros parametrosCtl = new ControladorParametros();
-    VentanaUtils utils = new VentanaUtils(this);
-    List<Parametro> parametros = new ArrayList<>();
-    Parametro parametro;
+    private static ParametroVista instancia;
+    private ControladorParametros parametrosCtl = new ControladorParametros();
+    private VentanaUtils utils = new VentanaUtils(this);
+    private List<Parametro> parametros = new ArrayList<>();
+    private Parametro parametro;
+    private EventManager events = new EventManager("busqueda");
+
+    public static final String MODO_BUSQUEDA = "busqueda";
+    public static final String MODO_GESTION = "gestion";
     
-    public ParametroVista() {
+    private ParametroVista() {
         initComponents();
         try{
             parametros = parametrosCtl.getAllParams();
@@ -27,6 +34,44 @@ public class ParametroVista extends javax.swing.JFrame {
                 "Error: " + e.toString(),
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void subscribe(EventListener listener){
+        events.subscribe(MODO_BUSQUEDA, listener);
+    }
+
+    public void unsuscribe(EventListener listener){
+        events.unsubscribe(MODO_BUSQUEDA, listener);
+    }
+
+    public static ParametroVista getInstancia(){
+        if(ParametroVista.instancia == null){
+            ParametroVista.instancia = new ParametroVista();
+        }
+        return ParametroVista.instancia;
+    }
+    
+    public void preparar(String modo){
+        switch (modo) {
+            case MODO_GESTION:
+                this.nombreLbl.setVisible(true);
+                this.nombreTF.setVisible(true);
+                this.nuevoBtn.setVisible(true);
+                this.eliminarBtn.setVisible(true);
+                this.busquedaAceptarBtn.setVisible(false);
+                this.aceptarBtn.setVisible(true);
+                break;
+            case MODO_BUSQUEDA:
+                this.busquedaAceptarBtn.setVisible(true);
+                this.aceptarBtn.setVisible(false);
+                this.nombreLbl.setVisible(false);
+                this.nombreTF.setVisible(false);
+                this.nuevoBtn.setVisible(false);
+                this.eliminarBtn.setVisible(false);
+                break;
+            default:
+                throw new AssertionError();
         }
     }
     
@@ -52,12 +97,13 @@ public class ParametroVista extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         parametrosScrollList = new javax.swing.JList<>();
-        jLabel1 = new javax.swing.JLabel();
+        nombreLbl = new javax.swing.JLabel();
         nombreTF = new javax.swing.JTextField();
         aceptarBtn = new javax.swing.JButton();
         buscarTF = new javax.swing.JTextField();
         nuevoBtn = new javax.swing.JButton();
         eliminarBtn = new javax.swing.JButton();
+        busquedaAceptarBtn = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 204));
 
@@ -68,7 +114,7 @@ public class ParametroVista extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(parametrosScrollList);
 
-        jLabel1.setText("Nombre");
+        nombreLbl.setText("Nombre");
 
         aceptarBtn.setText("Aceptar");
         aceptarBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -97,6 +143,13 @@ public class ParametroVista extends javax.swing.JFrame {
             }
         });
 
+        busquedaAceptarBtn.setText("Aceptar");
+        busquedaAceptarBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                busquedaAceptarBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -105,11 +158,16 @@ public class ParametroVista extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 276, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(91, 91, 91)
+                                .addComponent(busquedaAceptarBtn)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel1)
+                                    .addComponent(nombreLbl)
                                     .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(nuevoBtn)
@@ -122,33 +180,31 @@ public class ParametroVista extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(buscarTF, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(169, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(buscarTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(aceptarBtn)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 153, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nuevoBtn)
-                    .addComponent(eliminarBtn))
-                .addGap(35, 35, 35))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(55, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(22, 22, 22)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(nombreLbl)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nombreTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(aceptarBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(nuevoBtn)
+                            .addComponent(eliminarBtn))
+                        .addGap(35, 35, 35))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(busquedaAceptarBtn)
+                        .addGap(18, 18, 18))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -267,13 +323,20 @@ public class ParametroVista extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_eliminarBtnActionPerformed
+
+    private void busquedaAceptarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaAceptarBtnActionPerformed
+        events.notify("busqueda", this.parametro);
+        this.setVisible(false);
+    }//GEN-LAST:event_busquedaAceptarBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton aceptarBtn;
     private javax.swing.JTextField buscarTF;
+    private javax.swing.JButton busquedaAceptarBtn;
     private javax.swing.JButton eliminarBtn;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nombreLbl;
     private javax.swing.JTextField nombreTF;
     private javax.swing.JButton nuevoBtn;
     private javax.swing.JList<String> parametrosScrollList;

@@ -18,4 +18,16 @@ public class Prueba {
     public String toString(){
         return idPrueba + " " + nombre + " " + idParametro;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj instanceof Prueba == false) 
+            return false;
+
+        Prueba p = (Prueba)obj;
+
+        return  idPrueba == p.idPrueba &&
+                nombre.equals(p.nombre) &&
+                idParametro == p.idParametro;
+    }
 }
