@@ -42,6 +42,14 @@ public class RepositorioSitio {
         }
         return res;
     }
+    
+    public Sitio getById(long idSitio) throws Exception {
+        String query = "SELECT * FROM Sitio WHERE idSitio = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, idSitio);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        return Conector.resSet.next() ? fromResSet() : null;
+    }
 
     public List<Sitio> search(String clave, String latitud, String longitud, String municipio, String estado,
             String nombre) throws Exception {

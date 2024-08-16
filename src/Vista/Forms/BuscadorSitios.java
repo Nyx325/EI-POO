@@ -1,6 +1,8 @@
 package Vista.Forms;
 
 import Controlador.ControladorSitios;
+import Controlador.EventListener;
+import Controlador.EventManager;
 import Modelo.Entidad.Sitio;
 import Vista.Extras.VentanaUtils;
 
@@ -16,10 +18,12 @@ public class BuscadorSitios extends javax.swing.JFrame {
     private static BuscadorSitios instancia;   
     private Sitio sitio;
     private String modo;
+    private EventManager event = new EventManager(EVENTO_BUSQUEDA);
     
-    public static final String MODO_BUSQUEDA = "busqueda";
-    public static final String MODO_SELECTOR = "selector";
-    public static final String MODO_GESTION = "gestion";
+    public static final String EVENTO_BUSQUEDA = "sitios-ebusqueda";
+    public static final String MODO_BUSQUEDA = "sitio-busqueda";
+    public static final String MODO_SELECTOR = "sitio-selector";
+    public static final String MODO_GESTION = "sitio-gestion";
 
     public static BuscadorSitios getInstancia(){
         if(BuscadorSitios.instancia == null){
@@ -27,6 +31,14 @@ public class BuscadorSitios extends javax.swing.JFrame {
         }
 
         return BuscadorSitios.instancia;
+    }
+     
+    public void subscribe(EventListener listener){
+        event.subscribe(EVENTO_BUSQUEDA, listener);
+    }
+    
+    public void unsuscribe(EventListener listener){
+        event.unsubscribe("busqueda", listener);
     }
 
     private BuscadorSitios() {
@@ -582,7 +594,8 @@ public class BuscadorSitios extends javax.swing.JFrame {
     }//GEN-LAST:event_aceptarBtnMouseClicked
 
     private void aceptarBusquedaBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aceptarBusquedaBtnActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        event.notify(EVENTO_BUSQUEDA, this.sitio);
     }//GEN-LAST:event_aceptarBusquedaBtnActionPerformed
 
     private void cargarDatos(Sitio s){
@@ -682,6 +695,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
                 this.aceptarBusquedaBtn.setVisible(false);
                 break;
             case BuscadorSitios.MODO_BUSQUEDA:
+                this.setSize(550, 530);
                 this.GestionPanel.setVisible(false);
                 this.sPaneGestion.setVisible(false);
                 this.gestionBotonesPanel.setVisible(false);

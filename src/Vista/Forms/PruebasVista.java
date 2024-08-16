@@ -90,8 +90,6 @@ public class PruebasVista extends javax.swing.JFrame implements EventListener {
         nuevoBtn = new javax.swing.JButton();
         eliminarBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
         jPanel1.setBackground(new java.awt.Color(153, 153, 255));
 
         busquedaTF.addKeyListener(new java.awt.event.KeyAdapter() {

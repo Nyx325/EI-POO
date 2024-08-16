@@ -257,14 +257,14 @@ public class SignatariosMenu extends javax.swing.JFrame {
 
         jLabel7.setText("Fecha Ingreso");
 
-        jLabel9.setText("Fecha Ingreso");
+        jLabel9.setText("Fecha Nacimiento");
 
         javax.swing.GroupLayout signatPanelLayout = new javax.swing.GroupLayout(signatPanel);
         signatPanel.setLayout(signatPanelLayout);
         signatPanelLayout.setHorizontalGroup(
             signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(signatPanelLayout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(signatPanelLayout.createSequentialGroup()
@@ -309,7 +309,7 @@ public class SignatariosMenu extends javax.swing.JFrame {
                                     .addComponent(sueldoTF, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(bonoTF, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(fIngresoTF, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         signatPanelLayout.setVerticalGroup(
             signatPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

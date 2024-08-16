@@ -9,8 +9,8 @@ public class Muestra {
     public LocalDate fMuestreo;
     public LocalTime hMuestreo;
     public LocalDate fRecepcion;
-    public long muestreador;
-    public long idSitio;
+    public Long muestreador;
+    public Long idSitio;
 
     public Muestra() {
     }

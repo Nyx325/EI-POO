@@ -297,6 +297,9 @@
                       <Dimension value="[104, 104]"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jPanel11MouseClicked"/>
+                  </Events>
 
                   <Layout>
                     <DimensionLayout dim="0">

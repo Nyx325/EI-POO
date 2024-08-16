@@ -430,6 +430,8 @@ BEGIN
     RETURN CONCAT(DATE(fecha),"T", LEFT(TIME(fecha),5));
 END //
 
+SELET LocalDateTimeFmt(NOW());
+
 # Dado una entrada, concatenar los caracteres de porciento para su uso en LIKE
 # 2
 DROP FUNCTION IF EXISTS LikeFmt;
@@ -873,6 +875,7 @@ CALL CrearUsuario("marictt", "1234", "Pruebas");
 DROP USER IF EXISTS 'marcuspa'@'localhost';
 CALL CrearUsuario("marcuspa", "1234", "Muestreo");
 
+/*
 # TIGGERS BEFORE
 #1
 DROP TRIGGER IF EXISTS InCliente;

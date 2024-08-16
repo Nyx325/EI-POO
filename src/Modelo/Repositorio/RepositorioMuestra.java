@@ -25,7 +25,7 @@ public class RepositorioMuestra {
         Conector.pStmt.setString(1, numControl);
         Conector.resSet = Conector.pStmt.executeQuery();
 
-        return fromResSet();
+        return Conector.resSet.next() ? fromResSet() : null;
     }
 
     public List<Muestra> getAllMuestras() throws Exception {
@@ -62,5 +62,65 @@ public class RepositorioMuestra {
         }
 
         return res;
+    }
+    
+    protected void add(Muestra m) throws Exception {
+        String query = "INSERT INTO Muestra VALUES (?,?,?,?,?,?,?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, m.numControl);
+        Conector.pStmt.setString(2, m.proyecto);
+        Conector.pStmt.setString(3, m.fMuestreo.toString());
+        Conector.pStmt.setString(4, m.hMuestreo.toString());
+        Conector.pStmt.setString(5, m.fRecepcion.toString());
+        
+        if(m.muestreador == null)
+            Conector.pStmt.setNull(6, 1);
+        else
+            Conector.pStmt.setLong(6, m.muestreador);
+        
+        if(m.muestreador == null)
+            Conector.pStmt.setNull(7, 1);
+        else
+            Conector.pStmt.setLong(7, m.idSitio);
+        
+        System.out.println(Conector.pStmt);
+        Conector.pStmt.executeUpdate();
+    }
+    
+    protected void update(Muestra m) throws Exception {
+        String query = "UPDATE Muestra SET ";
+        query+="proyecto = ?, ";
+        query+="fMuestreo = ?, ";
+        query+="hMuestreo = ?, ";
+        query+="fRecepcion = ?, ";
+        query+="muestreador = ?, ";
+        query+="idSitio = ? ";
+        query+="WHERE numControl = ?";
+        
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, m.proyecto);
+        Conector.pStmt.setString(2, m.fMuestreo.toString());
+        Conector.pStmt.setString(3, m.hMuestreo.toString());
+        Conector.pStmt.setString(4, m.fRecepcion.toString());
+        Conector.pStmt.setString(5, m.numControl);
+        
+        if(m.muestreador == null)
+            Conector.pStmt.setNull(6, 1);
+        else
+            Conector.pStmt.setLong(6, m.muestreador);
+        
+        if(m.muestreador == null)
+            Conector.pStmt.setNull(7, 1);
+        else
+            Conector.pStmt.setLong(7, m.idSitio);
+        
+        Conector.pStmt.executeUpdate();
+    }
+    
+    public void delete(Muestra m) throws Exception {
+        String query = "DELETE FROM Muestra WHERE numControl = ?";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, m.numControl);
+        Conector.pStmt.executeUpdate();
     }
 }

@@ -56,10 +56,12 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 - [ ] Tarea 5: Vista que asigne clientes a sitios
 - [x] Tarea 6: Vista bitácora
 - [ ] Tarea 7: Ventanas de captura de resultados
-- [ ] Tarea 8: Gestion muestras
+- [x] Tarea 8: Gestion muestras
+    1. [ ] Selector de signatario
+- [ ] Tarea 9: Generacion de graficos
 
 ### Del script
-- [ ] Tarea 1: Funcion #4 del script
-- [ ] Tarea 2: Funcion #10 del script
-- [ ] Tarea 3: Pruebas de to'
-- [ ] Tarea 4: Transacciones distribuidas y tipos bloqueo
+- [x] Tarea 1: Funcion #4 del script
+- [x] Tarea 2: Funcion #10 del script
+- [x] Tarea 3: Pruebas de to'
+- [x] Tarea 4: Transacciones distribuidas y tipos bloqueo

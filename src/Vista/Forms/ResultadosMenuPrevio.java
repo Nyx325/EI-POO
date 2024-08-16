@@ -282,9 +282,8 @@ public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventLis
     private void selMuestraBtnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selMuestraBtnActionPerformed
         this.buscandoMuestra = true;
         BuscadorMuestras menu = BuscadorMuestras.getInstancia();
-        menu.setModo(BuscadorMuestras.MODO_BUSQUEDA);
-        menu.preparar();
-        menu.show();
+        menu.preparar(BuscadorMuestras.MODO_BUSQUEDA);
+        menu.setVisible(true);
     }// GEN-LAST:event_selMuestraBtnActionPerformed
 
     private void parametroCboxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_parametroCboxActionPerformed

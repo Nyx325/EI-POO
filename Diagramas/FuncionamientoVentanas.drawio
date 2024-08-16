@@ -1,0 +1,73 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.5 Chrome/126.0.6478.234 Electron/31.4.0 Safari/537.36" version="24.7.5">
+  <diagram name="Página-1" id="KfVrUnbGB-RSAyeXUDb-">
+    <mxGraphModel dx="880" dy="519" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-2" target="UgkqQb3eDgaaz39K2Ntc-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-2" value="Cargar datos en ventana" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="20" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-3" target="UgkqQb3eDgaaz39K2Ntc-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-3" value="Definir ultimaLista como Lista" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="80" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-4" target="UgkqQb3eDgaaz39K2Ntc-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-4" value="Definir ultimaSeleccion como Objeto" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="130" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-9" target="UgkqQb3eDgaaz39K2Ntc-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-9" target="UgkqQb3eDgaaz39K2Ntc-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="785" y="255" />
+              <mxPoint x="785" y="360" />
+              <mxPoint x="690" y="360" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-9" value="Objeto en ultimaLista" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="1">
+          <mxGeometry x="615" y="240" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-10" target="UgkqQb3eDgaaz39K2Ntc-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-10" value="Definir modeloDatos como Modelo" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="180" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-13" target="UgkqQb3eDgaaz39K2Ntc-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="350" />
+              <mxPoint x="600" y="350" />
+              <mxPoint x="600" y="255" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-13" value="Agregar objeto a modeloDatos" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="630" y="290" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="UgkqQb3eDgaaz39K2Ntc-16" target="UgkqQb3eDgaaz39K2Ntc-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-16" value="Establecer modelo de tabla o lista de la ventana como modeloDatos" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="625" y="370" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-18" value="Fin" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="655" y="450" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UgkqQb3eDgaaz39K2Ntc-20" value="Visualizar datos ventana" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="20" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
