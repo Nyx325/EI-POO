@@ -14,6 +14,139 @@ CREATE TABLE Muestreos.Cliente (
 	nombre varchar(255) NOT NULL
 );
 
+
+CREATE TABLE Muestreos.Norma (
+	idNorma INT PRIMARY KEY AUTO_INCREMENT,
+	norma VARCHAR(100),
+	unidades VARCHAR(32)
+    DEFAULT "mg/L",
+	tipoVentana INT
+    DEFAULT 1
+);
+
+
+CREATE TABLE Muestreos.Signatario(
+	idSignatario INT PRIMARY KEY AUTO_INCREMENT,
+	primNombre VARCHAR(16),
+	segNombre VARCHAR(16),
+	apellidoP VARCHAR(16),
+	apellidoM VARCHAR(16),
+	sueldo FLOAT DEFAULT 1000,
+	bono FLOAT DEFAULT 0,
+	fIngreso DATE,
+	fNacimiento DATE,
+	posicion VARCHAR(32) DEFAULT "Pruebas",
+        usuario VARCHAR(32) 
+);
+
+
+CREATE TABLE Muestreos.Parametro(
+	idParametro INT PRIMARY KEY AUTO_INCREMENT,
+	nombre VARCHAR(45)
+);
+
+# Hijos
+CREATE TABLE Muestreos.Sitio(
+    idSitio INT PRIMARY KEY AUTO_INCREMENT,
+    clave VArCHAR(256),
+    nombre VARCHAR(256),
+    cuenca VARCHAR(256),
+    cAcuifero VARCHAR(256), /*Clave acuifero*/
+    acuifero VARCHAR(256),
+    organismo VARCHAR(256),
+    dirLocal VARCHAR(256), /*Dirección local*/
+    edo VARCHAR(256),
+    municipio VARCHAR(256),
+    cAgua VARCHAR(256), /*Cuerpo de agua*/
+    tipoC VARCHAR(256), /*Tipo cuerpo*/
+    subtipoC VARCHAR(256),
+    latitud VARCHAR(256),
+    longitud VARCHAR(256),
+    uso VARCHAR(256),
+    lugarT VARCHAR(256), /*Lugar toma*/
+	idCliente INT,
+	FOREIGN KEY (idCliente) 
+		REFERENCES Muestreos.Cliente(idCliente)
+	    ON DELETE SET NULL
+	    ON UPDATE CASCADE
+);
+
+CREATE TABLE Muestreos.Prueba (
+	idPrueba INT PRIMARY KEY auto_increment,
+	nombre varchar(100) NOT NULL,
+	idParametro INT,
+	FOREIGN KEY (idParametro) 
+		REFERENCES Parametro (idParametro)
+	    ON DELETE SET NULL
+	    ON UPDATE CASCADE
+);
+
+CREATE TABLE Muestreos.DetalleNorma(
+	folio INT PRIMARY KEY AUTO_INCREMENT,
+	idNorma INT,
+	idPrueba INT,
+	FOREIGN KEY (idNorma) 
+		REFERENCES Muestreos.Norma(idNorma)
+		ON DELETE SET NULL 
+		ON UPDATE CASCADE,
+	FOREIGN KEY (idPrueba) 
+		REFERENCES Muestreos.Prueba(idPrueba)
+		ON DELETE SET NULL 
+		ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Muestreos.DetalleSignatarios(
+	idDetalle INT PRIMARY KEY AUTO_INCREMENT,
+	idSignatario INT,
+	idPrueba INT,
+	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE Muestreos.Muestra(
+	numControl VARCHAR(30) PRIMARY KEY,
+	proyecto VARCHAR(100),
+	fMuestreo DATE,
+	hMuestreo TIME,
+	fRecepcion DATE,
+	muestreador INT,
+	idSitio INT,
+	FOREIGN KEY (muestreador) REFERENCES Muestreos.Signatario(idSignatario)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (idSitio) REFERENCES Muestreos.Sitio(idSitio)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE Muestreos.Resultados(
+	folio INT PRIMARY KEY AUTO_INCREMENT,
+	resultado VARCHAR(45),
+	fAnalisis DATE,
+	idSignatario INT,
+	idPrueba INT,
+	idNorma INT,
+	numControl VARCHAR(30),
+	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (idNorma) REFERENCES Muestreos.Norma(idNorma)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE,
+	FOREIGN KEY (numControl) REFERENCES Muestreos.Muestra(numControl)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
+);
+
+/*
 INSERT INTO Cliente (idCliente, nombre) VALUES 
 (1, "3M"),
 (2, "Abbott"),
@@ -55,15 +188,6 @@ INSERT INTO Cliente (idCliente, nombre) VALUES
 (38, "Syngenta"),
 (39, "Total"),
 (40, "Unilever");
-
-CREATE TABLE Muestreos.Norma (
-	idNorma INT PRIMARY KEY AUTO_INCREMENT,
-	norma VARCHAR(100),
-	unidades VARCHAR(32)
-    DEFAULT "mg/L",
-	tipoVentana INT
-    DEFAULT 1
-);
 
 # Mediciones directas y Físicoquimicos
 INSERT INTO Norma (idNorma, norma) VALUES
@@ -110,7 +234,7 @@ INSERT INTO Norma (idNorma, norma) VALUES
 # Toxicidad
 INSERT INTO Norma VALUES
 (34,"NMX-AA-087-SCFI-2010", NULL, NULL),
-(35,"NMX-AA-112-SCFI-2017 ()", NULL, NULL), /*Le falta un simbolo que viene en el doc)*/
+(35,"NMX-AA-112-SCFI-2017", NULL, NULL), 
 (36,"Método 10200 H Standard Methods APHA. AWWA. WEF. Ed. 21st. 2005 (Método tricromático)", NULL, NULL);
 
 # Espectrofotometria de absorción atómica
@@ -122,20 +246,6 @@ INSERT INTO Norma (idNorma, norma, unidades, tipoVentana) VALUES
 (38,"XML-AA-001-2024", "mg/L", NULL),
 (39,"XML-AA-002-2024", "mg/L", NULL),
 (40,"XML-AA-003-2024", "mg/L", NULL);
-
-CREATE TABLE Muestreos.Signatario(
-	idSignatario INT PRIMARY KEY AUTO_INCREMENT,
-	primNombre VARCHAR(16),
-	segNombre VARCHAR(16),
-	apellidoP VARCHAR(16),
-	apellidoM VARCHAR(16),
-	sueldo FLOAT DEFAULT 1000,
-	bono FLOAT DEFAULT 0,
-	fIngreso DATE,
-	fNacimiento DATE,
-	posicion VARCHAR(32) DEFAULT "Pruebas",
-        usuario VARCHAR(32) 
-);
 
 INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM,fIngreso,fNacimiento, posicion, usuario) VALUES
 (1,"Rubén","Omar","Román","Salinas", NOW(), "2004-05-28", "Dirección", "rubenrs@localhost"),
@@ -181,11 +291,6 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 (39,"Alondra","Celia","Hernández","Montez", "Pruebas"),
 (40,"Alicia","Carolina","Rojas","Prado", "Pruebas");
 
-CREATE TABLE Muestreos.Parametro(
-	idParametro INT PRIMARY KEY AUTO_INCREMENT,
-	nombre VARCHAR(45)
-);
-
 INSERT INTO Parametro VALUES
 (1, "Metales pesados"),
 (2, "Microbiología"),
@@ -228,33 +333,6 @@ INSERT INTO Parametro VALUES
 (39, "Residuos gaseosos"),
 (40, "Contaminantes emergentes");
 
-# Hijos
-CREATE TABLE Muestreos.Sitio(
-    idSitio INT PRIMARY KEY AUTO_INCREMENT,
-    clave VArCHAR(256),
-    nombre VARCHAR(256),
-    cuenca VARCHAR(256),
-    cAcuifero VARCHAR(256), /*Clave acuifero*/
-    acuifero VARCHAR(256),
-    organismo VARCHAR(256),
-    dirLocal VARCHAR(256), /*Dirección local*/
-    edo VARCHAR(256),
-    municipio VARCHAR(256),
-    cAgua VARCHAR(256), /*Cuerpo de agua*/
-    tipoC VARCHAR(256), /*Tipo cuerpo*/
-    subtipoC VARCHAR(256),
-    latitud VARCHAR(256),
-    longitud VARCHAR(256),
-    uso VARCHAR(256),
-    lugarT VARCHAR(256), /*Lugar toma*/
-	idCliente INT,
-	FOREIGN KEY (idCliente) 
-		REFERENCES Muestreos.Cliente(idCliente)
-	    ON DELETE SET NULL
-	    ON UPDATE CASCADE
-);
-
-
 INSERT INTO Sitio VALUES
 (1,"OCBAL2825","RIO TETLAMA ANTES RIO APATLACO","RIO AMACUZAC",NULL,NULL,
 "OCBAL",NULL,"MORELOS","XOXOCOTLA","RIO APATLACO","LÓTICO",NULL,"18.702203",
@@ -265,17 +343,6 @@ INSERT INTO Sitio (idSitio, clave, nombre, edo, municipio, tipoC, latitud, longi
 (3, "ABCD002RNL", "Río Jamapa", "Veracruz", "Veracruz", "Río", "19.1722", "-96.1333"),
 (4, "ABCD007", "Lago de Pátzcuaro", "Michoacán", "Morelia", "Río", "19.5042", "-96.1333"),
 (5, "ABCD008", "Río Atoyac", "Puebla", "Puebla", "Río", "19.1722", "-96.1333");
-
-
-CREATE TABLE Muestreos.Prueba (
-	idPrueba INT PRIMARY KEY auto_increment,
-	nombre varchar(100) NOT NULL,
-	idParametro INT,
-	FOREIGN KEY (idParametro) 
-		REFERENCES Parametro (idParametro)
-	    ON DELETE SET NULL
-	    ON UPDATE CASCADE
-);
 
 INSERT INTO Prueba VALUES
 (1,"Arsénico", 1),
@@ -291,20 +358,6 @@ INSERT INTO Prueba VALUES
 (11,"Plomo", 1),
 (12,"Zinc", 1);
 
-CREATE TABLE Muestreos.DetalleNorma(
-	folio INT PRIMARY KEY AUTO_INCREMENT,
-	idNorma INT,
-	idPrueba INT,
-	FOREIGN KEY (idNorma) 
-		REFERENCES Muestreos.Norma(idNorma)
-		ON DELETE SET NULL 
-		ON UPDATE CASCADE,
-	FOREIGN KEY (idPrueba) 
-		REFERENCES Muestreos.Prueba(idPrueba)
-		ON DELETE SET NULL 
-		ON UPDATE CASCADE
-);
-
 INSERT INTO DetalleNorma (idPrueba, idNorma) VALUES
 (1, 37),
 (2, 37),
@@ -318,19 +371,7 @@ INSERT INTO DetalleNorma (idPrueba, idNorma) VALUES
 (10, 37),
 (11, 37),
 (12, 37);
-
-CREATE TABLE Muestreos.DetalleSignatarios(
-	idDetalle INT PRIMARY KEY AUTO_INCREMENT,
-	idSignatario INT,
-	idPrueba INT,
-	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE,
-	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE
-);
-
+ 
 INSERT INTO DetalleSignatarios VALUES 
 (0,1,1),
 (0,1,2),
@@ -357,22 +398,6 @@ INSERT INTO DetalleSignatarios VALUES
 (0,5,11),
 (0,5,12);
 
-CREATE TABLE Muestreos.Muestra(
-	numControl VARCHAR(30) PRIMARY KEY,
-	proyecto VARCHAR(100),
-	fMuestreo DATE,
-	hMuestreo TIME,
-	fRecepcion DATE,
-	muestreador INT,
-	idSitio INT,
-	FOREIGN KEY (muestreador) REFERENCES Muestreos.Signatario(idSignatario)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE,
-	FOREIGN KEY (idSitio) REFERENCES Muestreos.Sitio(idSitio)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE
-);
-
 INSERT INTO Muestra VALUES
 ("240124220802", "Red Nacional de Moritoreo", "2024-01-24", "14:30:00","2024-01-24", 8, 1),
 ("123456778901", "Proyecto2", "2024-01-27", "13:28:00", "2024-01-27", 8, 2),
@@ -380,28 +405,6 @@ INSERT INTO Muestra VALUES
 ("123456778903", "Proyecto4", "2024-02-17", "14:08:00", "2024-02-17", 8, 4),
 ("123456778904", "Proyecto5", "2024-03-30", "12:12:00", "2024-03-30", 8, 5);
 
-CREATE TABLE Muestreos.Resultados(
-	folio INT PRIMARY KEY AUTO_INCREMENT,
-	resultado VARCHAR(45),
-	fAnalisis DATE,
-	idSignatario INT,
-	idPrueba INT,
-	idNorma INT,
-	numControl VARCHAR(30),
-	FOREIGN KEY (idSignatario) REFERENCES Muestreos.Signatario(idSignatario)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE,
-	FOREIGN KEY (idPrueba) REFERENCES Muestreos.Prueba(idPrueba)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE,
-	FOREIGN KEY (idNorma) REFERENCES Muestreos.Norma(idNorma)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE,
-	FOREIGN KEY (numControl) REFERENCES Muestreos.Muestra(numControl)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE
-);
- 
 INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, numControl) VALUES
 ("<0.002", "2024-02-07", 5, 1, 37, "240124220802"),
 ("<0.05", "2024-01-30", 5, 2, 37, "240124220802"),
@@ -413,6 +416,233 @@ INSERT INTO Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, n
 ("<0.20", "2024-01-30", 5, 9, 37, "240124220802"),
 ("<0.30", "2024-01-30", 5, 11, 37, "240124220802"),
 ("<0.20", "2024-01-30", 5, 12, 37, "240124220802");
+*/
+
+
+INSERT INTO Muestreos.Bitacora (mensaje) VALUES 
+('Inicio del muestreo en el sitio A'),
+('Recepción de muestras del sitio B'),
+('Análisis de pH completado'),
+('Error en la toma de muestras'),
+('Registro de muestras completado'),
+('Norma N-123 aplicada a la prueba P-001'),
+('Verificación de datos realizada'),
+('Actualización de datos en la base de datos'),
+('Finalización del muestreo en el sitio C'),
+('Muestra número M-1234 recibida'),
+('Análisis de sulfatos iniciado'),
+('Preparación de soluciones completada'),
+('Elaboración de informe de resultados'),
+('Revisión de normas aplicables'),
+('Muestra número M-5678 en análisis'),
+('Cambio de estado a finalizado para el muestreo'),
+('Inconsistencias encontradas en los datos'),
+('Solicitud de aclaración enviada a laboratorio'),
+('Recepción de nueva muestra de control'),
+('Finalización del proceso de análisis para la muestra M-6789');
+
+INSERT INTO Muestreos.Cliente (nombre) VALUES 
+('Compañía ABC'),
+('Laboratorio XYZ'),
+('Cliente 123'),
+('Industria LMN'),
+('Agropecuaria OPQ'),
+('Minera RST'),
+('Consultora UVW'),
+('Empresa DEF'),
+('Hidrocarburos GHI'),
+('Tecnologías JKL'),
+('Alimentos MNO'),
+('Servicios PQR'),
+('Consultores STU'),
+('Agricultura VWX'),
+('Energía YZA'),
+('Automotriz BCD'),
+('Textiles EFG'),
+('Farmacéutica HIJ'),
+('Educación KLM'),
+('Construcción NOP');
+
+INSERT INTO Muestreos.Norma (norma, unidades, tipoVentana) VALUES 
+('NOM-001', 'mg/L', 1),
+('NOM-002', 'mg/L', 1),
+('NOM-003', 'mg/L', 2),
+('NOM-004', 'mg/L', 1),
+('NOM-005', 'mg/L', 1),
+('NOM-006', 'mg/L', 2),
+('NOM-007', 'mg/L', 1),
+('NOM-008', 'mg/L', 1),
+('NOM-009', 'mg/L', 2),
+('NOM-010', 'mg/L', 1),
+('NOM-011', 'mg/L', 1),
+('NOM-012', 'mg/L', 1),
+('NOM-013', 'mg/L', 2),
+('NOM-014', 'mg/L', 1),
+('NOM-015', 'mg/L', 2),
+('NOM-016', 'mg/L', 1),
+('NOM-017', 'mg/L', 2),
+('NOM-018', 'mg/L', 1),
+('NOM-019', 'mg/L', 1),
+('NOM-020', 'mg/L', 1);
+
+
+INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellidoM,fIngreso,fNacimiento, posicion, usuario) VALUES
+(1,"Rubén","Omar","Román","Salinas", NOW(), "2004-05-28", "Dirección", "rubenrs@localhost"),
+(2,"Maricruz",NULL,"Toledano","Torres", NOW(), "2004-09-12", "Sindicalizado", "marictt@localhost"),
+(3,"Ian","Marcus","Prado","Acevedo", NOW(), "2000-06-10",  "Muestreo", "marcuspa@localhost");
+
+INSERT INTO Muestreos.Signatario (primNombre, segNombre, apellidoP, apellidoM, sueldo, bono, fIngreso, fNacimiento, posicion, usuario) VALUES 
+('Juan', 'Carlos', 'Pérez', 'Gómez', 1200, 200, '2022-01-10', '1990-05-14', 'Analista', 'jcperez'),
+('María', 'Elena', 'López', 'Martínez', 1300, 250, '2021-03-15', '1988-08-22', 'Químico', 'melopez'),
+('Luis', 'Fernando', 'García', 'Rodríguez', 1400, 300, '2020-05-20', '1985-12-10', 'Ingeniero', 'lfgarcia'),
+('Ana', 'Sofía', 'Ramírez', 'Sánchez', 1250, 100, '2019-07-25', '1992-03-30', 'Técnico', 'asramirez'),
+('Carlos', 'Eduardo', 'Hernández', 'Gutiérrez', 1500, 400, '2018-09-05', '1987-11-18', 'Supervisor', 'cehernandez'),
+('José', 'Miguel', 'Fernández', 'Ríos', 1350, 250, '2022-02-14', '1991-06-01', 'Técnico', 'jmfernandez'),
+('Laura', 'Isabel', 'González', 'Torres', 1280, 180, '2017-04-12', '1989-01-05', 'Analista', 'ligonzalez'),
+('Pedro', 'Antonio', 'Mendoza', 'Hernández', 1450, 320, '2021-08-19', '1993-09-23', 'Ingeniero', 'pamendoza'),
+('Silvia', 'Patricia', 'Vargas', 'Ruiz', 1380, 280, '2020-11-25', '1990-02-17', 'Químico', 'spvargas'),
+('Jorge', 'Alberto', 'Cruz', 'López', 1320, 240, '2019-03-30', '1988-07-14', 'Supervisor', 'jacruz'),
+('Alejandra', 'Beatriz', 'Morales', 'Méndez', 1420, 310, '2018-12-10', '1986-10-02', 'Ingeniero', 'abmorales'),
+('Ricardo', 'Daniel', 'Ortega', 'Ramírez', 1370, 270, '2022-05-17', '1992-03-01', 'Analista', 'rdortega'),
+('Fernando', 'José', 'Pérez', 'Ramírez', 1500, 350, '2021-10-09', '1991-12-25', 'Supervisor', 'fjramirez'),
+('Gabriela', 'Lucía', 'Navarro', 'Gómez', 1310, 220, '2020-07-21', '1993-04-11', 'Químico', 'glnavarro'),
+('Miguel', 'Ángel', 'Reyes', 'Sosa', 1390, 290, '2019-01-15', '1987-06-09', 'Ingeniero', 'mareyes'),
+('Sofía', 'Alejandra', 'Luna', 'Zamora', 1330, 250, '2018-11-05', '1990-08-21', 'Analista', 'saluna'),
+('Andrés', 'Eduardo', 'Ramírez', 'Flores', 1440, 330, '2017-02-25', '1989-10-10', 'Técnico', 'aeramirez'),
+('Mónica', 'Paola', 'Cisneros', 'Vega', 1290, 190, '2022-03-12', '1994-05-19', 'Supervisor', 'mpcisneros'),
+('Roberto', 'Carlos', 'Hernández', 'Martínez', 1460, 340, '2021-06-14', '1992-01-28', 'Técnico', 'rchernandez'),
+('Daniela', 'Fernanda', 'López', 'Ramírez', 1340, 260, '2020-04-23', '1991-09-07', 'Ingeniero', 'dflopez');
+
+INSERT INTO Muestreos.Parametro (nombre) VALUES 
+('pH'),
+('Conductividad'),
+('Turbidez'),
+('Cloruro'),
+('Sulfatos'),
+('Nitratos'),
+('Oxígeno disuelto'),
+('Demanda bioquímica de oxígeno'),
+('Demanda química de oxígeno'),
+('Alcalinidad'),
+('Dureza'),
+('Calcio'),
+('Magnesio'),
+('Sodio'),
+('Potasio'),
+('Hierro'),
+('Manganeso'),
+('Fósforo'),
+('Fluoruros'),
+('Mercurio');
+
+INSERT INTO Muestreos.Sitio (clave, nombre, cuenca, cAcuifero, acuifero, organismo, dirLocal, edo, municipio, cAgua, tipoC, subtipoC, latitud, longitud, uso, lugarT, idCliente)
+VALUES 
+('SIT-001', 'Río Azul', 'Cuenca 1', 'AC-001', 'Acuífero 1', 'Organismo A', 'Calle 123', 'Estado A', 'Municipio A', 'Agua 1', 'Río', 'Río Perennial', '21.1234', '-101.1234', 'Abastecimiento público', 'Punto A', 1),
+('SIT-002', 'Laguna Verde', 'Cuenca 2', 'AC-002', 'Acuífero 2', 'Organismo B', 'Calle 456', 'Estado B', 'Municipio B', 'Agua 2', 'Lago', 'Lago Natural', '20.5678', '-100.5678', 'Recreación', 'Punto B', 2),
+('SIT-003', 'Río Claro', 'Cuenca 1', 'AC-003', 'Acuífero 3', 'Organismo A', 'Calle 789', 'Estado C', 'Municipio C', 'Agua 3', 'Río', 'Río Perennial', '19.4321', '-99.4321', 'Abastecimiento público', 'Punto C', 3),
+('SIT-004', 'Lago Verde', 'Cuenca 2', 'AC-004', 'Acuífero 4', 'Organismo B', 'Calle 101', 'Estado D', 'Municipio D', 'Agua 4', 'Lago', 'Lago Natural', '18.8765', '-98.8765', 'Conservación de flora y fauna', 'Punto D', 4),
+('SIT-005', 'Río Grande', 'Cuenca 3', 'AC-005', 'Acuífero 5', 'Organismo C', 'Calle 202', 'Estado E', 'Municipio E', 'Agua 5', 'Río', 'Río Perennial', '17.6543', '-97.6543', 'Hidroelectricidad', 'Punto E', 5),
+('SIT-006', 'Laguna Amarilla', 'Cuenca 4', 'AC-006', 'Acuífero 6', 'Organismo D', 'Calle 303', 'Estado F', 'Municipio F', 'Agua 6', 'Lago', 'Lago Natural', '16.3210', '-96.3210', 'Recreación', 'Punto F', 6),
+('SIT-007', 'Río Azul', 'Cuenca 3', 'AC-007', 'Acuífero 7', 'Organismo C', 'Calle 404', 'Estado G', 'Municipio G', 'Agua 7', 'Río', 'Río Perennial', '15.9876', '-95.9876', 'Abastecimiento público', 'Punto G', 7),
+('SIT-008', 'Lago Blanco', 'Cuenca 4', 'AC-008', 'Acuífero 8', 'Organismo D', 'Calle 505', 'Estado H', 'Municipio H', 'Agua 8', 'Lago', 'Lago Natural', '14.6543', '-94.6543', 'Conservación de flora y fauna', 'Punto H', 8),
+('SIT-009', 'Río Negro', 'Cuenca 1', 'AC-009', 'Acuífero 9', 'Organismo A', 'Calle 606', 'Estado I', 'Municipio I', 'Agua 9', 'Río', 'Río Perennial', '13.3210', '-93.3210', 'Hidroelectricidad', 'Punto I', 9),
+('SIT-010', 'Laguna Blanca', 'Cuenca 2', 'AC-010', 'Acuífero 10', 'Organismo B', 'Calle 707', 'Estado J', 'Municipio J', 'Agua 10', 'Lago', 'Lago Natural', '12.9876', '-92.9876', 'Agricultura', 'Punto J', 10),
+('SIT-011', 'Río Verde', 'Cuenca 5', 'AC-011', 'Acuífero 11', 'Organismo E', 'Calle 808', 'Estado K', 'Municipio K', 'Agua 11', 'Río', 'Río Intermittent', '11.6543', '-91.6543', 'Industria', 'Punto K', 11),
+('SIT-012', 'Lago Azul', 'Cuenca 6', 'AC-012', 'Acuífero 12', 'Organismo F', 'Calle 909', 'Estado L', 'Municipio L', 'Agua 12', 'Lago', 'Lago Artificial', '10.3210', '-90.3210', 'Recreación', 'Punto L', 12),
+('SIT-013', 'Río Blanco', 'Cuenca 7', 'AC-013', 'Acuífero 13', 'Organismo G', 'Calle 1010', 'Estado M', 'Municipio M', 'Agua 13', 'Río', 'Río Perennial', '9.9876', '-89.9876', 'Agricultura', 'Punto M', 13),
+('SIT-014', 'Laguna Roja', 'Cuenca 8', 'AC-014', 'Acuífero 14', 'Organismo H', 'Calle 1111', 'Estado N', 'Municipio N', 'Agua 14', 'Lago', 'Lago Natural', '8.6543', '-88.6543', 'Conservación de flora y fauna', 'Punto N', 14),
+('SIT-015', 'Río Amarillo', 'Cuenca 9', 'AC-015', 'Acuífero 15', 'Organismo I', 'Calle 1212', 'Estado O', 'Municipio O', 'Agua 15', 'Río', 'Río Perennial', '7.3210', '-87.3210', 'Abastecimiento público', 'Punto O', 15);
+
+INSERT INTO Muestreos.Prueba (nombre, idParametro)
+VALUES
+('pH', 1),
+('Turbidez', 2),
+('Conductividad', 3),
+('Color', 4),
+('Sólidos disueltos', 5),
+('Cloruros', 6),
+('Sulfatos', 7),
+('Nitratos', 8),
+('Fósforo', 9),
+('Oxígeno disuelto', 10),
+('Demanda bioquímica de oxígeno', 11),
+('Demanda química de oxígeno', 12),
+('Coliformes fecales', 13),
+('Coliformes totales', 14),
+('Cianuros', 15);
+
+
+INSERT INTO Muestreos.DetalleNorma (idNorma, idPrueba)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15);
+
+INSERT INTO Muestreos.DetalleSignatarios (idSignatario, idPrueba)
+VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6),
+(7, 7),
+(8, 8),
+(9, 9),
+(10, 10),
+(11, 11),
+(12, 12),
+(13, 13),
+(14, 14),
+(15, 15);
+
+INSERT INTO Muestreos.Muestra (numControl, proyecto, fMuestreo, hMuestreo, fRecepcion, muestreador, idSitio)
+VALUES
+('MC-001', 'Proyecto A', '2024-08-01', '08:00:00', '2024-08-02', 1, 1),
+('MC-002', 'Proyecto B', '2024-08-03', '09:00:00', '2024-08-04', 2, 2),
+('MC-003', 'Proyecto C', '2024-08-05', '10:00:00', '2024-08-06', 3, 3),
+('MC-004', 'Proyecto D', '2024-08-07', '11:00:00', '2024-08-08', 4, 4),
+('MC-005', 'Proyecto E', '2024-08-09', '12:00:00', '2024-08-10', 5, 5),
+('MC-006', 'Proyecto F', '2024-08-11', '13:00:00', '2024-08-12', 6, 6),
+('MC-007', 'Proyecto G', '2024-08-13', '14:00:00', '2024-08-14', 7, 7),
+('MC-008', 'Proyecto H', '2024-08-15', '15:00:00', '2024-08-16', 8, 8),
+('MC-009', 'Proyecto I', '2024-08-17', '16:00:00', '2024-08-18', 9, 9),
+('MC-010', 'Proyecto J', '2024-08-19', '17:00:00', '2024-08-20', 10, 10),
+('MC-011', 'Proyecto K', '2024-08-21', '18:00:00', '2024-08-22', 11, 11),
+('MC-012', 'Proyecto L', '2024-08-23', '19:00:00', '2024-08-24', 12, 12),
+('MC-013', 'Proyecto M', '2024-08-25', '20:00:00', '2024-08-26', 13, 13),
+('MC-014', 'Proyecto N', '2024-08-27', '21:00:00', '2024-08-28', 14, 14),
+('MC-015', 'Proyecto O', '2024-08-29', '22:00:00', '2024-08-30', 15, 15);
+
+INSERT INTO Muestreos.Resultados (resultado, fAnalisis, idSignatario, idPrueba, idNorma, numControl)
+VALUES
+('Resultado 1', '2024-08-02', 1, 1, 1, 'MC-001'),
+('Resultado 2', '2024-08-04', 2, 2, 2, 'MC-002'),
+('Resultado 3', '2024-08-06', 3, 3, 3, 'MC-003'),
+('Resultado 4', '2024-08-08', 4, 4, 4, 'MC-004'),
+('Resultado 5', '2024-08-10', 5, 5, 5, 'MC-005'),
+('Resultado 6', '2024-08-12', 6, 6, 6, 'MC-006'),
+('Resultado 7', '2024-08-14', 7, 7, 7, 'MC-007'),
+('Resultado 8', '2024-08-16', 8, 8, 8, 'MC-008'),
+('Resultado 9', '2024-08-18', 9, 9, 9, 'MC-009'),
+('Resultado 10', '2024-08-20', 10, 10, 10, 'MC-010'),
+('Resultado 11', '2024-08-22', 11, 11, 11, 'MC-011'),
+('Resultado 12', '2024-08-24', 12, 12, 12, 'MC-012'),
+('Resultado 13', '2024-08-26', 13, 13, 13, 'MC-013'),
+('Resultado 14', '2024-08-28', 14, 14, 14, 'MC-014'),
+('Resultado 15', '2024-08-30', 15, 15, 15, 'MC-015');
 
 # FUNCIONES
 # Convertir un DATETIME a una cadena que Java puede parsear en un
