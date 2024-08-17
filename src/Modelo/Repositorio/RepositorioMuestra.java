@@ -102,17 +102,18 @@ public class RepositorioMuestra {
         Conector.pStmt.setString(2, m.fMuestreo.toString());
         Conector.pStmt.setString(3, m.hMuestreo.toString());
         Conector.pStmt.setString(4, m.fRecepcion.toString());
-        Conector.pStmt.setString(5, m.numControl);
+        
+        if(m.muestreador == null)
+            Conector.pStmt.setNull(5, 1);
+        else
+            Conector.pStmt.setLong(5, m.muestreador);
         
         if(m.muestreador == null)
             Conector.pStmt.setNull(6, 1);
         else
-            Conector.pStmt.setLong(6, m.muestreador);
+            Conector.pStmt.setLong(6, m.idSitio);
         
-        if(m.muestreador == null)
-            Conector.pStmt.setNull(7, 1);
-        else
-            Conector.pStmt.setLong(7, m.idSitio);
+        Conector.pStmt.setString(7, m.numControl);
         
         Conector.pStmt.executeUpdate();
     }

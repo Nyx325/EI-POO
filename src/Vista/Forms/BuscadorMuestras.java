@@ -467,6 +467,11 @@ public class BuscadorMuestras extends javax.swing.JFrame implements EventListene
             gFRecepcionTF.setText("");
             gNumCTF.setText("");
             gProyTF.setText("");
+            gMuestreadorLbl.setText("Muestreador: [Ninguno]");
+            gSitioLbl.setText("Sitio: [Ninguno]");
+            this.muestra = null;
+            this.muestreadorCambio = null;
+            this.sitioCambio = null;
             buscar();
             
         } catch (DateTimeParseException e) {

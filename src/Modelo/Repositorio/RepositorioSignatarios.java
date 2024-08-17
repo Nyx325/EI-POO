@@ -124,7 +124,11 @@ public class RepositorioSignatarios {
     
     public List<Signatario> searchByFullName(String fullName) throws Exception {
         List<Signatario> res = new ArrayList<>();
-        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario WHERE nombreCS(idSignatario) LIKE LikeFmt(?)";
+        
+        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario";
+        query+=" WHERE nombreCS(idSignatario) LIKE LikeFmt(?)";
+        query+=" ORDER BY SiglasSignatario(idSignatario)";
+        
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setString(1, fullName);
         Conector.resSet = Conector.pStmt.executeQuery();
