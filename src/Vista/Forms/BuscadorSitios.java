@@ -683,6 +683,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
     public void preparar() {
         switch (this.modo) {
             case BuscadorSitios.MODO_SELECTOR:
+                this.setSize(610, 550);
                 this.GestionPanel.setVisible(false);
                 this.sPaneGestion.setVisible(false);
                 this.gestionBotonesPanel.setVisible(false);
@@ -695,7 +696,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
                 this.aceptarBusquedaBtn.setVisible(false);
                 break;
             case BuscadorSitios.MODO_BUSQUEDA:
-                this.setSize(550, 530);
+                this.setSize(610, 550);
                 this.GestionPanel.setVisible(false);
                 this.sPaneGestion.setVisible(false);
                 this.gestionBotonesPanel.setVisible(false);

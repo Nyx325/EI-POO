@@ -790,6 +790,11 @@ END //
 
 CALL NormasPorPrueba(1); 
 
+	SELECT norma, COUNT(norma) As NumPruebas FROM Norma 
+	INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma 
+	INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba 
+	GROUP BY norma;
+
 #9
 DROP PROCEDURE IF EXISTS QueryFromStr;
 DELIMITER //
@@ -866,8 +871,6 @@ END //
 
 DROP USER IF EXISTS 'rubenrs'@'localhost';
 CALL CrearUsuario("rubenrs", "1234", "Dirección");
-CALL CrearUsuario("rubenrs", "1234", "Dirección");
-CALL CrearUsuario("rubiño", "1234", "Direcció");
 
 DROP USER IF EXISTS 'marictt'@'localhost';
 CALL CrearUsuario("marictt", "1234", "Pruebas");

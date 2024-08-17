@@ -5,6 +5,8 @@ import Modelo.Entidad.Signatario;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RepositorioSignatarios {
     protected Signatario fromResSet() throws Exception {
@@ -136,6 +138,24 @@ public class RepositorioSignatarios {
             res.add(fromResSet());
         }
 
+        return res;
+    }
+    
+    public Map<String, Long> topSignatarionResultados(long top) throws Exception {
+        Map<String, Long> res = new HashMap<>();
+        
+        String query = "CALL TopSignatariosConMasResultados(?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, top);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        
+        while(Conector.resSet.next()){
+            res.put(
+                Conector.resSet.getString(1), 
+                Conector.resSet.getLong(2)
+            );
+        }
+        
         return res;
     }
 }

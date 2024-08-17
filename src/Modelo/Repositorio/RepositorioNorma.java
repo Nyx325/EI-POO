@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Modelo.Entidad.Norma;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RepositorioNorma {
     protected Norma fromResSet() throws Exception {
@@ -79,6 +81,31 @@ public class RepositorioNorma {
         return list;
     }
 
+    public Map<String, Long> normasMasPruebas(long top) throws Exception {
+        Map<String, Long> res = new HashMap<>();
+        
+        String query = "SELECT * FROM Norma ";
+        query+="INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma ";
+        query+="SELECT norma, COUNT(norma) FROM Norma ";
+	query+="INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma ";
+	query+="INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba ";
+	query+="GROUP BY norma ";
+        query+="LIMIT ?";
+        
+        Conector.pStmt = Conector.getConnection().prepareCall(query);
+        Conector.pStmt.setLong(1, top);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        
+        while(Conector.resSet.next()){
+            res.put(
+                Conector.resSet.getString(1), 
+                Conector.resSet.getLong(2)
+            );
+        }
+        
+        return res;
+    }
+    
     protected void addAI(Norma n) throws Exception {
         String query = "INSERT INTO Norma VALUES (0,?,?,?)";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);

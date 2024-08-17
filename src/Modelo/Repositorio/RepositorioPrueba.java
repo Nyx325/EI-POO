@@ -5,6 +5,8 @@ import java.util.List;
 
 import Modelo.Entidad.DetalleSignatario;
 import Modelo.Entidad.Prueba;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RepositorioPrueba {
     protected Prueba fromResSet() throws Exception {
@@ -118,6 +120,24 @@ public class RepositorioPrueba {
         Conector.pStmt.setLong(2, idPrueba);
         Conector.resSet = Conector.pStmt.executeQuery();
         return Conector.resSet.next();
+    }
+    
+    public Map<String, Long> pruebasRealizadasPorAnio(long anio, long top) throws Exception {
+        Map<String, Long> res = new HashMap<>();
+        String query = "CALL TopPruebasMasRealizadasPorAnio(?, ?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setLong(1, anio);
+        Conector.pStmt.setLong(2, top);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        
+        while(Conector.resSet.next()){
+            res.put(
+                Conector.resSet.getString(1), 
+                Conector.resSet.getLong(2)
+            );
+        }
+        
+        return res;
     }
 
     public void agregarPruebaASignatario(long idSignatario, long idPrueba) throws Exception{
