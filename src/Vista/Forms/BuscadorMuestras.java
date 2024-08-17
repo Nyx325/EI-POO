@@ -58,6 +58,7 @@ public class BuscadorMuestras extends javax.swing.JFrame implements EventListene
         initComponents();
         this.utils = new VentanaUtils(this);
         BuscadorSitios.getInstancia().subscribe(this);
+        BuscadorSignatarios.getInstancia().subscribe(this);
     }
 
     public void subscribe(EventListener listener) {
@@ -73,8 +74,13 @@ public class BuscadorMuestras extends javax.swing.JFrame implements EventListene
         switch (eventType) {
             case BuscadorSitios.EVENTO_BUSQUEDA:
                 Sitio sit = (Sitio)obj;
-                this.sitioCambio = null;
+                this.sitioCambio = sit.idLugar;
                 this.gSitioLbl.setText("Sitio: "+sit.clave);
+                break;
+            case BuscadorSignatarios.EVENTO_BUSQUEDA:
+                Signatario s = (Signatario)obj;
+                this.muestreadorCambio = s.idSignatario;
+                this.gMuestreadorLbl.setText("Muestreador: "+s.getNombreCompleto());
                 break;
             default:
                 throw new AssertionError();
@@ -406,7 +412,7 @@ public class BuscadorMuestras extends javax.swing.JFrame implements EventListene
         try {
             Signatario s = repoSig.searchBy(muestra.muestreador);
             gMuestreadorLbl.setText(
-                "Muestreador: "+ (s != null ? s.siglas : "[Ninguno]")
+                "Muestreador: "+ (s != null ? s.getNombreCompleto() : "[Ninguno]")
             );
             
             Sitio sit = repoSit.getById(muestra.idSitio);
@@ -426,11 +432,14 @@ public class BuscadorMuestras extends javax.swing.JFrame implements EventListene
     }//GEN-LAST:event_muestrasTbMouseClicked
 
     private void buscarMuestreadorBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarMuestreadorBtnMouseClicked
-        if(this.muestrasTb.getSelectedRow() == -1) return;
+        if(!agregando && this.muestrasTb.getSelectedRow() == -1) return;
+        BuscadorSignatarios b = BuscadorSignatarios.getInstancia();
+        b.buscar();
+        b.setVisible(true);
     }//GEN-LAST:event_buscarMuestreadorBtnMouseClicked
 
     private void buscarSitioBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buscarSitioBtnMouseClicked
-        if(this.muestrasTb.getSelectedRow() == -1) return;
+        if(!agregando && this.muestrasTb.getSelectedRow() == -1) return;
         BuscadorSitios b = BuscadorSitios.getInstancia();
         b.preparar(BuscadorSitios.MODO_BUSQUEDA);
         b.setVisible(true);
@@ -453,7 +462,13 @@ public class BuscadorMuestras extends javax.swing.JFrame implements EventListene
             else{
                 muestraCtl.modify(m);
             }
+            gFMuestreoTF.setText("");
+            gHoraTF.setText("");
+            gFRecepcionTF.setText("");
+            gNumCTF.setText("");
+            gProyTF.setText("");
             buscar();
+            
         } catch (DateTimeParseException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(

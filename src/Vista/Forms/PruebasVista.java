@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import Controlador.ControladorPruebas;
+import Modelo.Entidad.Signatario;
 import Modelo.Repositorio.Conector;
 import Modelo.Repositorio.RepositorioParametro;
 import Vista.Extras.VentanaUtils;
@@ -26,13 +27,14 @@ public class PruebasVista extends javax.swing.JFrame implements EventListener {
         initComponents();
         utils.centrarEnPantalla();
         ParametroVista.getInstancia().subscribe(this);
+        BuscadorSignatarios.getInstancia().subscribe(this);
         preparar();
     }
     
     @Override
     public void update(String eventType, Object obj) {
         switch (eventType) {
-            case "busqueda":
+            case ParametroVista.EVENTO_BUSQUEDA:
                 Parametro p = (Parametro) obj;
                 this.parametroLbl.setText(p.nombre);
                 this.idParametro = p.idParametro;

@@ -16,8 +16,9 @@ public class ParametroVista extends javax.swing.JFrame {
     private VentanaUtils utils = new VentanaUtils(this);
     private List<Parametro> parametros = new ArrayList<>();
     private Parametro parametro;
-    private EventManager events = new EventManager("busqueda");
+    private EventManager events = new EventManager(EVENTO_BUSQUEDA);
 
+    public static final String EVENTO_BUSQUEDA = "param-busqueda";
     public static final String MODO_BUSQUEDA = "busqueda";
     public static final String MODO_GESTION = "gestion";
     
@@ -38,11 +39,11 @@ public class ParametroVista extends javax.swing.JFrame {
     }
 
     public void subscribe(EventListener listener){
-        events.subscribe(MODO_BUSQUEDA, listener);
+        events.subscribe(EVENTO_BUSQUEDA, listener);
     }
 
     public void unsuscribe(EventListener listener){
-        events.unsubscribe(MODO_BUSQUEDA, listener);
+        events.unsubscribe(EVENTO_BUSQUEDA, listener);
     }
 
     public static ParametroVista getInstancia(){
@@ -325,7 +326,7 @@ public class ParametroVista extends javax.swing.JFrame {
     }//GEN-LAST:event_eliminarBtnActionPerformed
 
     private void busquedaAceptarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaAceptarBtnActionPerformed
-        events.notify("busqueda", this.parametro);
+        events.notify(EVENTO_BUSQUEDA, this.parametro);
         this.setVisible(false);
     }//GEN-LAST:event_busquedaAceptarBtnActionPerformed
 

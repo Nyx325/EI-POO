@@ -57,7 +57,7 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 - [x] Tarea 6: Vista bitácora
 - [ ] Tarea 7: Ventanas de captura de resultados
 - [x] Tarea 8: Gestion muestras
-    1. [ ] Selector de signatario
+    1. [x] Selector de signatario
 - [ ] Tarea 9: Generacion de graficos
 
 ### Del script

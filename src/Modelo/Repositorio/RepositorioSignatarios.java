@@ -121,4 +121,17 @@ public class RepositorioSignatarios {
         Conector.resSet.next();
         return Conector.resSet.getString(1);
     }
+    
+    public List<Signatario> searchByFullName(String fullName) throws Exception {
+        List<Signatario> res = new ArrayList<>();
+        String query = "SELECT *, SiglasSignatario(idSignatario) FROM Signatario WHERE nombreCS(idSignatario) LIKE LikeFmt(?)";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.pStmt.setString(1, fullName);
+        Conector.resSet = Conector.pStmt.executeQuery();
+        while (Conector.resSet.next()) {
+            res.add(fromResSet());
+        }
+
+        return res;
+    }
 }
