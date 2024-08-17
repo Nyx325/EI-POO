@@ -1,19 +1,20 @@
 package Controlador;
 
-import Modelo.Entidad.Prueba;
+import Modelo.Repositorio.RepositorioCliente;
 import Modelo.Repositorio.RepositorioNorma;
 import Modelo.Repositorio.RepositorioPrueba;
 import Modelo.Repositorio.RepositorioSignatarios;
-import java.util.List;
+import Modelo.Repositorio.RepositorioSitio;
+
 import java.util.Map;
-import javax.swing.JOptionPane;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 public class ControladorGraficos {
     RepositorioPrueba repoPrueba = new RepositorioPrueba();
     RepositorioSignatarios repoSig = new RepositorioSignatarios();
     RepositorioNorma repoNorm = new RepositorioNorma();
-
+    RepositorioSitio repoSit = new RepositorioSitio();
+    RepositorioCliente repoCli = new RepositorioCliente();
     
     private DefaultCategoryDataset dataSetFromMap(Map<String, Long> map, String group) throws Exception {
         DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
@@ -39,6 +40,16 @@ public class ControladorGraficos {
                 return dataSetFromMap(
                     repoNorm.normasMasPruebas(5), 
                     "Pruebas por norma"
+                );
+            case 4:
+                return dataSetFromMap(
+                    repoSit.sitiosConMasResultados(), 
+                    "Sitios con más resultados"
+                );
+            case 5:
+                return dataSetFromMap(
+                    repoCli.clientesFrecuentes(), 
+                    "Clientes frecuentes"
                 );
             default:
                 throw new AssertionError();

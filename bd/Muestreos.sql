@@ -692,9 +692,10 @@ BEGIN
 	SELECT Prueba.Nombre, COUNT(Resultados.folio) As Total FROM Resultados 
 	INNER JOIN Prueba ON Resultados.idPrueba  = Prueba.idPrueba
 	INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro 
-	WHERE YEAR(Resultados.fAnalisis) = Anio
-	GROUP BY Prueba.nombre
-	ORDER BY COUNT(Resultados.folio)
+	WHERE YEAR(Resultados.fAnalisis) = Anio 
+	GROUP BY Prueba.nombre 
+	ORDER BY COUNT(Resultados.folio) 
+    DESC
 	LIMIT top;
 END //
 
@@ -718,9 +719,10 @@ BEGIN
 		Signatario.primNombre, COUNT(Resultados.idSignatario) As Total 
 	FROM Resultados 
 	INNER JOIN Signatario ON Signatario.idSignatario = Resultados.idSignatario 
-	GROUP BY SiglasSignatario(Signatario.idSignatario)
-	ORDER BY COUNT(Resultados.idSignatario)
-	LIMIT top;
+	GROUP BY SiglasSignatario(Signatario.idSignatario) 
+	ORDER BY COUNT(Resultados.idSignatario) 
+	/*LIMIT top*/
+    DESC;
 END //
 
 CALL TopSignatariosConMasResultados(5);
@@ -790,10 +792,27 @@ END //
 
 CALL NormasPorPrueba(1); 
 
-	SELECT norma, COUNT(norma) As NumPruebas FROM Norma 
-	INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma 
-	INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba 
-	GROUP BY norma;
+SELECT norma, COUNT(norma) FROM Norma 
+INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma 
+INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba 
+GROUP BY norma 
+ORDER BY COUNT(norma) 
+DESC;
+
+SELECT clave, COUNT(clave) FROM Resultados 
+INNER JOIN Muestra ON Resultados.numControl = Muestra.numControl 
+INNER JOIN Sitio ON Muestra.idSitio = Sitio.idSitio 
+GROUP BY clave 
+ORDER BY COUNT(clave) 
+DESC;
+
+SELECT Cliente.nombre, COUNT(Cliente.nombre) FROM Resultados 
+INNER JOIN Muestra ON Resultados.numControl = Muestra.numControl 
+INNER JOIN Sitio ON Muestra.idSitio = Sitio.idSitio 
+INNER JOIN Cliente ON Sitio.idCliente = Cliente.idCliente 
+GROUP BY Cliente.nombre 
+ORDER BY COUNT(clave) 
+DESC;
 
 #9
 DROP PROCEDURE IF EXISTS QueryFromStr;

@@ -1,7 +1,10 @@
 package Modelo.Repositorio;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import Modelo.Entidad.Cliente;
 
 public class RepositorioCliente {
@@ -76,5 +79,27 @@ public class RepositorioCliente {
         Conector.pStmt.setString(1, c.nombre);
         Conector.pStmt.setLong(2, c.idCliente);
         Conector.pStmt.executeUpdate();
+    }
+
+    public Map<String, Long> clientesFrecuentes() throws Exception {
+        String query ="SELECT Cliente.nombre, COUNT(Cliente.nombre) FROM Resultados ";
+        query+="INNER JOIN Muestra ON Resultados.numControl = Muestra.numControl ";
+        query+="INNER JOIN Sitio ON Muestra.idSitio = Sitio.idSitio ";
+        query+="INNER JOIN Cliente ON Sitio.idCliente = Cliente.idCliente ";
+        query+="GROUP BY Cliente.nombre";
+
+        Map<String,Long> res = new HashMap<>();
+
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        while (Conector.resSet.next()) {
+            res.put(
+                Conector.resSet.getString(1), 
+                Conector.resSet.getLong(2)
+            );
+        }
+
+        return res;
     }
 }

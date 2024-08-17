@@ -124,7 +124,15 @@ public class RepositorioPrueba {
     
     public Map<String, Long> pruebasRealizadasPorAnio(long anio, long top) throws Exception {
         Map<String, Long> res = new HashMap<>();
-        String query = "CALL TopPruebasMasRealizadasPorAnio(?, ?)";
+
+        String query="SELECT Prueba.Nombre, COUNT(Resultados.folio) As Total FROM Resultados ";
+        query+="INNER JOIN Prueba ON Resultados.idPrueba  = Prueba.idPrueba ";
+        query+="INNER JOIN Parametro ON Prueba.idParametro = Parametro.idParametro ";
+        query+="WHERE YEAR(Resultados.fAnalisis) = ? ";
+        query+="GROUP BY Prueba.nombre ";
+        query+="ORDER BY COUNT(Resultados.folio) ";
+        query+="DESC ";
+        query+="LIMIT ? ";
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, anio);
         Conector.pStmt.setLong(2, top);

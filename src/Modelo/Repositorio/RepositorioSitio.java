@@ -1,7 +1,10 @@
 package Modelo.Repositorio;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import Modelo.Entidad.Sitio;
 
 public class RepositorioSitio {
@@ -168,5 +171,24 @@ public class RepositorioSitio {
         Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.pStmt.setLong(1, s.idLugar);
         Conector.pStmt.executeUpdate();
+    }
+
+    public Map<String, Long> sitiosConMasResultados() throws Exception {
+        String query = "SELECT clave, COUNT(clave) FROM Resultados ";
+        query += "INNER JOIN Muestra ON Resultados.numControl = Muestra.numControl ";
+        query += "INNER JOIN Sitio ON Muestra.idSitio = Sitio.idSitio ";
+        query += "GROUP BY clave ";
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
+        Conector.resSet = Conector.pStmt.executeQuery();
+
+        Map<String, Long> res = new HashMap<>();
+        while (Conector.resSet.next()) {
+            res.put(
+                Conector.resSet.getString(1), 
+                Conector.resSet.getLong(2)
+            );
+        }
+
+        return res;
     }
 }

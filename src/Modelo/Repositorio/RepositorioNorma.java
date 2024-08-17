@@ -83,17 +83,15 @@ public class RepositorioNorma {
 
     public Map<String, Long> normasMasPruebas(long top) throws Exception {
         Map<String, Long> res = new HashMap<>();
-        
-        String query = "SELECT * FROM Norma ";
+
+        String query="SELECT norma, COUNT(norma) FROM Norma ";
         query+="INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma ";
-        query+="SELECT norma, COUNT(norma) FROM Norma ";
-	query+="INNER JOIN DetalleNorma ON DetalleNorma.idNorma  = Norma.idNorma ";
-	query+="INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba ";
-	query+="GROUP BY norma ";
-        query+="LIMIT ?";
+        query+="INNER JOIN Prueba ON DetalleNorma.idPrueba = Prueba.idPrueba ";
+        query+="GROUP BY norma ";
+        query+="ORDER BY COUNT(norma) ";
+        query+="DESC";
         
-        Conector.pStmt = Conector.getConnection().prepareCall(query);
-        Conector.pStmt.setLong(1, top);
+        Conector.pStmt = Conector.getConnection().prepareStatement(query);
         Conector.resSet = Conector.pStmt.executeQuery();
         
         while(Conector.resSet.next()){

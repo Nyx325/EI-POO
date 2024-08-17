@@ -152,7 +152,7 @@ public class RepositorioSignatarios {
         while(Conector.resSet.next()){
             res.put(
                 Conector.resSet.getString(1), 
-                Conector.resSet.getLong(2)
+                Conector.resSet.getLong(5)
             );
         }
         
