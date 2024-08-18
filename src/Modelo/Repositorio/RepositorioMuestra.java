@@ -108,7 +108,7 @@ public class RepositorioMuestra {
         else
             Conector.pStmt.setLong(5, m.muestreador);
         
-        if(m.muestreador == null)
+        if(m.idSitio == null)
             Conector.pStmt.setNull(6, 1);
         else
             Conector.pStmt.setLong(6, m.idSitio);
