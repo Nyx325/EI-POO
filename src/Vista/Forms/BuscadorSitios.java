@@ -690,6 +690,7 @@ public class BuscadorSitios extends javax.swing.JFrame {
                 this.aceptarBusquedaBtn.setVisible(false);
                 break;
             case BuscadorSitios.MODO_GESTION:
+                this.setSize(1015, 555);
                 this.GestionPanel.setVisible(true);
                 this.gestionBotonesPanel.setVisible(true);
                 this.sPaneGestion.setVisible(true);

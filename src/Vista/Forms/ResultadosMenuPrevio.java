@@ -16,6 +16,7 @@ import Modelo.Repositorio.RepositorioNorma;
 import Modelo.Repositorio.RepositorioParametro;
 import Modelo.Repositorio.RepositorioPrueba;
 import Vista.Extras.VentanaUtils;
+import Vista.Forms.VentanasCaptura.Ventana1;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -26,10 +27,11 @@ public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventLis
     private boolean buscandoMuestra;
     private Signatario sesion;
     private Muestra muestra;
+    private Prueba prueba;
+    private Norma norma;
     private List<Parametro> parametros;
     private HashMap<String, List<Prueba>> pruebas;
-    private List<Prueba> emptyPruebas = new ArrayList<>();
-    private List<Muestra> emptyMuestras = new ArrayList<>();
+    private List<Norma> normas;
 
     private RepositorioParametro repoParam = new RepositorioParametro();
     private RepositorioPrueba repoPrueba = new RepositorioPrueba();
@@ -132,6 +134,11 @@ public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventLis
         jScrollPane1.setViewportView(pruebasTB);
 
         normaCbox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        normaCbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                normaCboxActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Norma");
 
@@ -243,13 +250,41 @@ public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventLis
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void continuarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBtnActionPerformed
-        
-    }//GEN-LAST:event_continuarBtnActionPerformed
-
     private void volverBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_volverBtn1ActionPerformed
         cerrarVentana();
     }//GEN-LAST:event_volverBtn1ActionPerformed
+
+    private void continuarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBtnActionPerformed
+        if(
+            this.muestra == null ||
+            this.prueba == null ||
+            this.norma == null
+        ){
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Se debe seleccionar muestra, prueba y norma",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        Ventana1 v = new Ventana1();
+        v.muestra = this.muestra;
+        v.prueba = this.prueba;
+        v.norma = this.norma;
+        v.analista = this.sesion;
+        v.preparar();
+        v.setVisible(true);
+    }//GEN-LAST:event_continuarBtnActionPerformed
+
+    private void normaCboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_normaCboxActionPerformed
+        int index = this.normaCbox.getSelectedIndex();
+        if(index == 0){
+            this.norma = null;
+            return;
+        }
+        
+        this.norma = normas.get(index-1);
+    }//GEN-LAST:event_normaCboxActionPerformed
 
     private void pruebasTBMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_pruebasTBMouseClicked
         int index = pruebasTB.getSelectedRow();
@@ -264,9 +299,12 @@ public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventLis
 
         String parametro = parametros.get(parametroCbox.getSelectedIndex() - 1).nombre;
         Prueba prueba = this.pruebas.get(parametro).get(index);
+        this.prueba = prueba;
+        this.norma = null;
         try {
-            List<Norma> normas = repoNorma.getNormaByPrueba(prueba.idPrueba);
-            loadNormas(normas);
+            this.normas = repoNorma.getNormaByPrueba(prueba.idPrueba);
+            loadNormas(this.normas);
+            
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(
@@ -299,7 +337,7 @@ public class ResultadosMenuPrevio extends javax.swing.JFrame implements EventLis
 
             int index = this.parametroCbox.getSelectedIndex();
             if (index == 0) {
-                loadPruebas(emptyPruebas);
+                loadPruebas(new ArrayList<>());
                 return;
             }
 
