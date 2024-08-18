@@ -24,7 +24,7 @@ public class ControladorSitios extends RepositorioSitio {
             }
         }
 
-        
+        if(msg.length() != 0) throw new Exception(msg);
     }
 
     public void add(Sitio s) throws Exception {
