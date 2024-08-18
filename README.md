@@ -41,27 +41,3 @@ INSERT INTO Signatario (idSignatario, primNombre, segNombre, apellidoP, apellido
 (2,"Maricruz",NULL,"Toledano","Torres", NOW(), "2004-09-12", "Sindicalizado", "marictt@localhost"),
 (3,"Ian","Marcus","Prado","Acevedo", NOW(), "2000-06-10",  "Muestreo", "marcuspa@localhost");
 ```
-
-## TODO list
-### Del programa
-- [x] Tarea 1: CRUD sitios
-    1. [ ] Enlazar clientes a nuevos sitios o existenes
-    2. [ ] Reenlazar clientes y muestras o modificar apropiadamente
-- [x] Tarea 2: Personalizar vista sitios segun permisos
-    1. [ ] Incluir patron observer para busquedas
-    2. [ ] Hacer que no se vea desproporcionado el menu
-- [x] Tarea 3: CRUD clientes
-- [x] Tarea 4: CRUD Pruebas
-    1. [x] Vista que asigne pruebas a parámetros
-- [ ] Tarea 5: Vista que asigne clientes a sitios
-- [x] Tarea 6: Vista bitácora
-- [ ] Tarea 7: Ventanas de captura de resultados
-- [x] Tarea 8: Gestion muestras
-    1. [x] Selector de signatario
-- [x] Tarea 9: Generacion de graficos
-
-### Del script
-- [x] Tarea 1: Funcion #4 del script
-- [x] Tarea 2: Funcion #10 del script
-- [x] Tarea 3: Pruebas de to'
-- [x] Tarea 4: Transacciones distribuidas y tipos bloqueo
